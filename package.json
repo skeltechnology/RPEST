@@ -1,0 +1,17 @@
+{
+  "name": "com.skeltech.rpest",
+  "version": "0.1.0",
+  "displayName": "RPEST",
+  "description": "A Unity package to develop 2D RPG.",
+  "unity": "2021.3",
+  "unityRelease": "4f1",
+  "keywords": [
+    "RPG",
+    "2D"
+  ],
+  "author": {
+    "name": "Skel Tech",
+    "url": "https://skeltechnology.blogspot.com/"
+  },
+  "type": "library"
+}
