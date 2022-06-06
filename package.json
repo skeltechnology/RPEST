@@ -7,7 +7,8 @@
   "unityRelease": "4f1",
   "keywords": [
     "RPG",
-    "2D"
+    "2D",
+    "Pathfinding"
   ],
   "author": {
     "name": "Skel Tech",
