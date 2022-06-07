@@ -1,3 +1,5 @@
+using SkelTech.RPEST.Utilities.Structures;
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,8 +24,7 @@ namespace SkelTech.RPEST.Pathfinding {
                 Cell start = this.grid[startPosition.x, startPosition.y];
                 Cell end = this.grid[endPosition.x, endPosition.y];
 
-                // TODO: PriorityQueue
-                Queue<Cell> queue = new Queue<Cell>();
+                PriorityQueue<Cell> queue = new PriorityQueue<Cell>(100);
                 start.visited = true;
                 queue.Enqueue(start);
 
@@ -31,6 +32,7 @@ namespace SkelTech.RPEST.Pathfinding {
                     --maxIterations;
                     Cell current = queue.Dequeue();
                     if (current == end) {
+                        Debug.Log("Iterations: " + (1000 - maxIterations).ToString());
                         return this.GetPath(current);
                     }
                     foreach (Cell neighbor in this.GetNeighbors(current)) {

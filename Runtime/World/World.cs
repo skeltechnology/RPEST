@@ -15,10 +15,15 @@ namespace SkelTech.RPEST.World {
         private void Awake() {
             this.grid = this.GetComponent<Grid>();
             this.InitializeWalkables();
-            ICollection<Vector2Int> path = this.walkables[0].GetPath(new Vector2Int(1, 1), new Vector2Int(8, 1), 1000)?.GetPositions();
+            System.DateTime before = System.DateTime.Now;
+            SkelTech.RPEST.Pathfinding.Path pa = this.walkables[0].GetPath(new Vector2Int(1, 1), new Vector2Int(-10, -3), 1000);
+            System.DateTime after = System.DateTime.Now;
+            System.TimeSpan duration = after.Subtract(before);
+            ICollection<Vector2Int> path = pa.GetPositions();
             foreach (var p in path) {
                 Debug.Log(p);
             }
+            Debug.Log("Duration: " + duration.Milliseconds + "ms");
         }
         #endregion
 
