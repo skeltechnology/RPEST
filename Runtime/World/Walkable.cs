@@ -21,11 +21,11 @@ namespace SkelTech.RPEST.World {
         #endregion
 
         #region Getters
-        public Path GetPath(Vector2Int localStartPosition, Vector2Int localEndPosition, int maxIterations) {
+        public Path FindShortestPath(Vector2Int localStartPosition, Vector2Int localEndPosition, int maxIterations) {
             Vector2Int gridStartPosition = this.LocalToGrid(localStartPosition);
             Vector2Int gridEndPosition = this.LocalToGrid(localEndPosition);
 
-            Path gridPath = this.pathfinder.GetPath(gridStartPosition, gridEndPosition, maxIterations);
+            Path gridPath = this.pathfinder.FindShortestPath(gridStartPosition, gridEndPosition, maxIterations);
             Path localPath = new Path();
             foreach (Vector2Int gridPosition in gridPath.GetPositions()) {
                 localPath.AddPosition(this.GridToLocal(gridPosition));

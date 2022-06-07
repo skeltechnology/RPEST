@@ -8,7 +8,6 @@ namespace SkelTech.RPEST.World {
         #region Fields
         private Grid grid;
         private Walkable[] walkables = new Walkable[0];
-        [SerializeField] private GameObject circle;
         #endregion
         
         #region Unity
@@ -16,7 +15,7 @@ namespace SkelTech.RPEST.World {
             this.grid = this.GetComponent<Grid>();
             this.InitializeWalkables();
             System.DateTime before = System.DateTime.Now;
-            SkelTech.RPEST.Pathfinding.Path pa = this.walkables[0].GetPath(new Vector2Int(1, 1), new Vector2Int(-10, -3), 1000);
+            SkelTech.RPEST.Pathfinding.Path pa = this.walkables[0].FindShortestPath(new Vector2Int(1, 1), new Vector2Int(-10, -3), 1000);
             System.DateTime after = System.DateTime.Now;
             System.TimeSpan duration = after.Subtract(before);
             ICollection<Vector2Int> path = pa.GetPositions();
