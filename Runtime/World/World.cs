@@ -7,7 +7,8 @@ namespace SkelTech.RPEST.World {
     public class World : MonoBehaviour {
         #region Fields
         private Grid grid;
-        private Walkable[] walkables = new Walkable[0];
+        private Tilemap[] walkables = new Tilemap[0];
+        private WalkableObject[] characters = new WalkableObject[0];
         // TODO: CHARACTERS, OBSTACLES, ...
         #endregion
         
@@ -16,7 +17,7 @@ namespace SkelTech.RPEST.World {
             this.grid = this.GetComponent<Grid>();
             this.InitializeWalkables();
             System.DateTime before = System.DateTime.Now;
-            SkelTech.RPEST.Pathfinding.Path pa = this.walkables[0].FindShortestPath(new Vector2Int(1, 1), new Vector2Int(-10, -3), 1000);
+            SkelTech.RPEST.Pathfinding.Path pa = this.characters[0].FindShortestPath(new Vector2Int(1, 1), new Vector2Int(-10, -3), 1000);
             System.DateTime after = System.DateTime.Now;
             System.TimeSpan duration = after.Subtract(before);
             ICollection<Vector2Int> path = pa.GetPositions();
@@ -29,20 +30,16 @@ namespace SkelTech.RPEST.World {
 
         #region Initialization
         private void InitializeWalkables() {
-            Tilemap[] childTilemaps;
+            // TODO: IN THE FUTURE, A DEPTH SEARCH CAN BE PERFORMED TO RETREIVE DATA, ALLOWING THE USER TO HAVE IT'S OWN STRUCTURE
             foreach (Transform child in this.transform) {
-                childTilemaps = child.GetComponentsInChildren<Tilemap>();
                 if (child.name.Equals("Walkables")) {
                     child.gameObject.SetActive(false);
-                    this.walkables = new Walkable[childTilemaps.Length];
-                    for (int i = 0; i < childTilemaps.Length; ++i) {
-                        this.walkables[i] = new Walkable(childTilemaps[i]);
-                    }
-                    return;
+                    this.walkables = child.GetComponentsInChildren<Tilemap>();
+                } else if (child.name.Equals("Characters")) {
+                    child.gameObject.SetActive(false);
+                    this.characters = child.GetComponentsInChildren<WalkableObject>();
                 }
-                // TODO: CHECK FOR WALKABLE OBJECTS
             }
-            // TODO: WARNING
         }
         #endregion
     }
