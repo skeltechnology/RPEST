@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace SkelTech.RPEST.Pathfinding {
+namespace SkelTech.RPEST.Pathfinding.Search {
     public class ShortestPathSolver : SearchSolver<Cell> {
         #region Properties
         public Cell FinalState { get; set; }
@@ -23,7 +23,7 @@ namespace SkelTech.RPEST.Pathfinding {
         }
         #endregion
 
-        #region Overwritten
+        #region Getters
         protected override int Cost(Cell state) {
             return 1;
         }
@@ -55,13 +55,12 @@ namespace SkelTech.RPEST.Pathfinding {
 
         #region Operators
         public override Cell[] solve(Cell initialState, int maxIterations) {
-            if (this.FinalState == null) return null;
+            if (initialState == null || this.FinalState == null) return null;
             return base.solve(initialState, maxIterations);
         }
         #endregion
 
         #region Helpers
-        
         public bool IsValidPosition(int i, int j) {
             if(i >= 0 && i < this.rows && j >= 0 && j < this.columns) {
                 return this.grid[i, j] != null;

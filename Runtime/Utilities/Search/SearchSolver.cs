@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SkelTech.RPEST.Utilities.Search {
     public abstract class SearchSolver<T> {
-        #region Abstract
+        #region Getters
         protected abstract int Cost(T state);
         protected abstract int Heuristic(T state);
         protected abstract ICollection<T> Neighbors(T state);

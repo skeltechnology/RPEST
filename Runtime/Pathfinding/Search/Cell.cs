@@ -1,7 +1,4 @@
-using System;
-using System.Text;
-
-namespace SkelTech.RPEST.Pathfinding {
+namespace SkelTech.RPEST.Pathfinding.Search {
     public class Cell {
         #region Properties
         public int Row { get; private set; }

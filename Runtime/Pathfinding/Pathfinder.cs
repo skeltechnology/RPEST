@@ -1,7 +1,5 @@
-using SkelTech.RPEST.Utilities.Search;
+using SkelTech.RPEST.Pathfinding.Search;
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -46,7 +44,7 @@ namespace SkelTech.RPEST.Pathfinding {
 
             for (int y = bounds.yMin, i = 0; i < rows; ++y, ++i) {
                 for (int x = bounds.xMin, j = 0; j < columns; ++x, ++j) {
-                    if (tilemap.HasTile(new Vector3Int(x, y, 0))) { // TODO: REPLACE WITH TILEMAP Z
+                    if (tilemap.HasTile(new Vector3Int(x, y, 0))) {
                         grid[i, j] = new Cell(i, j);
                     }
                 }

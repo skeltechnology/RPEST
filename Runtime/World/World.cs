@@ -8,6 +8,7 @@ namespace SkelTech.RPEST.World {
         #region Fields
         private Grid grid;
         private Walkable[] walkables = new Walkable[0];
+        // TODO: CHARACTERS, OBSTACLES, ...
         #endregion
         
         #region Unity
@@ -23,17 +24,6 @@ namespace SkelTech.RPEST.World {
                 Debug.Log(p);
             }
             Debug.Log("Duration: " + duration.Milliseconds + "ms");
-        }
-        #endregion
-
-        #region Movement
-        public bool CanMoveTo(WalkableObject walkableObject, Vector3Int position) {
-            Tilemap tilemap = walkableObject.GetWalkable();
-            if (tilemap) {
-                // TODO: IMPLEMENT PATHFINDING LOGIC
-            }
-
-            return false;
         }
         #endregion
 
