@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,13 +24,24 @@ namespace SkelTech.RPEST.Input.Keyboard {
         #endregion
 
         #region Setters
-        public void SetKey(KeyCode key) {
-            this.listenedKeys.Add(key);
+        public void SetKeys(KeyCode[] keys) {
+            foreach (KeyCode key in keys)
+                this.SetKey(key);
         }
 
-        // TODO: ADD LIST OF KEYS
-        // TODO: REMOVE
-        // TODO: REMOVE LIST OF KEYS
+        public void SetKey(KeyCode key) {
+            if (!this.listenedKeys.Contains(key))
+                this.listenedKeys.Add(key);
+        }
+
+        public void RemoveKeys(KeyCode[] keys) {
+            foreach (KeyCode key in keys)
+                this.RemoveKey(key);
+        }
+
+        public void RemoveKey(KeyCode key) {
+            this.listenedKeys.Remove(key);
+        }
         #endregion
     }
 }

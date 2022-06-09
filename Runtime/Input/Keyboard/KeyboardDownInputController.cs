@@ -1,10 +1,10 @@
 using UnityEngine;
 
 namespace SkelTech.RPEST.Input.Keyboard {
-    public class KeyboardHoldInputController : KeyboardInputController {
+    public class KeyboardDownInputController : KeyboardInputController {
         #region Getters
         protected override bool IsInputKeyActive(KeyCode key) {
-            return UnityEngine.Input.GetKey(key);
+            return UnityEngine.Input.GetKeyDown(key);
         }
         #endregion
     }
