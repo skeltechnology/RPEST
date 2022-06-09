@@ -74,17 +74,6 @@ namespace SkelTech.RPEST.Input {
             return value;
         }
 
-        // TODO: REUSE CODE
-        private static void RemoveAllOccurrences(LinkedList<InputListenerData<T>> list, object listener) {
-            LinkedListNode<InputListenerData<T>> node = list.First, next;
-            while (node != null) {
-                next = node.Next;
-                if (node.Value.Listener == listener)
-                    list.Remove(node);
-                node = next;
-            }
-        }
-
         private static void RemoveAllOccurrences(LinkedList<InputListenerData<T>> list, object listener, Action<T> callback) {
             LinkedListNode<InputListenerData<T>> node = list.First, next;
             bool sameListener, sameCallback;
