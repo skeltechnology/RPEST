@@ -36,7 +36,6 @@ namespace SkelTech.RPEST.World {
                     child.gameObject.SetActive(false);
                     this.walkables = child.GetComponentsInChildren<Tilemap>();
                 } else if (child.name.Equals("Characters")) {
-                    child.gameObject.SetActive(false);
                     this.characters = child.GetComponentsInChildren<WalkableObject>();
                 }
             }

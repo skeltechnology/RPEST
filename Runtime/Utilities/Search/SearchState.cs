@@ -3,9 +3,9 @@ using System;
 namespace SkelTech.RPEST.Utilities.Search {
     public class SearchState<T> : IComparable<SearchState<T>> {
         #region Properties
-        public int F { get { return G + H; } }
-        public int G { get; set; }
-        public int H { get; set; }
+        public int Priority { get { return Cost + Heuristic; } }  // Lower priority integers are explored first
+        public int Cost { get; set; }
+        public int Heuristic { get; set; }
 
         public SearchState<T> Previous { get; set; }
 
@@ -21,16 +21,16 @@ namespace SkelTech.RPEST.Utilities.Search {
 
         #region Operators
         public int CompareTo(SearchState<T> other) {
-            if (this.F < other.F) return -1;
-            if (this.F > other.F) return 1;
+            if (this.Priority < other.Priority) return -1;
+            if (this.Priority > other.Priority) return 1;
             return 0;
         }
         #endregion
 
         #region Initialization
         public void Reset() {
-            this.G = 0;
-            this.H = 0;
+            this.Cost = 0;
+            this.Heuristic = 0;
             this.Previous = null;
         }
         #endregion

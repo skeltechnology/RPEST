@@ -24,12 +24,12 @@ namespace SkelTech.RPEST.Pathfinding.Search {
         #endregion
 
         #region Getters
-        protected override int Cost(Cell state) {
-            return 1;
+        protected override int Cost(SearchState<Cell> state) {
+            return state.Previous.Cost + 1;
         }
 
-        protected override int Heuristic(Cell state) {
-            return Mathf.Abs(state.Row - this.FinalState.Row) + Mathf.Abs(state.Column - this.FinalState.Column);
+        protected override int Heuristic(SearchState<Cell> state) {
+            return Mathf.Abs(state.State.Row - this.FinalState.Row) + Mathf.Abs(state.State.Column - this.FinalState.Column);
         }
 
         protected override ICollection<Cell> Neighbors(Cell state) {

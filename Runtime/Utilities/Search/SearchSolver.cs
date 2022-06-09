@@ -7,8 +7,10 @@ using UnityEngine;
 namespace SkelTech.RPEST.Utilities.Search {
     public abstract class SearchSolver<T> {
         #region Getters
-        protected abstract int Cost(T state);
-        protected abstract int Heuristic(T state);
+        // These are called after Previous is updated
+        protected abstract int Cost(SearchState<T> state);
+        protected abstract int Heuristic(SearchState<T> state);
+
         protected abstract ICollection<T> Neighbors(T state);
         protected abstract bool IsFinal(T state);
         #endregion
@@ -36,8 +38,8 @@ namespace SkelTech.RPEST.Utilities.Search {
 
                     searchState.Previous = current;
                     
-                    searchState.G = current.G + this.Cost(neighbor); // TODO: CONFIRM
-                    searchState.H = this.Heuristic(neighbor);
+                    searchState.Cost = this.Cost(searchState);
+                    searchState.Heuristic = this.Heuristic(searchState);
 
                     queue.Enqueue(searchState);
                 }
