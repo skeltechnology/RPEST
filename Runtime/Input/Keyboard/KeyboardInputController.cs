@@ -2,18 +2,20 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkelTech.RPEST.Input {
-    public class KeyboardInputController : InputController<KeyCode> {
+namespace SkelTech.RPEST.Input.Keyboard {
+    public abstract class KeyboardInputController : InputController<KeyCode> {
         #region Fields
-        [SerializeField] private List<KeyCode> listenedKeys;
+        [SerializeField] protected List<KeyCode> listenedKeys;
         #endregion
 
         #region Getters
+        protected abstract bool IsInputKeyActive(KeyCode key);
+
         protected override ICollection<KeyCode> GetInputEvents() {
             LinkedList<KeyCode> result = new LinkedList<KeyCode>();
 
             foreach (KeyCode key in this.listenedKeys) {
-                if (UnityEngine.Input.GetKeyDown(key)) {
+                if (this.IsInputKeyActive(key)) {
                     result.AddLast(key);
                 }
             }
