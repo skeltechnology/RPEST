@@ -16,15 +16,12 @@ namespace SkelTech.RPEST.World {
         private void Awake() {
             this.grid = this.GetComponent<Grid>();
             this.InitializeWalkables();
-            System.DateTime before = System.DateTime.Now;
-            SkelTech.RPEST.Pathfinding.Path pa = this.characters[0].FindShortestPath(new Vector2Int(1, 1), new Vector2Int(-10, -3), 1000);
-            System.DateTime after = System.DateTime.Now;
-            System.TimeSpan duration = after.Subtract(before);
-            ICollection<Vector2Int> path = pa.GetPositions();
-            foreach (var p in path) {
-                Debug.Log(p);
-            }
-            Debug.Log("Duration: " + duration.Milliseconds + "ms");
+        }
+        #endregion
+
+        #region Getters
+        public WalkableObject[] GetCharacters() {
+            return this.characters;
         }
         #endregion
 
