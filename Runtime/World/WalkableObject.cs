@@ -9,12 +9,14 @@ namespace SkelTech.RPEST.World {
     public class WalkableObject : MonoBehaviour {
         #region Properties
         public bool IsMoving { get; private set; }
-        public float Speed { get { return this.speed; } set { this.speed = value; } } // TODO: >= 0 ?
+        public float Speed { get { return this.speed; } set { this.speed = value; } }
         #endregion
 
         #region Fields
         [SerializeField] private Tilemap walkable;
         [SerializeField] private float speed = 1;
+        private float cellDistance;
+        private Vector3Int queueDirection;
 
         private World world;
         private Pathfinder pathfinder;
@@ -70,25 +72,34 @@ namespace SkelTech.RPEST.World {
             if (!this.IsMoving) {
                 Vector3 finalPosition = this.transform.localPosition + direction;
                 if (this.IsWalkable(finalPosition))
-                    StartCoroutine(MoveOneCell(finalPosition));
+                    StartCoroutine(MoveCell(finalPosition));
+            } else if (this.cellDistance > this.walkable.layoutGrid.cellSize.x * 0.8f) {
+                this.queueDirection = direction;
             }
         }
 
         public void Move(Path path) {
             if (!this.IsMoving) {
-                // TODO: verify if path is valid: initial position == current, ...
-                StartCoroutine(MovePath(path));
+                if (path != null && 
+                path.GetPositions().Count > 0 && 
+                (path.GetInitialPosition() - Vector2Int.FloorToInt((Vector2) this.transform.localPosition)).sqrMagnitude < Mathf.Epsilon)
+                    StartCoroutine(MovePath(path));
             }
         }
         #endregion
 
         #region Coroutines
-        private IEnumerator MoveOneCell(Vector3 finalPosition) {
+        private IEnumerator MoveCell(Vector3 finalPosition) {
             this.IsMoving = true;
 
             yield return StartCoroutine(MoveToCoroutine(finalPosition));
 
             this.IsMoving = false;
+
+            if (this.queueDirection != Vector3Int.zero) {
+                this.Move(this.queueDirection);
+                this.queueDirection = Vector3Int.zero;
+            }
         }
 
         private IEnumerator MovePath(Path path) {
@@ -107,11 +118,15 @@ namespace SkelTech.RPEST.World {
 
         // TODO: CAN BE STATIC AND IN UTILS
         private IEnumerator MoveToCoroutine(Vector3 finalPosition) {
+            this.cellDistance = 0f;
+            float delta;
             while ((finalPosition - this.transform.localPosition).sqrMagnitude > Mathf.Epsilon) {
-                this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, Time.deltaTime * this.speed);
+                delta = Mathf.Abs(Time.deltaTime * this.speed);
+                this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, delta);
+                this.cellDistance += delta;
                 yield return null;
             }
-            // this.transform.localPosition = finalPosition;  // TODO: IS THIS NEEDED?
+            this.transform.localPosition = finalPosition;
         }
         #endregion
 

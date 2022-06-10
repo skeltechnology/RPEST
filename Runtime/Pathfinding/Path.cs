@@ -14,6 +14,12 @@ namespace SkelTech.RPEST.Pathfinding {
         #endregion
 
         #region Getters
+        public Vector2Int GetInitialPosition() {
+            IEnumerator<Vector2Int> position = this.positions.GetEnumerator();
+            position.MoveNext();
+            return position.Current;
+        }
+
         public ICollection<Vector2Int> GetPositions() {
             return this.positions;
         }
