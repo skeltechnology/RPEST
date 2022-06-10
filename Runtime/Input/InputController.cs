@@ -20,7 +20,7 @@ namespace SkelTech.RPEST.Input {
                 if (this.listeners.ContainsKey(input)) {
                     inputListeners = this.listeners[input].ToArray();
                     foreach (InputListenerData<T> data in inputListeners) {
-                        data.Callback.Invoke(input);
+                        data.Callback.Invoke();
                     }
                 }
             }
@@ -32,12 +32,12 @@ namespace SkelTech.RPEST.Input {
         #endregion
 
         #region Operators
-        public void SetListener(object listener, T[] inputList, Action<T> callback) {
+        public void SetListener(object listener, T[] inputList, Action callback) {
             foreach (T input in inputList)
                 this.SetListener(listener, input, callback);
         }
 
-        public void SetListener(object listener, T input, Action<T> callback) {
+        public void SetListener(object listener, T input, Action callback) {
             LinkedList<InputListenerData<T>> inputListeners = SecureGetValue(this.listeners, input);
 
             InputListenerData<T> data = new InputListenerData<T>(listener, callback);
@@ -45,20 +45,20 @@ namespace SkelTech.RPEST.Input {
         }
 
         public void RemoveListener(object listener) {
-            this.RemoveListener(listener, (Action<T>) null);
+            this.RemoveListener(listener, (Action) null);
         }
 
         public void RemoveListener(object listener, T input) {
             this.RemoveListener(listener, input, null);
         }
 
-        public void RemoveListener(object listener, Action<T> callback) {
+        public void RemoveListener(object listener, Action callback) {
             foreach (LinkedList<InputListenerData<T>> inputListeners in this.listeners.Values.ToArray()) {
                 RemoveAllOccurrences(inputListeners, listener, callback);
             }
         }
 
-        public void RemoveListener(object listener, T input, Action<T> callback) {
+        public void RemoveListener(object listener, T input, Action callback) {
             if (this.listeners.ContainsKey(input))
                 RemoveAllOccurrences(this.listeners[input], listener, callback);
         }
@@ -67,6 +67,8 @@ namespace SkelTech.RPEST.Input {
         #region Helpers
         private static B SecureGetValue<A, B>(Dictionary<A, B> dict, A key) where B : new() {
             B value;
+            Debug.Log(dict);
+            Debug.Log(key);
             if (!dict.TryGetValue(key, out value)) {
                 value = new B();
                 dict.Add(key, value);
@@ -74,7 +76,7 @@ namespace SkelTech.RPEST.Input {
             return value;
         }
 
-        private static void RemoveAllOccurrences(LinkedList<InputListenerData<T>> list, object listener, Action<T> callback) {
+        private static void RemoveAllOccurrences(LinkedList<InputListenerData<T>> list, object listener, Action callback) {
             LinkedListNode<InputListenerData<T>> node = list.First, next;
             bool sameListener, sameCallback;
             while (node != null) {

@@ -1,12 +1,20 @@
 using SkelTech.RPEST.Pathfinding;
 
+using System.Collections;
+
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace SkelTech.RPEST.World {
     public class WalkableObject : MonoBehaviour {
+        #region Properties
+        public bool IsMoving { get; private set; }
+        public float Speed { get { return this.speed; } set { this.speed = value; } } // TODO: >= 0 ?
+        #endregion
+
         #region Fields
         [SerializeField] private Tilemap walkable;
+        [SerializeField] private float speed = 1;
 
         private World world;
         private Pathfinder pathfinder;
@@ -14,7 +22,11 @@ namespace SkelTech.RPEST.World {
 
         #region Unity
         private void Awake() {
-            this.world = GameObject.Find("World").GetComponent<World>();
+            // TODO: MAKE POSTION ON XX.5 , Must be done in super class WorldObject
+            this.IsMoving = false;
+
+            this.world = GameObject.Find("World").GetComponent<World>(); // TODO: IN FUTURE, HAVE SETTER AND WORLD WOULD PERFORM DEPTH SEARCH
+
             if (this.world) this.pathfinder = new Pathfinder(this.walkable);
         }
         #endregion
@@ -36,6 +48,48 @@ namespace SkelTech.RPEST.World {
                 localPath.AddPosition(this.GridToLocal(gridPosition));
             }
             return localPath;
+        }
+
+        public void MoveUp() {
+            this.Move(Vector3Int.up);
+        }
+
+        public void MoveDown() {
+            this.Move(Vector3Int.down);
+        }
+
+        public void MoveLeft() {
+            this.Move(Vector3Int.left);
+        }
+
+        public void MoveRight() {
+            this.Move(Vector3Int.right);
+        }
+
+        private void Move(Vector3Int direction) {
+            if (!this.IsMoving)
+                StartCoroutine(MoveOneCell(this.transform.localPosition + direction));
+        }
+        #endregion
+
+        #region Coroutines
+        private IEnumerator MoveOneCell(Vector3 finalPosition) {
+            this.IsMoving = true;
+
+            yield return StartCoroutine(MoveToCoroutine(finalPosition));
+
+            this.IsMoving = false;
+        }
+
+        // private IEnumerator MovePath() {} // TODO
+
+        // TODO: CAN BE STATIC AND IN UTILS
+        private IEnumerator MoveToCoroutine(Vector3 finalPosition) {
+            while ((finalPosition - this.transform.localPosition).sqrMagnitude > Mathf.Epsilon) {
+                this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, Time.deltaTime * this.speed);
+                yield return null;
+            }
+            //this.transform.localPosition = finalPosition;
         }
         #endregion
 
