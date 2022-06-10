@@ -67,8 +67,6 @@ namespace SkelTech.RPEST.Input {
         #region Helpers
         private static B SecureGetValue<A, B>(Dictionary<A, B> dict, A key) where B : new() {
             B value;
-            Debug.Log(dict);
-            Debug.Log(key);
             if (!dict.TryGetValue(key, out value)) {
                 value = new B();
                 dict.Add(key, value);

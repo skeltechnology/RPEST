@@ -20,5 +20,9 @@ namespace SkelTech.RPEST.Pathfinding.Search {
             this.Visited = false;
         }
         #endregion
+
+        public override string ToString() {
+            return Row.ToString() + " " + Column.ToString();
+        }
     }
 }

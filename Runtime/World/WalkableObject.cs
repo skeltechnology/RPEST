@@ -73,6 +73,13 @@ namespace SkelTech.RPEST.World {
                     StartCoroutine(MoveOneCell(finalPosition));
             }
         }
+
+        public void Move(Path path) {
+            if (!this.IsMoving) {
+                // TODO: verify if path is valid: initial position == current, ...
+                StartCoroutine(MovePath(path));
+            }
+        }
         #endregion
 
         #region Coroutines
@@ -84,7 +91,19 @@ namespace SkelTech.RPEST.World {
             this.IsMoving = false;
         }
 
-        // private IEnumerator MovePath() {} // TODO
+        private IEnumerator MovePath(Path path) {
+            this.IsMoving = true;
+
+            Vector3 position;
+            foreach (Vector2Int direction in path.GetDirections()) {
+                position = this.transform.localPosition + (Vector3Int) direction;
+                if (!this.IsWalkable(position)) break;
+
+                yield return StartCoroutine(MoveToCoroutine(position));
+            }
+
+            this.IsMoving = false;
+        }
 
         // TODO: CAN BE STATIC AND IN UTILS
         private IEnumerator MoveToCoroutine(Vector3 finalPosition) {
@@ -109,6 +128,11 @@ namespace SkelTech.RPEST.World {
         #region Helpers
         private bool IsWalkable(Vector3 position) {
             Vector3Int floorPosition = Vector3Int.FloorToInt(position);  // TODO: CHECK IF NEEDS CONVERTION
+            return this.IsWalkable(floorPosition);
+        }
+
+        private bool IsWalkable(Vector3Int position) {
+            Vector3Int floorPosition = Vector3Int.FloorToInt(position);
             bool hasTile = this.walkable.HasTile(floorPosition);
             bool hasObstacle = false;  // TODO: CHECK FOR OBSTACLE
             return hasTile && !hasObstacle;
