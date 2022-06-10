@@ -67,8 +67,11 @@ namespace SkelTech.RPEST.World {
         }
 
         private void Move(Vector3Int direction) {
-            if (!this.IsMoving)
-                StartCoroutine(MoveOneCell(this.transform.localPosition + direction));
+            if (!this.IsMoving) {
+                Vector3 finalPosition = this.transform.localPosition + direction;
+                if (this.IsWalkable(finalPosition))
+                    StartCoroutine(MoveOneCell(finalPosition));
+            }
         }
         #endregion
 
@@ -89,7 +92,7 @@ namespace SkelTech.RPEST.World {
                 this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, Time.deltaTime * this.speed);
                 yield return null;
             }
-            //this.transform.localPosition = finalPosition;
+            // this.transform.localPosition = finalPosition;  // TODO: IS THIS NEEDED?
         }
         #endregion
 
@@ -100,6 +103,15 @@ namespace SkelTech.RPEST.World {
 
         private Vector2Int GridToLocal(in Vector2Int gridPosition) {
             return new Vector2Int(gridPosition.y + this.walkable.cellBounds.xMin, gridPosition.x + this.walkable.cellBounds.yMin);
+        }
+        #endregion
+
+        #region Helpers
+        private bool IsWalkable(Vector3 position) {
+            Vector3Int floorPosition = Vector3Int.FloorToInt(position);  // TODO: CHECK IF NEEDS CONVERTION
+            bool hasTile = this.walkable.HasTile(floorPosition);
+            bool hasObstacle = false;  // TODO: CHECK FOR OBSTACLE
+            return hasTile && !hasObstacle;
         }
         #endregion
     }
