@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace SkelTech.RPEST.World {
-    public class WalkableObject : MonoBehaviour {
+    public class WalkableObject : WorldObject {
         #region Properties
         public bool IsMoving { get; private set; }
         public bool IsRunning { get { return this.isRunning; } set { this.isRunning = this.canRun && value; } }
@@ -19,7 +19,6 @@ namespace SkelTech.RPEST.World {
             }
             return 0f;
         } }
-
         #endregion
 
         #region Fields
@@ -32,17 +31,14 @@ namespace SkelTech.RPEST.World {
         private Vector3Int queueDirection;
         private bool isRunning = false;
 
-        private World world;
         private Pathfinder pathfinder;
         #endregion
 
         #region Unity
-        private void Awake() {
-            // TODO: MAKE POSTION ON XX.5 , Must be done in super class WorldObject
+        protected override void Awake() {
+            base.Awake();
+
             this.IsMoving = false;
-
-            this.world = GameObject.Find("World").GetComponent<World>(); // TODO: IN FUTURE, HAVE SETTER AND WORLD WOULD PERFORM DEPTH SEARCH
-
             if (this.world) this.pathfinder = new Pathfinder(this.walkable);
         }
         #endregion
