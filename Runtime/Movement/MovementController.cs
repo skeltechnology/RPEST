@@ -7,7 +7,6 @@ namespace SkelTech.RPEST.Movement {
     [RequireComponent(typeof(WalkableObject))]
     public abstract class MovementController<T> : MonoBehaviour {
         #region Fields
-        [SerializeField] protected InputController<T> inputController;
         protected WalkableObject walkableObject;
 
         private bool isListening = false;
@@ -23,7 +22,7 @@ namespace SkelTech.RPEST.Movement {
         }
 
         private void OnEnable() {
-            if (this.inputController.IsInitialized())
+            if (this.IsInputInitialized())
                 this.StartListening();
         }
 
@@ -33,7 +32,9 @@ namespace SkelTech.RPEST.Movement {
         #endregion
 
         #region Initialization
+        protected abstract bool IsInputInitialized();
         protected abstract void SetListeners();
+        protected abstract void RemoveListeners();
 
         private void StartListening() {
             if (!this.isListening) {
@@ -45,7 +46,7 @@ namespace SkelTech.RPEST.Movement {
         private void EndListening() {
             if (this.isListening) {
                 this.isListening = false;
-                this.inputController.RemoveListener(this);
+                this.RemoveListeners();
             }
         }
         #endregion

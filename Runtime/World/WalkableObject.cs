@@ -9,14 +9,28 @@ namespace SkelTech.RPEST.World {
     public class WalkableObject : MonoBehaviour {
         #region Properties
         public bool IsMoving { get; private set; }
-        public float Speed { get { return this.speed; } set { this.speed = value; } }
+        public bool IsRunning { get { return this.isRunning; } set { this.isRunning = this.canRun && value; } }
+
+        public float WalkingSpeed { get { return this.walkingSpeed; } set { this.walkingSpeed = value; } }
+        public float RunningSpeed { get { return this.runningSpeed; } set { this.runningSpeed = value; } }
+        public float Speed { get {
+            if (this.IsMoving) {
+                return this.IsRunning ? this.RunningSpeed : this.WalkingSpeed;
+            }
+            return 0f;
+        } }
+
         #endregion
 
         #region Fields
         [SerializeField] private Tilemap walkable;
-        [SerializeField] private float speed = 1;
+        [SerializeField] private float walkingSpeed = 4f;
+        [SerializeField] private bool canRun = true;
+        [SerializeField] private float runningSpeed = 6.5f;
+
         private float cellDistance;
         private Vector3Int queueDirection;
+        private bool isRunning = false;
 
         private World world;
         private Pathfinder pathfinder;
@@ -121,7 +135,7 @@ namespace SkelTech.RPEST.World {
             this.cellDistance = 0f;
             float delta;
             while ((finalPosition - this.transform.localPosition).sqrMagnitude > Mathf.Epsilon) {
-                delta = Mathf.Abs(Time.deltaTime * this.speed);
+                delta = Mathf.Abs(Time.deltaTime * this.Speed);
                 this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, delta);
                 this.cellDistance += delta;
                 yield return null;
