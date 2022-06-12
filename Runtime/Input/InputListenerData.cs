@@ -4,11 +4,11 @@ namespace SkelTech.RPEST.Input {
     public struct InputListenerData<T> {
         #region Properties
         public object Listener { get; }
-        public Action<T> Callback { get; }
+        public Action Callback { get; }
         #endregion
 
         #region Constructors
-        public InputListenerData(object listener, Action<T> callback) {
+        public InputListenerData(object listener, Action callback) {
             this.Listener = listener;
             this.Callback = callback;
         }

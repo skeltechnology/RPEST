@@ -20,6 +20,10 @@ namespace SkelTech.RPEST.World {
         #endregion
 
         #region Getters
+        public Grid GetGrid() {
+            return this.grid;
+        }
+        
         public WalkableObject[] GetCharacters() {
             return this.characters;
         }

@@ -34,16 +34,25 @@ namespace SkelTech.RPEST.Pathfinding.Search {
 
         protected override ICollection<Cell> Neighbors(Cell state) {
             ICollection<Cell> neighbors = new LinkedList<Cell>();
-            int[] offset = {-1, 1};
+            int[] offsets = {-1, 1};
 
             int i = state.Row, j = state.Column;
-            foreach (int iOffset in offset) {
-                if (this.IsValidPosition(i + iOffset, j))
-                    neighbors.Add(this.grid[i + iOffset, j]);
-            }
-            foreach (int jOffset in offset) {
-                if (this.IsValidPosition(i, j + jOffset))
-                    neighbors.Add(this.grid[i, j + jOffset]);
+            Cell cell;
+            foreach (int offset in offsets) {
+                if (this.IsValidPosition(i + offset, j)) {
+                    cell = this.grid[i + offset, j];
+                    if (!cell.Visited) {
+                        cell.Visited = true;
+                        neighbors.Add(cell);
+                    }
+                }
+                if (this.IsValidPosition(i, j + offset)) {
+                    cell = this.grid[i, j + offset];
+                    if (!cell.Visited) {
+                        cell.Visited = true;
+                        neighbors.Add(cell);
+                    }
+                }
             }
             return neighbors;
         }
@@ -56,6 +65,7 @@ namespace SkelTech.RPEST.Pathfinding.Search {
         #region Operators
         public override Cell[] solve(Cell initialState, int maxIterations) {
             if (initialState == null || this.FinalState == null) return null;
+            initialState.Visited = true;
             return base.solve(initialState, maxIterations);
         }
         #endregion
