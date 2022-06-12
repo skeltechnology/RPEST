@@ -1,16 +1,15 @@
-using SkelTech.RPEST.Input.Keyboard;
+using SkelTech.RPEST.Input;
 using SkelTech.RPEST.World;
 
 using UnityEngine;
 
 namespace SkelTech.RPEST.Movement {
     [RequireComponent(typeof(WalkableObject))]
-    public class KeyboardMovementController : MonoBehaviour {
+    public abstract class MovementController<T> : MonoBehaviour {
         #region Fields
-        [SerializeField] private KeyboardInputController inputController;
-        [SerializeField] private KeyCode upKey = KeyCode.W, downKey = KeyCode.S, leftKey = KeyCode.A, rightKey = KeyCode.D;
+        [SerializeField] protected InputController<T> inputController;
+        protected WalkableObject walkableObject;
 
-        private WalkableObject walkableObject;
         private bool isListening = false;
         #endregion
 
@@ -34,13 +33,12 @@ namespace SkelTech.RPEST.Movement {
         #endregion
 
         #region Initialization
+        protected abstract void SetListeners();
+
         private void StartListening() {
             if (!this.isListening) {
                 this.isListening = true;
-                this.inputController.SetListener(this, this.upKey, this.walkableObject.MoveUp);
-                this.inputController.SetListener(this, this.downKey, this.walkableObject.MoveDown);
-                this.inputController.SetListener(this, this.leftKey, this.walkableObject.MoveLeft);
-                this.inputController.SetListener(this, this.rightKey, this.walkableObject.MoveRight);
+                this.SetListeners();
             }
         }
 
