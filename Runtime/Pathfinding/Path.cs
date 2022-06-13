@@ -4,37 +4,37 @@ using UnityEngine;
 namespace SkelTech.RPEST.Pathfinding {
     public class Path {
         #region Fields
-        private ICollection<Vector2Int> positions;
+        private ICollection<Vector3> positions;
         #endregion
 
         #region Constructors
         public Path() {
-            this.positions = new LinkedList<Vector2Int>();
+            this.positions = new LinkedList<Vector3>();
         }
         #endregion
 
         #region Getters
-        public Vector2Int GetInitialPosition() {
-            IEnumerator<Vector2Int> position = this.positions.GetEnumerator();
+        public Vector3 GetInitialPosition() {
+            IEnumerator<Vector3> position = this.positions.GetEnumerator();
             position.MoveNext();
             return position.Current;
         }
 
-        public ICollection<Vector2Int> GetPositions() {
+        public ICollection<Vector3> GetPositions() {
             return this.positions;
         }
 
-        public ICollection<Vector2Int> GetDirections() {
-            ICollection<Vector2Int> directions = new LinkedList<Vector2Int>();
+        public ICollection<Vector3Int> GetDirections() {
+            ICollection<Vector3Int> directions = new LinkedList<Vector3Int>();
 
             if (this.positions.Count > 1) {
-                Vector2Int previous;
-                IEnumerator<Vector2Int> position = this.positions.GetEnumerator();
+                Vector3 previous;
+                IEnumerator<Vector3> position = this.positions.GetEnumerator();
                 position.MoveNext();
                 previous = position.Current;
                 
                 while (position.MoveNext()) {
-                    directions.Add(position.Current - previous);
+                    directions.Add(Vector3Int.RoundToInt(position.Current - previous));
                     previous = position.Current;
                 }
             }
@@ -44,7 +44,7 @@ namespace SkelTech.RPEST.Pathfinding {
         #endregion
 
         #region Setters
-        public void AddPosition(Vector2Int position) {
+        public void AddPosition(Vector3 position) {
             this.positions.Add(position);
         }
         #endregion

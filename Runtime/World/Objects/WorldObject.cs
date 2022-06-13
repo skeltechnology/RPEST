@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SkelTech.RPEST.World {
+namespace SkelTech.RPEST.World.Objects {
     public class WorldObject : MonoBehaviour {
 
         #region Fields

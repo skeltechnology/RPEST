@@ -18,17 +18,17 @@ namespace SkelTech.RPEST.Pathfinding {
         #endregion
 
         #region Operators
-        public Path FindShortestPath(Vector2Int startPosition, Vector2Int endPosition, int maxIterations) {
-            if (!this.IsValidPath(startPosition, endPosition)) return null;
+        public Path FindShortestPath(Vector3Int startGridPosition, Vector3Int endGridPosition, int maxIterations) {
+            if (!this.IsValidPath(startGridPosition, endGridPosition)) return null;
 
             this.ResetGrid();
-            this.solver.FinalState = this.grid[endPosition.x, endPosition.y];
-            Cell[] result = this.solver.solve(this.grid[startPosition.x, startPosition.y], maxIterations);
+            this.solver.FinalState = this.grid[endGridPosition.y, endGridPosition.x];
+            Cell[] result = this.solver.solve(this.grid[startGridPosition.y, startGridPosition.x], maxIterations);
             if (result == null) return null;
 
             Path path = new Path();
             foreach (Cell cell in result) {
-                path.AddPosition(new Vector2Int(cell.Row, cell.Column));
+                path.AddPosition(new Vector3(cell.Column, cell.Row, 0));
             }
             return path;
         }
@@ -60,10 +60,10 @@ namespace SkelTech.RPEST.Pathfinding {
         #endregion
 
         #region Helpers
-        private bool IsValidPath(Vector2Int start, Vector2Int end) {
+        private bool IsValidPath(Vector3Int start, Vector3Int end) {
             if (start == null || end == null) return false;
-            if (!this.solver.IsValidPosition(start.x, start.y)) return false;
-            if (!this.solver.IsValidPosition(end.x, end.y)) return false;
+            if (!this.solver.IsValidPosition(start.y, start.x)) return false;
+            if (!this.solver.IsValidPosition(end.y, end.x)) return false;
             return true;
         }
         #endregion

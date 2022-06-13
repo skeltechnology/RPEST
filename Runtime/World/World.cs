@@ -1,21 +1,20 @@
-using System.Collections.Generic;
+using SkelTech.RPEST.World.Objects;
 
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace SkelTech.RPEST.World {
     public class World : MonoBehaviour {
         #region Fields
         private Grid grid;
-        private Tilemap[] walkables = new Tilemap[0];
-        private WalkableObject[] characters = new WalkableObject[0];
+        private WalkableTilemap[] walkableTilemaps;
+        private WalkableObject[] walkableObjects;
         // TODO: CHARACTERS, OBSTACLES, ...
         #endregion
         
         #region Unity
         private void Awake() {
             this.grid = this.GetComponent<Grid>();
-            this.InitializeWalkables();
+            this.InitializeWorld();
         }
         #endregion
 
@@ -24,22 +23,26 @@ namespace SkelTech.RPEST.World {
             return this.grid;
         }
         
-        public WalkableObject[] GetCharacters() {
-            return this.characters;
+        public WalkableObject[] GetWalkableObjects() {
+            return this.walkableObjects;
         }
         #endregion
 
         #region Initialization
-        private void InitializeWalkables() {
-            // TODO: IN THE FUTURE, A DEPTH SEARCH CAN BE PERFORMED TO RETREIVE DATA, ALLOWING THE USER TO HAVE IT'S OWN STRUCTURE
-            foreach (Transform child in this.transform) {
-                if (child.name.Equals("Walkables")) {
-                    child.gameObject.SetActive(false);
-                    this.walkables = child.GetComponentsInChildren<Tilemap>();
-                } else if (child.name.Equals("Characters")) {
-                    this.characters = child.GetComponentsInChildren<WalkableObject>();
-                }
-            }
+        private void InitializeWorld() {
+            this.InitializeWalkableTilemaps();
+            this.InitializeWalkableObjects();
+        }
+
+        private void InitializeWalkableTilemaps() {
+            this.walkableTilemaps = this.GetComponentsInChildren<WalkableTilemap>();
+            foreach (WalkableTilemap walkableTilemap in walkableTilemaps)
+                walkableTilemap.gameObject.SetActive(false);
+        }
+
+        private void InitializeWalkableObjects() {
+            this.walkableObjects = this.GetComponentsInChildren<WalkableObject>();
+            Debug.Log(this.walkableObjects.Length);
         }
         #endregion
     }
