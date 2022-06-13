@@ -30,8 +30,6 @@ namespace SkelTech.RPEST.World.Objects {
         private float cellDistance;
         private Vector3Int queueDirection;
         private bool isRunning = false;
-
-        private Pathfinder pathfinder;
         #endregion
 
         #region Unity
@@ -40,64 +38,39 @@ namespace SkelTech.RPEST.World.Objects {
 
             this.IsMoving = false;
         }
-
-        protected override void Start() {
-            base.Start();
-
-            if (this.world) this.pathfinder = new Pathfinder(this.walkable.GetTilemap());
-        }
-        #endregion
-
-        #region Getters
-        public WalkableTilemap GetWalkable() {
-            return this.walkable;
-        }
         #endregion
 
         #region Operators
-        public Path FindShortestPath(Vector2Int localStartPosition, Vector2Int localEndPosition, int maxIterations) {
-            Vector2Int gridStartPosition = this.LocalToGrid(localStartPosition);
-            Vector2Int gridEndPosition = this.LocalToGrid(localEndPosition);
-
-            Path gridPath = this.pathfinder.FindShortestPath(gridStartPosition, gridEndPosition, maxIterations);
-            Path localPath = new Path();
-            foreach (Vector2Int gridPosition in gridPath.GetPositions()) {
-                localPath.AddPosition(this.GridToLocal(gridPosition));
-            }
-            return localPath;
-        }
-
         public void MoveUp() {
-            this.Move(Vector3Int.up);
+            this.MoveDirection(Vector3Int.up);
         }
 
         public void MoveDown() {
-            this.Move(Vector3Int.down);
+            this.MoveDirection(Vector3Int.down);
         }
 
         public void MoveLeft() {
-            this.Move(Vector3Int.left);
+            this.MoveDirection(Vector3Int.left);
         }
 
         public void MoveRight() {
-            this.Move(Vector3Int.right);
+            this.MoveDirection(Vector3Int.right);
         }
 
-        private void Move(Vector3Int direction) {
+        private void MoveDirection(Vector3Int direction) {
             if (!this.IsMoving) {
                 Vector3 finalPosition = this.transform.localPosition + direction;
-                if (this.IsWalkable(finalPosition))
+                if (this.walkable.IsWalkable(finalPosition))
                     StartCoroutine(MoveCell(finalPosition));
             } else if (this.cellDistance > this.walkable.GetTilemap().layoutGrid.cellSize.x * 0.8f) {
                 this.queueDirection = direction;
             }
         }
 
-        public void Move(Path path) {
+        public void MoveTo(Vector3 position) {
             if (!this.IsMoving) {
-                if (path != null && 
-                path.GetPositions().Count > 0 && 
-                (path.GetInitialPosition() - Vector2Int.FloorToInt((Vector2) this.transform.localPosition)).sqrMagnitude < Mathf.Epsilon)
+                Path path = this.walkable.FindShortestPath(this.transform.localPosition, position, 1000);
+                if (path != null && path.GetPositions().Count > 2)
                     StartCoroutine(MovePath(path));
             }
         }
@@ -112,7 +85,7 @@ namespace SkelTech.RPEST.World.Objects {
             this.IsMoving = false;
 
             if (this.queueDirection != Vector3Int.zero) {
-                this.Move(this.queueDirection);
+                this.MoveDirection(this.queueDirection);
                 this.queueDirection = Vector3Int.zero;
             }
         }
@@ -121,9 +94,9 @@ namespace SkelTech.RPEST.World.Objects {
             this.IsMoving = true;
 
             Vector3 position;
-            foreach (Vector2Int direction in path.GetDirections()) {
-                position = this.transform.localPosition + (Vector3Int) direction;
-                if (!this.IsWalkable(position)) break;
+            foreach (Vector3Int direction in path.GetDirections()) {
+                position = this.transform.localPosition + direction;
+                if (!this.walkable.IsWalkable(position)) break;
 
                 yield return StartCoroutine(MoveToCoroutine(position));
             }
@@ -142,30 +115,6 @@ namespace SkelTech.RPEST.World.Objects {
                 yield return null;
             }
             this.transform.localPosition = finalPosition;
-        }
-        #endregion
-
-        #region Convertion
-        private Vector2Int LocalToGrid(in Vector2Int localPosition) {
-            return new Vector2Int(localPosition.y - this.walkable.GetTilemap().cellBounds.yMin, localPosition.x - this.walkable.GetTilemap().cellBounds.xMin);
-        }
-
-        private Vector2Int GridToLocal(in Vector2Int gridPosition) {
-            return new Vector2Int(gridPosition.y + this.walkable.GetTilemap().cellBounds.xMin, gridPosition.x + this.walkable.GetTilemap().cellBounds.yMin);
-        }
-        #endregion
-
-        #region Helpers
-        private bool IsWalkable(Vector3 position) {
-            Vector3Int floorPosition = Vector3Int.FloorToInt(position);  // TODO: CHECK IF NEEDS CONVERTION
-            return this.IsWalkable(floorPosition);
-        }
-
-        private bool IsWalkable(Vector3Int position) {
-            Vector3Int floorPosition = Vector3Int.FloorToInt(position);
-            bool hasTile = this.walkable.GetTilemap().HasTile(floorPosition);
-            bool hasObstacle = false;  // TODO: CHECK FOR OBSTACLE
-            return hasTile && !hasObstacle;
         }
         #endregion
     }
