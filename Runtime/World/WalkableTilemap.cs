@@ -21,12 +21,6 @@ namespace SkelTech.RPEST.World {
         }
         #endregion
 
-        #region Getters
-        public Tilemap GetTilemap() {
-            return this.tilemap;
-        }
-        #endregion
-
         #region Operators
         public Path FindShortestPath(Vector3 localStartPosition, Vector3 localEndPosition, int maxIterations) {
             Vector3Int gridStartPosition = this.LocalToGrid(localStartPosition);

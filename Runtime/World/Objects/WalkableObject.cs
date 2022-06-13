@@ -1,14 +1,14 @@
 using SkelTech.RPEST.Pathfinding;
 
 using System.Collections;
+using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace SkelTech.RPEST.World.Objects {
     public class WalkableObject : WorldObject {
         #region Properties
-        public bool IsMoving { get; private set; }
+        public bool IsMoving { get; private set; }  // TODO: CAN BE QUEUE.SIZE > 0?
         public bool IsRunning { get { return this.isRunning; } set { this.isRunning = this.canRun && value; } }
 
         public float WalkingSpeed { get { return this.walkingSpeed; } set { this.walkingSpeed = value; } }
@@ -28,7 +28,7 @@ namespace SkelTech.RPEST.World.Objects {
         [SerializeField] private float runningSpeed = 6.5f;
 
         private float cellDistance;
-        private Vector3Int queueDirection;
+        private Queue<Vector3Int> directionsQueue;
         private bool isRunning = false;
         #endregion
 
@@ -36,69 +36,61 @@ namespace SkelTech.RPEST.World.Objects {
         protected override void Awake() {
             base.Awake();
 
+            this.directionsQueue = new Queue<Vector3Int>();
             this.IsMoving = false;
         }
         #endregion
 
         #region Operators
         public void MoveUp() {
-            this.MoveDirection(Vector3Int.up);
+            this.AddDirection(Vector3Int.up);
         }
 
         public void MoveDown() {
-            this.MoveDirection(Vector3Int.down);
+            this.AddDirection(Vector3Int.down);
         }
 
         public void MoveLeft() {
-            this.MoveDirection(Vector3Int.left);
+            this.AddDirection(Vector3Int.left);
         }
 
         public void MoveRight() {
-            this.MoveDirection(Vector3Int.right);
+            this.AddDirection(Vector3Int.right);
         }
 
-        private void MoveDirection(Vector3Int direction) {
+        private void AddDirection(Vector3Int direction) {
             if (!this.IsMoving) {
-                Vector3 finalPosition = this.transform.localPosition + direction;
-                if (this.walkable.IsWalkable(finalPosition))
-                    StartCoroutine(MoveCell(finalPosition));
-            } else if (this.cellDistance > this.walkable.GetTilemap().layoutGrid.cellSize.x * 0.8f) {
-                this.queueDirection = direction;
+                this.directionsQueue.Enqueue(direction);
+                StartCoroutine(this.MoveQueuedDirections());
+            } else {
+                if (this.directionsQueue.Count == 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.8f) {
+                    this.directionsQueue.Enqueue(direction);
+                }
             }
         }
 
         public void MoveTo(Vector3 position) {
             if (!this.IsMoving) {
                 Path path = this.walkable.FindShortestPath(this.transform.localPosition, position, 1000);
-                if (path != null && path.GetPositions().Count > 2)
-                    StartCoroutine(MovePath(path));
+                if (path != null && path.GetPositions().Count > 2) {
+                    foreach (Vector3Int direction in path.GetDirections()) {
+                        this.directionsQueue.Enqueue(direction);
+                    }
+                    StartCoroutine(MoveQueuedDirections());
+                }
             }
         }
         #endregion
 
         #region Coroutines
-        private IEnumerator MoveCell(Vector3 finalPosition) {
+        private IEnumerator MoveQueuedDirections() {
             this.IsMoving = true;
 
-            yield return StartCoroutine(MoveToCoroutine(finalPosition));
-
-            this.IsMoving = false;
-
-            if (this.queueDirection != Vector3Int.zero) {
-                this.MoveDirection(this.queueDirection);
-                this.queueDirection = Vector3Int.zero;
-            }
-        }
-
-        private IEnumerator MovePath(Path path) {
-            this.IsMoving = true;
-
-            Vector3 position;
-            foreach (Vector3Int direction in path.GetDirections()) {
-                position = this.transform.localPosition + direction;
-                if (!this.walkable.IsWalkable(position)) break;
-
-                yield return StartCoroutine(MoveToCoroutine(position));
+            Vector3 finalPosition;
+            while (this.directionsQueue.Count > 0) {
+                finalPosition = this.transform.localPosition + this.directionsQueue.Dequeue();
+                if (this.walkable.IsWalkable(finalPosition))
+                    yield return StartCoroutine(MoveToCoroutine(finalPosition));
             }
 
             this.IsMoving = false;
