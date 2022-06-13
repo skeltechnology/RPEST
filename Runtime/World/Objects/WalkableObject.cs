@@ -5,7 +5,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace SkelTech.RPEST.World {
+namespace SkelTech.RPEST.World.Objects {
     public class WalkableObject : WorldObject {
         #region Properties
         public bool IsMoving { get; private set; }
@@ -22,7 +22,7 @@ namespace SkelTech.RPEST.World {
         #endregion
 
         #region Fields
-        [SerializeField] private Tilemap walkable;
+        [SerializeField] private WalkableTilemap walkable;
         [SerializeField] private float walkingSpeed = 4f;
         [SerializeField] private bool canRun = true;
         [SerializeField] private float runningSpeed = 6.5f;
@@ -39,12 +39,17 @@ namespace SkelTech.RPEST.World {
             base.Awake();
 
             this.IsMoving = false;
-            if (this.world) this.pathfinder = new Pathfinder(this.walkable);
+        }
+
+        protected override void Start() {
+            base.Start();
+
+            if (this.world) this.pathfinder = new Pathfinder(this.walkable.GetTilemap());
         }
         #endregion
 
         #region Getters
-        public Tilemap GetWalkable() {
+        public WalkableTilemap GetWalkable() {
             return this.walkable;
         }
         #endregion
@@ -83,7 +88,7 @@ namespace SkelTech.RPEST.World {
                 Vector3 finalPosition = this.transform.localPosition + direction;
                 if (this.IsWalkable(finalPosition))
                     StartCoroutine(MoveCell(finalPosition));
-            } else if (this.cellDistance > this.walkable.layoutGrid.cellSize.x * 0.8f) {
+            } else if (this.cellDistance > this.walkable.GetTilemap().layoutGrid.cellSize.x * 0.8f) {
                 this.queueDirection = direction;
             }
         }
@@ -142,11 +147,11 @@ namespace SkelTech.RPEST.World {
 
         #region Convertion
         private Vector2Int LocalToGrid(in Vector2Int localPosition) {
-            return new Vector2Int(localPosition.y - this.walkable.cellBounds.yMin, localPosition.x - this.walkable.cellBounds.xMin);
+            return new Vector2Int(localPosition.y - this.walkable.GetTilemap().cellBounds.yMin, localPosition.x - this.walkable.GetTilemap().cellBounds.xMin);
         }
 
         private Vector2Int GridToLocal(in Vector2Int gridPosition) {
-            return new Vector2Int(gridPosition.y + this.walkable.cellBounds.xMin, gridPosition.x + this.walkable.cellBounds.yMin);
+            return new Vector2Int(gridPosition.y + this.walkable.GetTilemap().cellBounds.xMin, gridPosition.x + this.walkable.GetTilemap().cellBounds.yMin);
         }
         #endregion
 
@@ -158,7 +163,7 @@ namespace SkelTech.RPEST.World {
 
         private bool IsWalkable(Vector3Int position) {
             Vector3Int floorPosition = Vector3Int.FloorToInt(position);
-            bool hasTile = this.walkable.HasTile(floorPosition);
+            bool hasTile = this.walkable.GetTilemap().HasTile(floorPosition);
             bool hasObstacle = false;  // TODO: CHECK FOR OBSTACLE
             return hasTile && !hasObstacle;
         }

@@ -1,4 +1,4 @@
-using SkelTech.RPEST.World;
+using SkelTech.RPEST.World.Objects;
 
 using UnityEngine;
 
