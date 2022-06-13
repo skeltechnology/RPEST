@@ -8,7 +8,7 @@ using UnityEngine;
 namespace SkelTech.RPEST.World.Objects {
     public class WalkableObject : WorldObject {
         #region Properties
-        public bool IsMoving { get; private set; }  // TODO: CAN BE QUEUE.SIZE > 0?
+        public bool IsMoving { get; private set; }
         public bool IsRunning { get { return this.isRunning; } set { this.isRunning = this.canRun && value; } }
 
         public float WalkingSpeed { get { return this.walkingSpeed; } set { this.walkingSpeed = value; } }
@@ -43,27 +43,29 @@ namespace SkelTech.RPEST.World.Objects {
 
         #region Operators
         public void MoveUp() {
-            this.AddDirection(Vector3Int.up);
+            this.Move(Vector3Int.up);
         }
 
         public void MoveDown() {
-            this.AddDirection(Vector3Int.down);
+            this.Move(Vector3Int.down);
         }
 
         public void MoveLeft() {
-            this.AddDirection(Vector3Int.left);
+            this.Move(Vector3Int.left);
         }
 
         public void MoveRight() {
-            this.AddDirection(Vector3Int.right);
+            this.Move(Vector3Int.right);
         }
 
-        private void AddDirection(Vector3Int direction) {
+        private void Move(Vector3Int direction) {
             if (!this.IsMoving) {
-                this.directionsQueue.Enqueue(direction);
-                StartCoroutine(this.MoveQueuedDirections());
+                if (this.walkable.IsWalkable(this.transform.localPosition + direction)) {  // Small optimization
+                    this.directionsQueue.Enqueue(direction);
+                    StartCoroutine(this.MoveQueuedDirections());
+                }
             } else {
-                if (this.directionsQueue.Count == 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.8f) {
+                if (this.directionsQueue.Count < 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.8f) {
                     this.directionsQueue.Enqueue(direction);
                 }
             }
@@ -87,26 +89,29 @@ namespace SkelTech.RPEST.World.Objects {
             this.IsMoving = true;
 
             Vector3 finalPosition;
+            float missingDelta = 0f;
             while (this.directionsQueue.Count > 0) {
                 finalPosition = this.transform.localPosition + this.directionsQueue.Dequeue();
-                if (this.walkable.IsWalkable(finalPosition))
-                    yield return StartCoroutine(MoveToCoroutine(finalPosition));
+                if (this.walkable.IsWalkable(finalPosition)) {
+                    this.cellDistance = missingDelta;
+                    this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, missingDelta);
+                    missingDelta = 0f;
+
+                    float delta = 0;
+                    Vector3 currentPosition = finalPosition;
+                    while ((finalPosition - this.transform.localPosition).sqrMagnitude > Mathf.Epsilon) {
+                        delta = Mathf.Abs(Time.deltaTime * this.Speed);
+                        currentPosition = this.transform.localPosition;
+                        this.transform.localPosition = Vector3.MoveTowards(currentPosition, finalPosition, delta);
+                        this.cellDistance += delta;
+                        yield return null;
+                    }
+                    this.transform.localPosition = finalPosition;
+                    missingDelta = delta - (this.transform.localPosition - currentPosition).magnitude;
+                }
             }
 
             this.IsMoving = false;
-        }
-
-        // TODO: CAN BE STATIC AND IN UTILS
-        private IEnumerator MoveToCoroutine(Vector3 finalPosition) {
-            this.cellDistance = 0f;
-            float delta;
-            while ((finalPosition - this.transform.localPosition).sqrMagnitude > Mathf.Epsilon) {
-                delta = Mathf.Abs(Time.deltaTime * this.Speed);
-                this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, delta);
-                this.cellDistance += delta;
-                yield return null;
-            }
-            this.transform.localPosition = finalPosition;
         }
         #endregion
     }

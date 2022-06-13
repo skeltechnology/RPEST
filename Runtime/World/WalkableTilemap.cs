@@ -37,7 +37,7 @@ namespace SkelTech.RPEST.World {
         }
 
         private Vector3 GridToLocal(in Vector3Int gridPosition) {
-            return gridPosition + this.tilemap.cellBounds.min;  // TODO: SUM HALF OF GRID SIZE
+            return gridPosition + this.tilemap.cellBounds.min + this.tilemap.layoutGrid.cellSize / 2;
         }
 
         private Path GridToLocal(in Path gridPath) {
