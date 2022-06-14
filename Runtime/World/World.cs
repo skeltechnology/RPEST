@@ -24,25 +24,28 @@ namespace SkelTech.RPEST.World {
         public Grid GetGrid() {
             return this.grid;
         }
-        
-        public ICollection<WorldObject> GetWalkableObjects() {
-            return this.objects;
-        }
 
         public WorldObject GetObject(Vector3Int globalPosition) {
             // Gets only the first object
             // TODO: CHECK FOR MOVING OBJECTS
             // TODO: GLOBAL POSITION NOT WORKING, REFACTOR POSITIONS IN WALKABLE
-            float epsilon = this.grid.cellSize.x / 2, sqrMagnitude;
             Vector3 target = globalPosition + this.grid.cellSize / 2;
             foreach (WorldObject worldObject in this.objects) {
-                if (worldObject.gameObject.activeSelf && worldObject.IsObstacle()) {
-                    sqrMagnitude = (target - worldObject.transform.position).sqrMagnitude;
-                    if (sqrMagnitude < epsilon)
-                        return worldObject;
-                }
+                if (this.HasCollision(target, worldObject))
+                    return worldObject;
             }
             return null;
+        }
+
+        public ICollection<WorldObject> GetObjects(Bounds bounds) {
+            ICollection<WorldObject> result = new LinkedList<WorldObject>();
+
+            foreach (WorldObject worldObject in this.objects) {
+                if (bounds.Contains(worldObject.transform.position))
+                    result.Add(worldObject);
+            }
+
+            return result;
         }
         #endregion
 
@@ -74,6 +77,16 @@ namespace SkelTech.RPEST.World {
             this.objects = new LinkedList<WorldObject>(this.GetComponentsInChildren<WorldObject>());
             foreach (WorldObject worldObject in this.objects)
                 worldObject.SetWorld(this);
+        }
+        #endregion
+
+        #region Helpers
+        private bool HasCollision(Vector3 position, WorldObject worldObject) {
+            if (worldObject.IsObstacle()) {
+                float sqrMagnitude = (position - worldObject.transform.position).sqrMagnitude;
+                return sqrMagnitude < this.grid.cellSize.x / 2;
+            }
+            return false;
         }
         #endregion
     }

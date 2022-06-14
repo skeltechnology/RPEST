@@ -23,7 +23,7 @@ namespace SkelTech.RPEST.World.Objects {
 
         #region Getters
         public bool IsObstacle() {
-            return this.isObstacle;
+            return this.gameObject.activeInHierarchy && this.isObstacle;
         }
         #endregion
 
