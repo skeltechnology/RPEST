@@ -3,6 +3,7 @@ using SkelTech.RPEST.World.Objects;
 using UnityEngine;
 
 namespace SkelTech.RPEST.World {
+    [DisallowMultipleComponent]
     public class World : MonoBehaviour {
         #region Fields
         private Grid grid;

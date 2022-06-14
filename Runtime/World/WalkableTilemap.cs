@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace SkelTech.RPEST.World {
+    [DisallowMultipleComponent]
     [RequireComponent(typeof(Tilemap))]
     public class WalkableTilemap : MonoBehaviour {
         #region Fields
