@@ -29,7 +29,7 @@ namespace SkelTech.RPEST.World {
             return new Bounds(position, this.grid.cellSize * 0.99f);  // Avoid edges collision
         }
 
-        public WorldObject GetObject(Vector3Int globalPosition) {
+        public WorldObject GetObstacle(Vector3Int globalPosition) {
             // Gets only the first object
             // TODO: GLOBAL POSITION NOT WORKING, REFACTOR POSITIONS IN WALKABLE
             Vector3 target = globalPosition + this.grid.cellSize / 2;
@@ -40,7 +40,7 @@ namespace SkelTech.RPEST.World {
             return null;
         }
 
-        public ICollection<WorldObject> GetObjects(Bounds bounds) {
+        public ICollection<WorldObject> GetObstacles(Bounds bounds) {
             ICollection<WorldObject> result = new LinkedList<WorldObject>();
 
             foreach (WorldObject worldObject in this.objects) {
