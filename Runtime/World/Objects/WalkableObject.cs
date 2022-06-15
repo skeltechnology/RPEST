@@ -41,6 +41,12 @@ namespace SkelTech.RPEST.World.Objects {
         }
         #endregion
 
+        #region Getters
+        public WalkableTilemap GetWalkableTilemap() {
+            return this.walkable;
+        }
+        #endregion
+
         #region Operators
         public void MoveUp() {
             this.Move(Vector3Int.up);

@@ -27,7 +27,6 @@ namespace SkelTech.RPEST.Utilities.Search {
                 SearchState<T> current = queue.Dequeue();
 
                 if (this.IsFinal(current.State)) {
-                    Debug.Log("Iterations: " + (1000 - maxIterations).ToString());
                     return GetResult(current);
                 }
 

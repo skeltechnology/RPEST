@@ -25,6 +25,10 @@ namespace SkelTech.RPEST.World {
         #endregion
 
         #region Getters
+        public Tilemap GetTilemap() {
+            return this.tilemap;
+        }
+        
         public ICollection<Vector3Int> GetObstacles() {
             ICollection<WorldObject> worldObjects = this.world.GetObstacles(this.tilemap.localBounds);
 

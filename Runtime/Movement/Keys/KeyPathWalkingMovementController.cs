@@ -24,11 +24,7 @@ namespace SkelTech.RPEST.Movement.Keys {
         #region Helpers
         private void MoveObject() {
             Vector3 mousePosition = this.camera.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
-            System.DateTime before = System.DateTime.Now;
             this.walkableObject.MoveTo(new Vector3(mousePosition.x, mousePosition.y, this.walkableObject.transform.position.z));
-            System.DateTime after = System.DateTime.Now;
-            System.TimeSpan duration = after.Subtract(before);
-            Debug.Log("Duration: " + duration.Milliseconds + "ms");
         }
         #endregion
     }
