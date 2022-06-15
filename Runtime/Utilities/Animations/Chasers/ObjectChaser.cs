@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace SkelTech.RPEST.Utilities.MonoBehaviours {
+    [DisallowMultipleComponent]
     public abstract class ObjectChaser : MonoBehaviour {
         #region Fields
         [SerializeField] private Transform target;

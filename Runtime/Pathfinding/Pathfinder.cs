@@ -1,5 +1,7 @@
 using SkelTech.RPEST.Pathfinding.Search;
 
+using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -18,10 +20,11 @@ namespace SkelTech.RPEST.Pathfinding {
         #endregion
 
         #region Operators
-        public Path FindShortestPath(Vector3Int startGridPosition, Vector3Int endGridPosition, int maxIterations) {
+        public Path FindShortestPath(Vector3Int startGridPosition, Vector3Int endGridPosition, ICollection<Vector3Int> obstacles, int maxIterations) {
             if (!this.IsValidPath(startGridPosition, endGridPosition)) return null;
 
             this.ResetGrid();
+            this.InitializeObstacles(obstacles);
             this.solver.FinalState = this.grid[endGridPosition.y, endGridPosition.x];
             Cell[] result = this.solver.solve(this.grid[startGridPosition.y, startGridPosition.x], maxIterations);
             if (result == null) return null;
@@ -55,6 +58,15 @@ namespace SkelTech.RPEST.Pathfinding {
         private void ResetGrid() {
             foreach (Cell cell in this.grid) {
                 cell?.Reset();
+            }
+        }
+
+        private void InitializeObstacles(ICollection<Vector3Int> obstacles) {
+            Cell cell;
+            foreach (Vector3Int obstacle in obstacles) {
+                cell = this.grid[obstacle.y, obstacle.x];
+                if (cell != null)
+                    cell.Visited = true;
             }
         }
         #endregion

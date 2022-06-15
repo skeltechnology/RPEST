@@ -65,7 +65,7 @@ namespace SkelTech.RPEST.World.Objects {
                     StartCoroutine(this.MoveQueuedDirections());
                 }
             } else {
-                if (this.directionsQueue.Count < 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.8f) {
+                if (this.directionsQueue.Count < 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.85f) {
                     this.directionsQueue.Enqueue(direction);
                 }
             }
@@ -108,6 +108,8 @@ namespace SkelTech.RPEST.World.Objects {
                     }
                     this.transform.localPosition = finalPosition;
                     missingDelta = delta - (this.transform.localPosition - currentPosition).magnitude;
+                } else {
+                    this.directionsQueue.Clear();
                 }
             }
 
