@@ -1,11 +1,11 @@
-using SkelTech.RPEST.Input.Keyboard;
+using SkelTech.RPEST.Input.Keys;
 
 using UnityEngine;
 
-namespace SkelTech.RPEST.Movement.Keyboard {
-    public class KeyboardWalkingMovementController : MovementController<KeyCode> {
+namespace SkelTech.RPEST.Movement.Keys {
+    public class KeyWalkingMovementController : MovementController<KeyCode> {
         #region Fields
-        [SerializeField] protected KeyboardHoldInputController inputController;
+        [SerializeField] protected KeyHoldInputController inputController;
         [SerializeField] private KeyCode upKey = KeyCode.W, downKey = KeyCode.S, leftKey = KeyCode.A, rightKey = KeyCode.D;
         #endregion
 

@@ -1,12 +1,12 @@
-using SkelTech.RPEST.Input.Keyboard;
+using SkelTech.RPEST.Input.Keys;
 
 using UnityEngine;
 
-namespace SkelTech.RPEST.Movement.Keyboard {
-    public class KeyboardRunningMovementController : MovementController<KeyCode> {
+namespace SkelTech.RPEST.Movement.Keys {
+    public class KeyRunningMovementController : MovementController<KeyCode> {
         #region Fields
-        [SerializeField] protected KeyboardUpInputController upInputController;
-        [SerializeField] protected KeyboardDownInputController downInputController;
+        [SerializeField] protected KeyUpInputController upInputController;
+        [SerializeField] protected KeyDownInputController downInputController;
         [SerializeField] private KeyCode runningKey = KeyCode.LeftShift;
         #endregion
 
