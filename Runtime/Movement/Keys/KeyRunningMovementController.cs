@@ -11,9 +11,6 @@ namespace SkelTech.RPEST.Movement.Keys {
         #endregion
 
         #region Initialization
-        protected override bool IsInputInitialized() {
-            return this.upInputController.IsInitialized() && this.downInputController.IsInitialized();
-        }
         protected override void SetListeners() {
             this.upInputController.SetListener(this, this.runningKey, () => this.walkableObject.IsRunning = false);
             this.downInputController.SetListener(this, this.runningKey, () => this.walkableObject.IsRunning = true);
