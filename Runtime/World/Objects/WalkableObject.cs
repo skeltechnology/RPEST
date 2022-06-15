@@ -74,7 +74,7 @@ namespace SkelTech.RPEST.World.Objects {
         public void MoveTo(Vector3 position) {
             if (!this.IsMoving) {
                 Path path = this.walkable.FindShortestPath(this.transform.localPosition, position, 1000);
-                if (path != null && path.GetPositions().Count > 2) {
+                if (path != null && path.GetPositions().Count > 1) {
                     foreach (Vector3Int direction in path.GetDirections()) {
                         this.directionsQueue.Enqueue(direction);
                     }

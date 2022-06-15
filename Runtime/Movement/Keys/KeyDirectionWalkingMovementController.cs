@@ -3,7 +3,7 @@ using SkelTech.RPEST.Input.Keys;
 using UnityEngine;
 
 namespace SkelTech.RPEST.Movement.Keys {
-    public class KeyWalkingMovementController : MovementController<KeyCode> {
+    public class KeyDirectionWalkingMovementController : MovementController<KeyCode> {
         #region Fields
         [SerializeField] protected KeyHoldInputController inputController;
         [SerializeField] private KeyCode upKey = KeyCode.W, downKey = KeyCode.S, leftKey = KeyCode.A, rightKey = KeyCode.D;
