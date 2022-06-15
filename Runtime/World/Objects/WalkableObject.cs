@@ -82,6 +82,11 @@ namespace SkelTech.RPEST.World.Objects {
                 }
             }
         }
+
+        public void StopMoving() {
+            if (this.IsMoving)
+                this.directionsQueue.Clear();
+        }
         #endregion
 
         #region Coroutines

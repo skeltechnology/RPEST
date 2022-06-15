@@ -7,7 +7,7 @@ namespace SkelTech.RPEST.Movement.Keys {
         #region Fields
         [SerializeField] private new Camera camera;
         [SerializeField] protected KeyDownInputController inputController;
-        [SerializeField] private KeyCode clickKey = KeyCode.Mouse0;
+        [SerializeField] private KeyCode clickKey = KeyCode.Mouse0, stopKey = KeyCode.Mouse1;
         #endregion
 
         #region Initialization
@@ -17,6 +17,7 @@ namespace SkelTech.RPEST.Movement.Keys {
 
         protected override void SetListeners() {
             this.inputController.SetListener(this, this.clickKey, this.MoveObject);
+            this.inputController.SetListener(this, stopKey, this.walkableObject.StopMoving);
         }
 
         protected override void RemoveListeners() {
