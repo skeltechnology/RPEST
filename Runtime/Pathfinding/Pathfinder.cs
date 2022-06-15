@@ -62,8 +62,11 @@ namespace SkelTech.RPEST.Pathfinding {
         }
 
         private void InitializeObstacles(ICollection<Vector3Int> obstacles) {
+            Cell cell;
             foreach (Vector3Int obstacle in obstacles) {
-                this.grid[obstacle.y, obstacle.x].Visited = true;
+                cell = this.grid[obstacle.y, obstacle.x];
+                if (cell != null)
+                    cell.Visited = true;
             }
         }
         #endregion

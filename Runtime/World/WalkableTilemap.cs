@@ -29,8 +29,24 @@ namespace SkelTech.RPEST.World {
             ICollection<WorldObject> worldObjects = this.world.GetObjects(this.tilemap.localBounds);
 
             ICollection<Vector3Int> obstacles = new LinkedList<Vector3Int>();
+            Vector3 center, up, down, left, right, extents;
+            Vector3Int centerGridPosition, gridPosition;
             foreach (WorldObject worldObject in worldObjects) {
-                obstacles.Add(this.LocalToGrid(worldObject.transform.position));
+                extents = worldObject.GetBounds().extents;
+                center = worldObject.transform.position;
+
+                up = new Vector3(center.x, center.y + extents.y, center.z);
+                down = new Vector3(center.x, center.y - extents.y, center.z);
+                left = new Vector3(center.x + extents.x, center.y, center.z);
+                right = new Vector3(center.x - extents.x, center.y, center.z);
+
+                centerGridPosition = this.LocalToGrid(center);
+                obstacles.Add(centerGridPosition);
+                foreach (Vector3 position in new Vector3[] {up, down, left, right}) {
+                    gridPosition = this.LocalToGrid(position);
+                    if (!centerGridPosition.Equals(gridPosition))
+                        obstacles.Add(gridPosition);
+                }
             }
             return obstacles;
         }
@@ -52,6 +68,7 @@ namespace SkelTech.RPEST.World {
                 gridEndPosition, 
                 this.GetObstacles(),
                 maxIterations);
+            if (gridPath == null) return null;
             return this.GridToLocal(gridPath);
         }
         #endregion

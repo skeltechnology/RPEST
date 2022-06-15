@@ -25,6 +25,10 @@ namespace SkelTech.RPEST.World.Objects {
         public bool IsObstacle() {
             return this.gameObject.activeInHierarchy && this.isObstacle;
         }
+
+        public Bounds GetBounds() {
+            return this.world.GetBounds(this.transform.position);
+        }
         #endregion
 
         #region Setters

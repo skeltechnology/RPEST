@@ -25,9 +25,12 @@ namespace SkelTech.RPEST.World {
             return this.grid;
         }
 
+        public Bounds GetBounds(Vector3 position) {
+            return new Bounds(position, this.grid.cellSize * 0.99f);  // Avoid edges collision
+        }
+
         public WorldObject GetObject(Vector3Int globalPosition) {
             // Gets only the first object
-            // TODO: CHECK FOR MOVING OBJECTS
             // TODO: GLOBAL POSITION NOT WORKING, REFACTOR POSITIONS IN WALKABLE
             Vector3 target = globalPosition + this.grid.cellSize / 2;
             foreach (WorldObject worldObject in this.objects) {
@@ -41,7 +44,7 @@ namespace SkelTech.RPEST.World {
             ICollection<WorldObject> result = new LinkedList<WorldObject>();
 
             foreach (WorldObject worldObject in this.objects) {
-                if (bounds.Contains(worldObject.transform.position))
+                if (worldObject.IsObstacle() && bounds.Intersects(worldObject.GetBounds()))
                     result.Add(worldObject);
             }
 
@@ -83,8 +86,9 @@ namespace SkelTech.RPEST.World {
         #region Helpers
         private bool HasCollision(Vector3 position, WorldObject worldObject) {
             if (worldObject.IsObstacle()) {
-                float sqrMagnitude = (position - worldObject.transform.position).sqrMagnitude;
-                return sqrMagnitude < this.grid.cellSize.x / 2;
+                Bounds positionBounds = this.GetBounds(position);
+                Bounds worldObjectBounds = worldObject.GetBounds();
+                return positionBounds.Intersects(worldObjectBounds);
             }
             return false;
         }
