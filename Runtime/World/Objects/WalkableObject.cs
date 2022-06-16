@@ -41,6 +41,12 @@ namespace SkelTech.RPEST.World.Objects {
         }
         #endregion
 
+        #region Getters
+        public WalkableTilemap GetWalkableTilemap() {
+            return this.walkable;
+        }
+        #endregion
+
         #region Operators
         public void MoveUp() {
             this.Move(Vector3Int.up);
@@ -74,13 +80,18 @@ namespace SkelTech.RPEST.World.Objects {
         public void MoveTo(Vector3 position) {
             if (!this.IsMoving) {
                 Path path = this.walkable.FindShortestPath(this.transform.localPosition, position, 1000);
-                if (path != null && path.GetPositions().Count > 2) {
+                if (path != null && path.GetPositions().Count > 1) {
                     foreach (Vector3Int direction in path.GetDirections()) {
                         this.directionsQueue.Enqueue(direction);
                     }
                     StartCoroutine(MoveQueuedDirections());
                 }
             }
+        }
+
+        public void StopMoving() {
+            if (this.IsMoving)
+                this.directionsQueue.Clear();
         }
         #endregion
 

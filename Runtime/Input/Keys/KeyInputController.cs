@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkelTech.RPEST.Input.Keyboard {
-    public abstract class KeyboardInputController : InputController<KeyCode> {
+namespace SkelTech.RPEST.Input.Keys {
+    public abstract class KeyInputController : InputController<KeyCode> {
         #region Fields
         [SerializeField] protected List<KeyCode> listenedKeys;
         #endregion

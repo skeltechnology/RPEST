@@ -16,13 +16,8 @@ namespace SkelTech.RPEST.Movement {
             this.walkableObject = this.GetComponent<WalkableObject>();
         }
 
-        private void Start() {
-            this.StartListening();
-        }
-
         private void OnEnable() {
-            if (this.IsInputInitialized())
-                this.StartListening();
+            this.StartListening();
         }
 
         private void OnDisable() {
@@ -31,7 +26,6 @@ namespace SkelTech.RPEST.Movement {
         #endregion
 
         #region Initialization
-        protected abstract bool IsInputInitialized();
         protected abstract void SetListeners();
         protected abstract void RemoveListeners();
 

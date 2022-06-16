@@ -1,7 +1,7 @@
 using UnityEngine;
 
-namespace SkelTech.RPEST.Input.Keyboard {
-    public class KeyboardUpInputController : KeyboardInputController {
+namespace SkelTech.RPEST.Input.Keys {
+    public class KeyUpInputController : KeyInputController {
         #region Getters
         protected override bool IsInputKeyActive(KeyCode key) {
             return UnityEngine.Input.GetKeyUp(key);

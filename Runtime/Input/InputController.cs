@@ -6,16 +6,10 @@ using UnityEngine;
 namespace SkelTech.RPEST.Input {
     public abstract class InputController<T> : MonoBehaviour {
         #region Fields
-        private Dictionary<T, LinkedList<InputListenerData<T>>> listeners;
-        private bool isInitialized = false;
+        private Dictionary<T, LinkedList<InputListenerData<T>>> listeners = new Dictionary<T, LinkedList<InputListenerData<T>>>();
         #endregion
 
         #region Unity
-        private void Awake() {
-            this.listeners = new Dictionary<T, LinkedList<InputListenerData<T>>>();
-            this.isInitialized = true;
-        }
-
         private void Update() {
             InputListenerData<T>[] inputListeners;
             foreach (T input in this.GetInputEvents()) {
@@ -31,10 +25,6 @@ namespace SkelTech.RPEST.Input {
 
         #region Getters
         protected abstract ICollection<T> GetInputEvents();
-
-        public bool IsInitialized() {
-            return this.isInitialized;
-        }
         #endregion
 
         #region Operators
