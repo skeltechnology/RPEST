@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SkelTech.RPEST.World.Objects {
+namespace SkelTech.RPEST.World.Elements.Objects {
     [DisallowMultipleComponent]
     public class WorldObject : MonoBehaviour {
         #region Fields

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace SkelTech.RPEST.World.Objects {
+namespace SkelTech.RPEST.World.Elements.Objects {
     public class WalkableObject : WorldObject {
         #region Properties
         public bool IsMoving { get; private set; }

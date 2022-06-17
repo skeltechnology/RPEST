@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkelTech.RPEST.World.Objects {
+namespace SkelTech.RPEST.World.Elements.Objects {
     public class InteractorObject : WalkableObject {
         #region Fields
         [SerializeField] private string interactorId;

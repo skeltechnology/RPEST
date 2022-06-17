@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace SkelTech.RPEST.World {
+namespace SkelTech.RPEST.World.Elements {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Tilemap))]
     public class WalkableTilemap : MonoBehaviour {
