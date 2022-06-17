@@ -1,5 +1,5 @@
-using SkelTech.RPEST.World;
-using SkelTech.RPEST.World.Objects;
+using SkelTech.RPEST.World.Elements;
+using SkelTech.RPEST.World.Elements.Objects;
 
 using System.Collections;
 using System.Collections.Generic;

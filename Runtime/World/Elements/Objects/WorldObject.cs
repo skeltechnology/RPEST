@@ -17,7 +17,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
 
         protected virtual void OnDestroy() {
-            this.world.RemoveObject(this);
+            this.world.WorldObjectDatabase.Remove(this);
         }
         #endregion
 

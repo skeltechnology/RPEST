@@ -1,4 +1,4 @@
-using SkelTech.RPEST.World.Objects;
+using SkelTech.RPEST.World.Elements.Objects;
 using SkelTech.RPEST.Pathfinding;
 
 using System.Collections;
@@ -30,7 +30,7 @@ namespace SkelTech.RPEST.World.Elements {
         }
         
         public ICollection<Vector3Int> GetObstacles() {
-            ICollection<WorldObject> worldObjects = this.world.GetObstacles(this.tilemap.localBounds);
+            ICollection<WorldObject> worldObjects = this.world.WorldObjectDatabase.GetObstacles(this.tilemap.localBounds);
 
             ICollection<Vector3Int> obstacles = new LinkedList<Vector3Int>();
             Vector3 center, up, down, left, right, extents;
@@ -99,7 +99,7 @@ namespace SkelTech.RPEST.World.Elements {
         public bool IsWalkable(Vector3 localPosition) {
             Vector3Int floorPosition = Vector3Int.FloorToInt(localPosition);
             bool hasTile = this.tilemap.HasTile(floorPosition);
-            bool hasNoObstacle = (this.world.GetObstacle(Vector3Int.FloorToInt(localPosition)) == null);
+            bool hasNoObstacle = (this.world.WorldObjectDatabase.GetObstacle(Vector3Int.FloorToInt(localPosition)) == null);
             return hasTile && hasNoObstacle;
         }
 
