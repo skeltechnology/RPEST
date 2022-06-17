@@ -28,6 +28,7 @@ namespace SkelTech.RPEST.World.Objects {
         [SerializeField] private float runningSpeed = 6.5f;
 
         private float cellDistance;
+        protected Vector3Int lastDirection = Vector3Int.down;
         private Queue<Vector3Int> directionsQueue;
         private bool isRunning = false;
         #endregion
@@ -102,7 +103,8 @@ namespace SkelTech.RPEST.World.Objects {
             Vector3 finalPosition;
             float missingDelta = 0f;
             while (this.directionsQueue.Count > 0) {
-                finalPosition = this.transform.localPosition + this.directionsQueue.Dequeue();
+                this.lastDirection = this.directionsQueue.Dequeue();
+                finalPosition = this.transform.localPosition + this.lastDirection;
                 if (this.walkable.IsWalkable(finalPosition)) {
                     this.cellDistance = missingDelta;
                     this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, missingDelta);

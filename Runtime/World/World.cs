@@ -11,6 +11,7 @@ namespace SkelTech.RPEST.World {
         private Grid grid;
         private ICollection<WalkableTilemap> walkableTilemaps;
         private ICollection<WorldObject> objects;
+        private ICollection<Interactable> interactables;
         #endregion
         
         #region Unity
