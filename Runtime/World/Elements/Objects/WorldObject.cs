@@ -2,19 +2,15 @@ using UnityEngine;
 
 namespace SkelTech.RPEST.World.Elements.Objects {
     [DisallowMultipleComponent]
-    public class WorldObject : MonoBehaviour {
+    public class WorldObject : WorldElement {
         #region Fields
         [SerializeField] protected bool isObstacle = true;
-
-        protected World world;
         #endregion
 
         #region Unity
         protected virtual void Awake() {}
 
-        protected virtual void Start() {
-            this.transform.localPosition = Vector3Int.FloorToInt(this.transform.localPosition) + this.world.GetGrid().cellSize / 2;
-        }
+        protected virtual void Start() {}
 
         protected virtual void OnDestroy() {
             this.world.WorldObjectDatabase.Remove(this);
@@ -32,8 +28,11 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Setters
-        public void SetWorld(World world) {
-            this.world = world;
+        public override void SetWorld(World world) {
+            this.world?.WorldObjectDatabase.Remove(this);
+            base.SetWorld(world);
+            this.world.WorldObjectDatabase.Add(this);
+            this.transform.localPosition = Vector3Int.FloorToInt(this.transform.localPosition) + this.world.GetGrid().cellSize / 2;
         }
         #endregion
     }

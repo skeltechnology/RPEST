@@ -10,9 +10,8 @@ using UnityEngine.Tilemaps;
 namespace SkelTech.RPEST.World.Elements {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Tilemap))]
-    public class WalkableTilemap : MonoBehaviour {
+    public class WalkableTilemap : WorldElement {
         #region Fields
-        private World world;
         private Tilemap tilemap;
         private Pathfinder pathfinder;
         #endregion;
@@ -53,12 +52,6 @@ namespace SkelTech.RPEST.World.Elements {
                 }
             }
             return obstacles;
-        }
-        #endregion
-
-        #region Setters
-        public void SetWorld(World world) {
-            this.world = world;
         }
         #endregion
 

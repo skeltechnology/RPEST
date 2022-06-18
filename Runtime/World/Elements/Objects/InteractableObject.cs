@@ -14,6 +14,14 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
         #endregion
 
+        #region Setters
+        public override void SetWorld(World world) {
+            this.world?.InteractableDatabase.Remove(this);
+            base.SetWorld(world);
+            this.world.InteractableDatabase.Add(this);
+        }
+        #endregion
+
         #region Operators
         public abstract bool Interact(InteractorObject interactor);
         #endregion

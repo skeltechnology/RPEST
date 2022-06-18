@@ -1,8 +1,5 @@
-using SkelTech.RPEST.World.Elements.Objects;
 using SkelTech.RPEST.World.Elements;
 using SkelTech.RPEST.World.Database;
-
-using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -17,7 +14,6 @@ namespace SkelTech.RPEST.World {
 
         #region Fields
         private Grid grid;
-        private ICollection<Interactable> interactables;
         #endregion
         
         #region Unity
@@ -39,10 +35,8 @@ namespace SkelTech.RPEST.World {
 
         #region Initialization
         private void InitializeWorld() {
-            // TODO: INIT WORLD IN OBJECTS
-            this.WalkableTilemapDatabase.Add(this.GetComponentsInChildren<WalkableTilemap>());
-            this.WorldObjectDatabase.Add(this.GetComponentsInChildren<WorldObject>());
-            this.InteractableDatabase.Add(this.GetComponentsInChildren<Interactable>());
+            foreach (WorldElement element in this.GetComponentsInChildren<WorldElement>())
+                element.SetWorld(this);
         }
         #endregion
     }
