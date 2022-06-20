@@ -34,9 +34,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Unity
-        protected override void Awake() {
-            base.Awake();
-
+        protected void Awake() {
             this.directionsQueue = new Queue<Vector3Int>();
             this.IsMoving = false;
         }

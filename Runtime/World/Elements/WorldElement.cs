@@ -6,10 +6,24 @@ namespace SkelTech.RPEST.World.Elements {
         protected World world;
         #endregion;
 
-        #region Setters
-        public virtual void SetWorld(World world) {
-            this.world = world;
+        #region Unity
+        protected void OnDestroy() {
+            if (this.world) this.DisableWorldElement();
         }
+        #endregion
+
+        #region Setters
+        public void SetWorld(World world) {
+            if (this.world) this.DisableWorldElement();
+            this.world = world;
+            this.InitializeWorldElement();
+        }
+        #endregion
+
+        #region Initialization
+        protected virtual void InitializeWorldElement() {}
+
+        protected virtual void DisableWorldElement() {}
         #endregion
     }
 }

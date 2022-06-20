@@ -7,16 +7,6 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         [SerializeField] protected bool isObstacle = true;
         #endregion
 
-        #region Unity
-        protected virtual void Awake() {}
-
-        protected virtual void Start() {}
-
-        protected virtual void OnDestroy() {
-            this.world.WorldObjectDatabase.Remove(this);
-        }
-        #endregion
-
         #region Getters
         public bool IsObstacle() {
             return this.gameObject.activeInHierarchy && this.isObstacle;
@@ -27,12 +17,14 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
         #endregion
 
-        #region Setters
-        public override void SetWorld(World world) {
-            this.world?.WorldObjectDatabase.Remove(this);
-            base.SetWorld(world);
+        #region Initialization
+        protected override void InitializeWorldElement() {
             this.world.WorldObjectDatabase.Add(this);
             this.transform.localPosition = Vector3Int.FloorToInt(this.transform.localPosition) + this.world.GetGrid().cellSize / 2;
+        }
+
+        protected override void DisableWorldElement() {
+            this.world.WorldObjectDatabase.Remove(this);
         }
         #endregion
     }
