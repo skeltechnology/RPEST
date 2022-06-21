@@ -68,6 +68,8 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                 if (this.CanMoveTo(this.transform.localPosition + direction)) {  // Small optimization
                     this.directionsQueue.Enqueue(direction);
                     StartCoroutine(this.MoveQueuedDirections());
+                } else {
+                    this.lastDirection = direction;
                 }
             } else {
                 if (this.directionsQueue.Count < 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.85f) {

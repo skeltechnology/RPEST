@@ -11,7 +11,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Operators
-        public abstract bool Interact(InteractorObject interactor);
+        public abstract void Interact(InteractorObject interactor);
         #endregion
 
         #region Initialization

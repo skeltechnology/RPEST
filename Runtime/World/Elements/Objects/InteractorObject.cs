@@ -9,10 +9,14 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Operators
-        public bool Interact() {
+        public void Interact() {
+            Vector3 interactablePosition = this.transform.position + this.lastDirection;
+            Interactable interactable = this.world.InteractableDatabase.GetInteractable(interactablePosition);
+
             // Check if there's an interactable in the next cell
-            // If there is, interact with it
-            return false;
+            if (interactable != null) {
+                interactable.Interact(this);
+            }
         }
         #endregion
     }
