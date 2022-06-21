@@ -13,7 +13,27 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
 
         public Bounds GetBounds() {
-            return this.world.GetBounds(this.transform.position);
+            return this.GetBounds(this.transform.position);
+        }
+        #endregion
+
+        #region Operators
+        public bool CollidesWith(WorldObject worldObject) {
+            if (worldObject.IsObstacle()) {
+                return this.CollidesWith(worldObject.transform.position);
+            }
+            return false;
+        }
+
+        public bool CollidesWith(Vector3 position) {
+            return this.CollidesWith(this.GetBounds(position));
+        }
+
+        public bool CollidesWith(Bounds bounds) {
+            if (this.IsObstacle()) {
+                return bounds.Intersects(this.GetBounds());
+            }
+            return false;
         }
         #endregion
 
@@ -25,6 +45,12 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         protected override void DisableWorldElement() {
             this.world.WorldObjectDatabase.Remove(this);
+        }
+        #endregion
+
+        #region Helpers
+        public Bounds GetBounds(Vector3 position) {
+            return new Bounds(position, this.world.GetGrid().cellSize * 0.99f);  // Avoid edges collision
         }
         #endregion
     }

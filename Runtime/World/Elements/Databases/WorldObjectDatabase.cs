@@ -8,13 +8,11 @@ using UnityEngine;
 namespace SkelTech.RPEST.World.Database {
     public class WorldObjectDatabase : WorldDatabase<WorldObject> {
         #region Getters
-            public WorldObject GetObstacle(Vector3Int globalPosition) {
+            public WorldObject GetObstacle(Vector3 globalPosition) {
                 // Gets only the first object
                 // TODO: GLOBAL POSITION NOT WORKING, REFACTOR POSITIONS IN WALKABLE
-                //TODO:Vector3 target = globalPosition + this.grid.cellSize / 2;
-                Vector3 target = globalPosition + new Vector3(1, 1, 0) / 2;
                 foreach (WorldObject worldObject in this.database) {
-                    if (this.HasCollision(target, worldObject))
+                    if (worldObject.CollidesWith(globalPosition))
                         return worldObject;
                 }
                 return null;
@@ -24,28 +22,11 @@ namespace SkelTech.RPEST.World.Database {
                 ICollection<WorldObject> result = new LinkedList<WorldObject>();
 
                 foreach (WorldObject worldObject in this.database) {
-                    if (worldObject.IsObstacle() && bounds.Intersects(worldObject.GetBounds()))
+                    if (worldObject.CollidesWith(bounds))
                         result.Add(worldObject);
                 }
 
                 return result;
-            }
-
-            // TODO: MOVE FUNCTION
-            public Bounds GetBounds(Vector3 position) {
-                return new Bounds(position, new Vector3(1, 1, 0) * 0.99f);  // Avoid edges collision
-            }
-            #endregion
-
-            #region Helpers
-            // TODO: MOVE TO UTILS FILE
-            private bool HasCollision(Vector3 position, WorldObject worldObject) {
-                if (worldObject.IsObstacle()) {
-                    Bounds positionBounds = this.GetBounds(position);
-                    Bounds worldObjectBounds = worldObject.GetBounds();
-                    return positionBounds.Intersects(worldObjectBounds);
-                }
-                return false;
             }
             #endregion
     }

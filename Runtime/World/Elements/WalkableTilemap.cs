@@ -91,8 +91,9 @@ namespace SkelTech.RPEST.World.Elements {
         #region Helpers
         public bool IsWalkable(Vector3 localPosition) {
             Vector3Int floorPosition = Vector3Int.FloorToInt(localPosition);
+            Vector3 worldPosition = this.world.GetWorldPosition(floorPosition);
             bool hasTile = this.tilemap.HasTile(floorPosition);
-            bool hasNoObstacle = (this.world.WorldObjectDatabase.GetObstacle(Vector3Int.FloorToInt(localPosition)) == null);
+            bool hasNoObstacle = (this.world.WorldObjectDatabase.GetObstacle(worldPosition) == null);
             return hasTile && hasNoObstacle;
         }
 

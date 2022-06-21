@@ -28,8 +28,8 @@ namespace SkelTech.RPEST.World {
             return this.grid;
         }
 
-        public Bounds GetBounds(Vector3 position) {
-            return new Bounds(position, this.grid.cellSize * 0.99f);  // Avoid edges collision
+        public Vector3 GetWorldPosition(Vector3Int position) {
+            return position + this.grid.cellSize / 2;
         }
         #endregion
 
