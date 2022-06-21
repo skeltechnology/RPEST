@@ -77,8 +77,12 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
 
         public void MoveTo(Vector3 position) {
+            this.MoveTo(Vector3Int.FloorToInt(position));
+        }
+
+        public void MoveTo(Vector3Int position) {
             if (!this.IsMoving) {
-                Path path = this.walkable.FindShortestPath(this.transform.localPosition, position, 1000);
+                Path path = this.walkable.FindShortestPath(Vector3Int.FloorToInt(this.transform.localPosition), position);
                 if (path != null && path.GetPositions().Count > 1) {
                     foreach (Vector3Int direction in path.GetDirections()) {
                         this.directionsQueue.Enqueue(direction);
