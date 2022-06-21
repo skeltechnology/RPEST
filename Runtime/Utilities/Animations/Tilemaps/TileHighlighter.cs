@@ -32,7 +32,7 @@ namespace SkelTech.RPEST.Utilities.Tilemaps {
 
             if (!mousePosition.Equals(this.previousMousePosition)) {
                 this.highlighterTilemap.SetTile(previousMousePosition, null);  // Remove old highlight
-                if (walkableTilemap.IsWalkable(mousePosition)) {
+                if (this.walkableObject.CanMoveTo(mousePosition)) {
                     this.highlighterTilemap.SetTile(mousePosition, this.highlightTile);  // Add new highlight
                 }
                 previousMousePosition = mousePosition;

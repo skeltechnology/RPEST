@@ -8,7 +8,7 @@ namespace SkelTech.RPEST.World {
     public class World : MonoBehaviour {
         #region Properties
         public WalkableTilemapDatabase WalkableTilemapDatabase { get; private set; } = new WalkableTilemapDatabase();
-        public WorldObjectDatabase WorldObjectDatabase { get; private set; } = new WorldObjectDatabase();
+        public ColliderObjectDatabase ColliderObjectDatabase { get; private set; } = new ColliderObjectDatabase();
         public InteractableDatabase InteractableDatabase { get; private set; } = new InteractableDatabase();
         #endregion
 

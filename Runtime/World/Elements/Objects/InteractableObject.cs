@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SkelTech.RPEST.World.Elements.Objects {
-    public abstract class InteractableObject : WorldObject, Interactable {
+    public abstract class InteractableObject : ColliderObject, Interactable {
         #region Getters
         public WorldObject GetWorldObject() {
             return this;
@@ -16,8 +16,8 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         #region Initialization
         protected override void InitializeWorldElement() {
-            this.world.InteractableDatabase.Add(this);
             base.InitializeWorldElement();
+            this.world.InteractableDatabase.Add(this);
         }
 
         protected override void DisableWorldElement() {

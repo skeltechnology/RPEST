@@ -29,12 +29,12 @@ namespace SkelTech.RPEST.World.Elements {
         }
         
         public ICollection<Vector3Int> GetObstacles() {
-            ICollection<WorldObject> worldObjects = this.world.WorldObjectDatabase.GetObstacles(this.tilemap.localBounds);
+            ICollection<ColliderObject> worldObjects = this.world.ColliderObjectDatabase.GetColliders(this.tilemap.localBounds);
 
             ICollection<Vector3Int> obstacles = new LinkedList<Vector3Int>();
             Vector3 center, up, down, left, right, extents;
             Vector3Int centerGridPosition, gridPosition;
-            foreach (WorldObject worldObject in worldObjects) {
+            foreach (ColliderObject worldObject in worldObjects) {
                 extents = worldObject.GetBounds().extents;
                 center = worldObject.transform.position;
 
@@ -56,14 +56,14 @@ namespace SkelTech.RPEST.World.Elements {
         #endregion
 
         #region Operators
-        public Path FindShortestPath(Vector3Int startPosition, Vector3Int endPosition) {
+        public Path FindShortestPath(Vector3Int startPosition, Vector3Int endPosition, bool useObstacles) {
             Vector3Int gridStartPosition = this.LocalToGrid(startPosition);
             Vector3Int gridEndPosition = this.LocalToGrid(endPosition);
 
             Path gridPath = this.pathfinder.FindShortestPath(
                 gridStartPosition, 
                 gridEndPosition, 
-                this.GetObstacles(),
+                useObstacles ? this.GetObstacles() : null,
                 1000);
             if (gridPath == null) return null;
             return this.GridToLocal(gridPath);
@@ -84,7 +84,6 @@ namespace SkelTech.RPEST.World.Elements {
         }
 
         private Path GridToLocal(in Path gridPath) {
-            // TODO
             Path localPath = new Path();
             foreach (Vector3 gridPosition in gridPath.GetPositions()) {
                 localPath.AddPosition(this.GridToLocal(Vector3Int.FloorToInt(gridPosition)));
@@ -109,10 +108,7 @@ namespace SkelTech.RPEST.World.Elements {
         }
 
         public bool IsWalkable(Vector3Int localPosition) {
-            Vector3 worldPosition = this.world.GetWorldPosition(localPosition);
-            bool hasTile = this.tilemap.HasTile(localPosition);
-            bool hasNoObstacle = (this.world.WorldObjectDatabase.GetObstacle(worldPosition) == null);
-            return hasTile && hasNoObstacle;
+            return this.tilemap.HasTile(localPosition);
         }
 
         public bool IsInsideTilemap(Vector3 localPosition) {
