@@ -19,10 +19,9 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         #region Operators
         public bool CollidesWith(WorldObject worldObject) {
-            if (worldObject.IsObstacle()) {
-                return this.CollidesWith(worldObject.transform.position);
-            }
-            return false;
+            //TODO: if (worldObject.IsObstacle()) // Both have to be an obstacle
+            return this.CollidesWith(worldObject.transform.position);
+            //return false;
         }
 
         public bool CollidesWith(Vector3 position) {

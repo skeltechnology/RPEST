@@ -87,6 +87,16 @@ namespace SkelTech.RPEST.World.Elements {
             return localPath;
         }
         #endregion
+
+        #region Initialization
+        protected override void InitializeWorldElement() {
+            this.world.WalkableTilemapDatabase.Add(this);
+        }
+
+        protected override void DisableWorldElement() {
+            this.world.WalkableTilemapDatabase.Remove(this);
+        }
+        #endregion
         
         #region Helpers
         public bool IsWalkable(Vector3 localPosition) {
