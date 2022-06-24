@@ -4,16 +4,23 @@ using SkelTech.RPEST.World.Elements.Objects;
 using UnityEngine;
 
 namespace SkelTech.RPEST.Input.Listeners.Keys {
-    public class InteractionController : WalkableObjectInputListener {
+    [RequireComponent(typeof(InteractorObject))]
+    public class KeyInteractionInputListener : InputListener {
         #region Fields
+        protected InteractorObject interactorObject;
         [SerializeField] protected KeyDownInputController inputController;
         [SerializeField] private KeyCode interactionKey = KeyCode.Return;
         #endregion
 
+        #region Unity
+        private void Awake() {
+            this.interactorObject = this.GetComponent<InteractorObject>();
+        }
+        #endregion
+
         #region Initialization
         protected override void SetListeners() {
-            // TODO: REFACTOR
-            this.inputController.SetListener(this, this.interactionKey, ((InteractorObject) this.walkableObject).Interact);
+            this.inputController.SetListener(this, this.interactionKey, this.interactorObject.Interact);
         }
 
         protected override void RemoveListeners() {

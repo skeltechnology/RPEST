@@ -3,7 +3,7 @@ using SkelTech.RPEST.Input.Controllers.Keys;
 using UnityEngine;
 
 namespace SkelTech.RPEST.Input.Listeners.Keys {
-    public class KeyRunningMovementController : WalkableObjectInputListener {
+    public class KeyRunningMovementInputListener : WalkableObjectInputListener {
         #region Fields
         [SerializeField] protected KeyUpInputController upInputController;
         [SerializeField] protected KeyDownInputController downInputController;
