@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace SkelTech.RPEST.World.Objects {
-    public class WalkableObject : WorldObject {
+namespace SkelTech.RPEST.World.Elements.Objects {
+    public class WalkableObject : ColliderObject {
         #region Properties
         public bool IsMoving { get; private set; }
         public bool IsRunning { get { return this.isRunning; } set { this.isRunning = this.canRun && value; } }
@@ -28,14 +28,13 @@ namespace SkelTech.RPEST.World.Objects {
         [SerializeField] private float runningSpeed = 6.5f;
 
         private float cellDistance;
+        protected Vector3Int lastDirection = Vector3Int.down;
         private Queue<Vector3Int> directionsQueue;
         private bool isRunning = false;
         #endregion
 
         #region Unity
-        protected override void Awake() {
-            base.Awake();
-
+        protected void Awake() {
             this.directionsQueue = new Queue<Vector3Int>();
             this.IsMoving = false;
         }
@@ -66,9 +65,11 @@ namespace SkelTech.RPEST.World.Objects {
 
         private void Move(Vector3Int direction) {
             if (!this.IsMoving) {
-                if (this.walkable.IsWalkable(this.transform.localPosition + direction)) {  // Small optimization
+                if (this.CanMoveTo(this.transform.localPosition + direction)) {  // Small optimization
                     this.directionsQueue.Enqueue(direction);
                     StartCoroutine(this.MoveQueuedDirections());
+                } else {
+                    this.lastDirection = direction;
                 }
             } else {
                 if (this.directionsQueue.Count < 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.85f) {
@@ -78,8 +79,16 @@ namespace SkelTech.RPEST.World.Objects {
         }
 
         public void MoveTo(Vector3 position) {
+            this.MoveTo(Vector3Int.FloorToInt(position));
+        }
+
+        public void MoveTo(Vector3Int position) {
             if (!this.IsMoving) {
-                Path path = this.walkable.FindShortestPath(this.transform.localPosition, position, 1000);
+                Path path = this.walkable.FindShortestPath(
+                    Vector3Int.FloorToInt(this.transform.localPosition), 
+                    position,
+                    this.HasCollision()
+                );
                 if (path != null && path.GetPositions().Count > 1) {
                     foreach (Vector3Int direction in path.GetDirections()) {
                         this.directionsQueue.Enqueue(direction);
@@ -102,8 +111,9 @@ namespace SkelTech.RPEST.World.Objects {
             Vector3 finalPosition;
             float missingDelta = 0f;
             while (this.directionsQueue.Count > 0) {
-                finalPosition = this.transform.localPosition + this.directionsQueue.Dequeue();
-                if (this.walkable.IsWalkable(finalPosition)) {
+                this.lastDirection = this.directionsQueue.Dequeue();
+                finalPosition = this.transform.localPosition + this.lastDirection;
+                if (this.CanMoveTo(finalPosition)) {
                     this.cellDistance = missingDelta;
                     this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, missingDelta);
                     missingDelta = 0f;
@@ -125,6 +135,18 @@ namespace SkelTech.RPEST.World.Objects {
             }
 
             this.IsMoving = false;
+        }
+        #endregion
+
+        #region Helpers
+        public bool CanMoveTo(Vector3 position) {
+            position = this.LocalToWorld(position);
+            if (this.HasCollision()) {
+                if (this.world.ColliderObjectDatabase.HasCollider(position))
+                    return false;
+            }
+
+            return this.walkable.IsWalkable(position);
         }
         #endregion
     }

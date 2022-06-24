@@ -1,16 +1,19 @@
-using SkelTech.RPEST.World.Objects;
-
-using System.Collections.Generic;
+using SkelTech.RPEST.World.Elements;
+using SkelTech.RPEST.World.Database;
 
 using UnityEngine;
 
 namespace SkelTech.RPEST.World {
     [DisallowMultipleComponent]
     public class World : MonoBehaviour {
+        #region Properties
+        public WalkableTilemapDatabase WalkableTilemapDatabase { get; private set; } = new WalkableTilemapDatabase();
+        public ColliderObjectDatabase ColliderObjectDatabase { get; private set; } = new ColliderObjectDatabase();
+        public InteractableDatabase InteractableDatabase { get; private set; } = new InteractableDatabase();
+        #endregion
+
         #region Fields
         private Grid grid;
-        private ICollection<WalkableTilemap> walkableTilemaps;
-        private ICollection<WorldObject> objects;
         #endregion
         
         #region Unity
@@ -25,72 +28,15 @@ namespace SkelTech.RPEST.World {
             return this.grid;
         }
 
-        public Bounds GetBounds(Vector3 position) {
-            return new Bounds(position, this.grid.cellSize * 0.99f);  // Avoid edges collision
-        }
-
-        public WorldObject GetObstacle(Vector3Int globalPosition) {
-            // Gets only the first object
-            // TODO: GLOBAL POSITION NOT WORKING, REFACTOR POSITIONS IN WALKABLE
-            Vector3 target = globalPosition + this.grid.cellSize / 2;
-            foreach (WorldObject worldObject in this.objects) {
-                if (this.HasCollision(target, worldObject))
-                    return worldObject;
-            }
-            return null;
-        }
-
-        public ICollection<WorldObject> GetObstacles(Bounds bounds) {
-            ICollection<WorldObject> result = new LinkedList<WorldObject>();
-
-            foreach (WorldObject worldObject in this.objects) {
-                if (worldObject.IsObstacle() && bounds.Intersects(worldObject.GetBounds()))
-                    result.Add(worldObject);
-            }
-
-            return result;
-        }
-        #endregion
-
-        #region Setters
-        public void AddObject(WorldObject worldObject) {
-            this.objects.Add(worldObject);
-        }
-
-        public void RemoveObject(WorldObject worldObject) {
-            this.objects.Remove(worldObject);
+        public Vector3 GetWorldPosition(Vector3Int position) {
+            return position + this.grid.cellSize / 2;
         }
         #endregion
 
         #region Initialization
         private void InitializeWorld() {
-            this.InitializeWalkableTilemaps();
-            this.InitializeWorldObjects();
-        }
-
-        private void InitializeWalkableTilemaps() {
-            this.walkableTilemaps = new LinkedList<WalkableTilemap>(this.GetComponentsInChildren<WalkableTilemap>());
-            foreach (WalkableTilemap walkableTilemap in this.walkableTilemaps) {
-                walkableTilemap.SetWorld(this);
-                walkableTilemap.gameObject.SetActive(false);
-            }
-        }
-
-        private void InitializeWorldObjects() {
-            this.objects = new LinkedList<WorldObject>(this.GetComponentsInChildren<WorldObject>());
-            foreach (WorldObject worldObject in this.objects)
-                worldObject.SetWorld(this);
-        }
-        #endregion
-
-        #region Helpers
-        private bool HasCollision(Vector3 position, WorldObject worldObject) {
-            if (worldObject.IsObstacle()) {
-                Bounds positionBounds = this.GetBounds(position);
-                Bounds worldObjectBounds = worldObject.GetBounds();
-                return positionBounds.Intersects(worldObjectBounds);
-            }
-            return false;
+            foreach (WorldElement element in this.GetComponentsInChildren<WorldElement>())
+                element.SetWorld(this);
         }
         #endregion
     }

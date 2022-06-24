@@ -1,5 +1,5 @@
-using SkelTech.RPEST.World;
-using SkelTech.RPEST.World.Objects;
+using SkelTech.RPEST.World.Elements;
+using SkelTech.RPEST.World.Elements.Objects;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace SkelTech.RPEST.Utilities.Tilemaps {
 
             if (!mousePosition.Equals(this.previousMousePosition)) {
                 this.highlighterTilemap.SetTile(previousMousePosition, null);  // Remove old highlight
-                if (walkableTilemap.IsWalkable(mousePosition)) {
+                if (this.walkableObject.CanMoveTo(mousePosition)) {
                     this.highlighterTilemap.SetTile(mousePosition, this.highlightTile);  // Add new highlight
                 }
                 previousMousePosition = mousePosition;

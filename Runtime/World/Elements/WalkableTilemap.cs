@@ -1,4 +1,4 @@
-using SkelTech.RPEST.World.Objects;
+using SkelTech.RPEST.World.Elements.Objects;
 using SkelTech.RPEST.Pathfinding;
 
 using System.Collections;
@@ -7,12 +7,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace SkelTech.RPEST.World {
+namespace SkelTech.RPEST.World.Elements {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Tilemap))]
-    public class WalkableTilemap : MonoBehaviour {
+    public class WalkableTilemap : WorldElement {
         #region Fields
-        private World world;
         private Tilemap tilemap;
         private Pathfinder pathfinder;
         #endregion;
@@ -30,12 +29,12 @@ namespace SkelTech.RPEST.World {
         }
         
         public ICollection<Vector3Int> GetObstacles() {
-            ICollection<WorldObject> worldObjects = this.world.GetObstacles(this.tilemap.localBounds);
+            ICollection<ColliderObject> worldObjects = this.world.ColliderObjectDatabase.GetColliders(this.tilemap.localBounds);
 
             ICollection<Vector3Int> obstacles = new LinkedList<Vector3Int>();
             Vector3 center, up, down, left, right, extents;
             Vector3Int centerGridPosition, gridPosition;
-            foreach (WorldObject worldObject in worldObjects) {
+            foreach (ColliderObject worldObject in worldObjects) {
                 extents = worldObject.GetBounds().extents;
                 center = worldObject.transform.position;
 
@@ -56,22 +55,16 @@ namespace SkelTech.RPEST.World {
         }
         #endregion
 
-        #region Setters
-        public void SetWorld(World world) {
-            this.world = world;
-        }
-        #endregion
-
         #region Operators
-        public Path FindShortestPath(Vector3 localStartPosition, Vector3 localEndPosition, int maxIterations) {
-            Vector3Int gridStartPosition = this.LocalToGrid(localStartPosition);
-            Vector3Int gridEndPosition = this.LocalToGrid(localEndPosition);
+        public Path FindShortestPath(Vector3Int startPosition, Vector3Int endPosition, bool useObstacles) {
+            Vector3Int gridStartPosition = this.LocalToGrid(startPosition);
+            Vector3Int gridEndPosition = this.LocalToGrid(endPosition);
 
             Path gridPath = this.pathfinder.FindShortestPath(
                 gridStartPosition, 
                 gridEndPosition, 
-                this.GetObstacles(),
-                maxIterations);
+                useObstacles ? this.GetObstacles() : null,
+                1000);
             if (gridPath == null) return null;
             return this.GridToLocal(gridPath);
         }
@@ -79,11 +72,15 @@ namespace SkelTech.RPEST.World {
 
         #region Convertion
         private Vector3Int LocalToGrid(in Vector3 localPosition) {
-            return Vector3Int.FloorToInt(localPosition) - this.tilemap.cellBounds.min;
+            return this.LocalToGrid(Vector3Int.FloorToInt(localPosition));
         }
 
-        private Vector3 GridToLocal(in Vector3Int gridPosition) {
-            return gridPosition + this.tilemap.cellBounds.min + this.tilemap.layoutGrid.cellSize / 2;
+        private Vector3Int LocalToGrid(in Vector3Int localPosition) {
+            return localPosition - this.tilemap.cellBounds.min;
+        }
+
+        private Vector3Int GridToLocal(in Vector3Int gridPosition) {
+            return gridPosition + this.tilemap.cellBounds.min;
         }
 
         private Path GridToLocal(in Path gridPath) {
@@ -94,13 +91,24 @@ namespace SkelTech.RPEST.World {
             return localPath;
         }
         #endregion
+
+        #region Initialization
+        protected override void InitializeWorldElement() {
+            this.world.WalkableTilemapDatabase.Add(this);
+        }
+
+        protected override void DisableWorldElement() {
+            this.world.WalkableTilemapDatabase.Remove(this);
+        }
+        #endregion
         
         #region Helpers
-        public bool IsWalkable(Vector3 localPosition) {
-            Vector3Int floorPosition = Vector3Int.FloorToInt(localPosition);
-            bool hasTile = this.tilemap.HasTile(floorPosition);
-            bool hasNoObstacle = (this.world.GetObstacle(Vector3Int.FloorToInt(localPosition)) == null);
-            return hasTile && hasNoObstacle;
+        public bool IsWalkable(Vector3 worldPosition) {
+            return this.IsWalkable(Vector3Int.FloorToInt(worldPosition));
+        }
+
+        public bool IsWalkable(Vector3Int localPosition) {
+            return this.tilemap.HasTile(localPosition);
         }
 
         public bool IsInsideTilemap(Vector3 localPosition) {

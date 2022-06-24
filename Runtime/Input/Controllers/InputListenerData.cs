@@ -1,6 +1,6 @@
 using System;
 
-namespace SkelTech.RPEST.Input {
+namespace SkelTech.RPEST.Input.Controllers {
     public struct InputListenerData<T> {
         #region Properties
         public object Listener { get; }

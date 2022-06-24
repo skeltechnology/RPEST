@@ -62,6 +62,8 @@ namespace SkelTech.RPEST.Pathfinding {
         }
 
         private void InitializeObstacles(ICollection<Vector3Int> obstacles) {
+            if (obstacles == null) return;
+            
             Cell cell;
             foreach (Vector3Int obstacle in obstacles) {
                 cell = this.grid[obstacle.y, obstacle.x];
