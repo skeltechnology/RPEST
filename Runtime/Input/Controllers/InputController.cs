@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkelTech.RPEST.Input {
+namespace SkelTech.RPEST.Input.Controllers {
     public abstract class InputController<T> : MonoBehaviour {
         #region Fields
         private Dictionary<T, LinkedList<InputListenerData<T>>> listeners = new Dictionary<T, LinkedList<InputListenerData<T>>>();

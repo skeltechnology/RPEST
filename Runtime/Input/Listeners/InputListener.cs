@@ -1,21 +1,12 @@
-using SkelTech.RPEST.World.Elements.Objects;
-
 using UnityEngine;
 
-namespace SkelTech.RPEST.Movement {
-    [RequireComponent(typeof(WalkableObject))]
-    public abstract class MovementController<T> : MonoBehaviour {
+namespace SkelTech.RPEST.Input.Listeners {
+    public abstract class InputListener : MonoBehaviour {
         #region Fields
-        protected WalkableObject walkableObject;
-
         private bool isListening = false;
         #endregion
 
         #region Unity
-        private void Awake() {
-            this.walkableObject = this.GetComponent<WalkableObject>();
-        }
-
         private void OnEnable() {
             this.StartListening();
         }

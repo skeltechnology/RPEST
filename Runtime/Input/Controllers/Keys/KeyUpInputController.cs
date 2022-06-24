@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SkelTech.RPEST.Input.Keys {
+namespace SkelTech.RPEST.Input.Controllers.Keys {
     public class KeyUpInputController : KeyInputController {
         #region Getters
         protected override bool IsInputKeyActive(KeyCode key) {

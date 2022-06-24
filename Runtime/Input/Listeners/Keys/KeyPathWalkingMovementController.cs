@@ -1,9 +1,9 @@
-using SkelTech.RPEST.Input.Keys;
+using SkelTech.RPEST.Input.Controllers.Keys;
 
 using UnityEngine;
 
-namespace SkelTech.RPEST.Movement.Keys {
-    public class KeyPathWalkingMovementController : MovementController<KeyCode> {
+namespace SkelTech.RPEST.Input.Listeners.Keys {
+    public class KeyPathWalkingMovementController : WalkableObjectInputListener {
         #region Fields
         [SerializeField] private new Camera camera;
         [SerializeField] protected KeyDownInputController inputController;

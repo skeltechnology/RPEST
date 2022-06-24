@@ -1,10 +1,10 @@
-using SkelTech.RPEST.Input.Keys;
+using SkelTech.RPEST.Input.Controllers.Keys;
 using SkelTech.RPEST.World.Elements.Objects;
 
 using UnityEngine;
 
-namespace SkelTech.RPEST.Movement.Keys {
-    public class InteractionController : MovementController<KeyCode> {
+namespace SkelTech.RPEST.Input.Listeners.Keys {
+    public class InteractionController : WalkableObjectInputListener {
         #region Fields
         [SerializeField] protected KeyDownInputController inputController;
         [SerializeField] private KeyCode interactionKey = KeyCode.Return;
