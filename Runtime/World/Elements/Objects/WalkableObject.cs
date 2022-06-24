@@ -47,6 +47,8 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Operators
+        protected virtual void OnFinishedMovement() {}
+
         public void MoveUp() {
             this.Move(Vector3Int.up);
         }
@@ -129,6 +131,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                     }
                     this.transform.localPosition = finalPosition;
                     missingDelta = delta - (this.transform.localPosition - currentPosition).magnitude;
+                    this.OnFinishedMovement();
                 } else {
                     this.directionsQueue.Clear();
                 }

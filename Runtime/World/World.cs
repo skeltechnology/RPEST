@@ -10,6 +10,7 @@ namespace SkelTech.RPEST.World {
         public WalkableTilemapDatabase WalkableTilemapDatabase { get; private set; } = new WalkableTilemapDatabase();
         public ColliderObjectDatabase ColliderObjectDatabase { get; private set; } = new ColliderObjectDatabase();
         public InteractableDatabase InteractableDatabase { get; private set; } = new InteractableDatabase();
+        public TriggerDatabase TriggerDatabase { get; private set; } = new TriggerDatabase();
         #endregion
 
         #region Fields

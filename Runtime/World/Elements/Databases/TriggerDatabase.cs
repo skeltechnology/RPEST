@@ -3,7 +3,7 @@ using SkelTech.RPEST.World.Elements.Objects;
 using UnityEngine;
 
 namespace SkelTech.RPEST.World.Database {
-    public class InteractableDatabase : WorldDatabase<Interactable> {
+    public class TriggerDatabase : WorldDatabase<Interactable> {
         #region Getters
         public Interactable GetInteractable(Vector3 globalPosition) {
             foreach (Interactable interactable in this.database) {
