@@ -3,6 +3,16 @@ using UnityEngine;
 namespace SkelTech.RPEST.World.Elements.Objects {
     [DisallowMultipleComponent]
     public class WorldObject : WorldElement {
+        #region Unity
+        protected void OnEnable() {
+            if (this.world) this.InitializeWorldElement();
+        }
+
+        protected void OnDisable() {
+            if (this.world) this.DisableWorldElement();
+        }
+        #endregion
+
         #region Getters
         public Bounds GetBounds() {
             return this.GetBounds(this.transform.position);

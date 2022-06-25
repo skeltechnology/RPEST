@@ -2,8 +2,6 @@ using SkelTech.RPEST.Utilities.Structures;
 
 using System.Collections.Generic;
 
-using UnityEngine;
-
 namespace SkelTech.RPEST.Utilities.Search {
     public abstract class SearchSolver<T> {
         #region Getters
