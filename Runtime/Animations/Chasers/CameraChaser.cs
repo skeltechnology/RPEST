@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SkelTech.RPEST.Utilities.MonoBehaviours {
+namespace SkelTech.RPEST.Animations.Chasers {
     [RequireComponent(typeof(Camera))]
     public class CameraChaser : ObjectChaser {
         #region Fields

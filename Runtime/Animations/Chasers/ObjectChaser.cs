@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SkelTech.RPEST.Utilities.MonoBehaviours {
+namespace SkelTech.RPEST.Animations.Chasers {
     [DisallowMultipleComponent]
     public abstract class ObjectChaser : MonoBehaviour {
         #region Fields
