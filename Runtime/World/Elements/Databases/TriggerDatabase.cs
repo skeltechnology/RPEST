@@ -3,12 +3,12 @@ using SkelTech.RPEST.World.Elements.Objects;
 using UnityEngine;
 
 namespace SkelTech.RPEST.World.Database {
-    public class TriggerDatabase : WorldDatabase<Interactable> {
+    public class TriggerDatabase : WorldDatabase<Trigger> {
         #region Getters
-        public Interactable GetInteractable(Vector3 globalPosition) {
-            foreach (Interactable interactable in this.database) {
-                if (interactable.GetWorldObject().Intersects(globalPosition))
-                    return interactable;
+        public Trigger GetTrigger(Vector3 globalPosition) {
+            foreach (Trigger trigger in this.database) {
+                if (trigger.GetWorldObject().Intersects(globalPosition))
+                    return trigger;
             }
             return null;
         }

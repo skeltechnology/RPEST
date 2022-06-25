@@ -47,6 +47,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Operators
+        protected virtual void OnStartedMovement() {}
         protected virtual void OnFinishedMovement() {}
 
         public void MoveUp() {
@@ -116,6 +117,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                 this.lastDirection = this.directionsQueue.Dequeue();
                 finalPosition = this.transform.localPosition + this.lastDirection;
                 if (this.CanMoveTo(finalPosition)) {
+                    this.OnStartedMovement();
                     this.cellDistance = missingDelta;
                     this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, missingDelta);
                     missingDelta = 0f;

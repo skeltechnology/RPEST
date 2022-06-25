@@ -14,8 +14,12 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Operators
+        protected override void OnStartedMovement() {
+            this.Trigger(this.transform.position, false);
+        }
+
         protected override void OnFinishedMovement() {
-            this.Trigger(this.transform.position);
+            this.Trigger(this.transform.position, true);
         }
 
         public void Interact() {
@@ -38,13 +42,18 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                 interactable.Interact(this);
             }
         }
-        #endregion
 
-        #region Helpers
-        private void Trigger(Vector3 triggerPosition) {
+        private void Trigger(Vector3 triggerPosition, bool onEnter) {
             if (this.canTrigger) {
-                Interactable interactable = this.world.TriggerDatabase.GetInteractable(triggerPosition);
-                this.Interact(interactable);
+                Trigger trigger = this.world.TriggerDatabase.GetTrigger(triggerPosition);
+                this.Trigger(trigger, onEnter);
+            }
+        }
+
+        private void Trigger(Trigger trigger, bool onEnter) {
+            if (trigger != null) {
+                if (onEnter) trigger.OnEnterTrigger(this);
+                else trigger.OnExitTrigger(this);
             }
         }
         #endregion

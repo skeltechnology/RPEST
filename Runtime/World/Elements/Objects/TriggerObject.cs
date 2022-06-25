@@ -1,5 +1,5 @@
 namespace SkelTech.RPEST.World.Elements.Objects {
-    public abstract class TriggerObject : WorldObject, Interactable {
+    public abstract class TriggerObject : WorldObject, Trigger {
         #region Getters
         public WorldObject GetWorldObject() {
             return this;
@@ -7,7 +7,8 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Operators
-        public abstract void Interact(InteractorObject interactor);
+        public abstract void OnEnterTrigger(InteractorObject interactor);
+        public abstract void OnExitTrigger(InteractorObject interactor);
         #endregion
 
         #region Initialization
