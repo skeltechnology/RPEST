@@ -1,4 +1,5 @@
 using SkelTech.RPEST.Pathfinding;
+using SkelTech.RPEST.Animations.Sprites;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #region Properties
         public bool IsMoving { get; private set; }
         public bool IsRunning { get { return this.isRunning; } set { this.isRunning = this.canRun && value; } }
+
+        public bool IsAnimated { get { return this.walkableAnimation != null && this.animator != null; } }
 
         public float WalkingSpeed { get { return this.walkingSpeed; } set { this.walkingSpeed = value; } }
         public float RunningSpeed { get { return this.runningSpeed; } set { this.runningSpeed = value; } }
@@ -23,6 +26,10 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         #region Fields
         [SerializeField] private WalkableTilemap walkable;
+
+        [SerializeField] private SpriteAnimator animator;
+        [SerializeField] private WalkableAnimation walkableAnimation;
+
         [SerializeField] private float walkingSpeed = 4f;
         [SerializeField] private bool canRun = true;
         [SerializeField] private float runningSpeed = 6.5f;
@@ -72,7 +79,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                     this.directionsQueue.Enqueue(direction);
                     StartCoroutine(this.MoveQueuedDirections());
                 } else {
-                    this.lastDirection = direction;
+                    this.UpdateDirection(direction);
                 }
             } else {
                 if (this.directionsQueue.Count < 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.85f) {
@@ -114,7 +121,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             Vector3 finalPosition;
             float missingDelta = 0f;
             while (this.directionsQueue.Count > 0) {
-                this.lastDirection = this.directionsQueue.Dequeue();
+                this.UpdateDirection(this.directionsQueue.Dequeue());
                 finalPosition = this.transform.localPosition + this.lastDirection;
                 if (this.CanMoveTo(finalPosition)) {
                     this.OnStartedMovement();
@@ -129,9 +136,14 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                         currentPosition = this.transform.localPosition;
                         this.transform.localPosition = Vector3.MoveTowards(currentPosition, finalPosition, delta);
                         this.cellDistance += delta;
+
+                        // TODO: OPTIMIZATION: ONLY CALCULATE IF IS ANIMATED
+                        this.UpdateSprite(this.cellDistance / this.world.GetGrid().cellSize.x);
+
                         yield return null;
                     }
                     this.transform.localPosition = finalPosition;
+                    this.UpdateSprite(0);
                     missingDelta = delta - (this.transform.localPosition - currentPosition).magnitude;
                     this.OnFinishedMovement();
                 } else {
@@ -152,6 +164,25 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             }
 
             return this.walkable.IsWalkable(position);
+        }
+
+        private void UpdateDirection(Vector3Int direction) {
+            this.lastDirection = direction;
+            if (this.IsAnimated) {
+                SpriteAnimation animation;
+                if (direction == Vector3Int.up) animation = this.walkableAnimation.GetUpAnimation();
+                else if (direction == Vector3Int.left) animation = this.walkableAnimation.GetLeftAnimation();
+                else if (direction == Vector3Int.right) animation = this.walkableAnimation.GetRightAnimation();
+                else animation = this.walkableAnimation.GetDownAnimation();
+
+                this.animator.SetAnimation(animation);
+                this.animator.UpdateSprite(0);
+            }
+        }
+
+        private void UpdateSprite(float progress) {
+            if (this.IsAnimated)
+                this.animator.UpdateSprite(progress);
         }
         #endregion
     }
