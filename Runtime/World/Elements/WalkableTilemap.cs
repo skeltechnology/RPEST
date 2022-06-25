@@ -1,7 +1,6 @@
 using SkelTech.RPEST.World.Elements.Objects;
 using SkelTech.RPEST.Pathfinding;
 
-using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -99,6 +98,7 @@ namespace SkelTech.RPEST.World.Elements {
 
         protected override void DisableWorldElement() {
             this.world.WalkableTilemapDatabase.Remove(this);
+            base.DisableWorldElement();
         }
         #endregion
         

@@ -75,8 +75,8 @@ namespace SkelTech.RPEST.Input.Controllers {
             bool sameListener, sameCallback;
             while (node != null) {
                 next = node.Next;
-                sameListener = listener == null || node.Value.Listener == listener;
-                sameCallback = callback == null || node.Value.Callback == callback;
+                sameListener = (listener == null || node.Value.Listener == listener);
+                sameCallback = (callback == null || node.Value.Callback == callback);
                 if (sameListener && sameCallback)
                     list.Remove(node);
                 node = next;

@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace SkelTech.RPEST.World.Elements.Objects {
     public abstract class TriggerObject : WorldObject, Interactable {
         #region Getters
