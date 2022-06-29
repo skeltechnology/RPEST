@@ -1,6 +1,7 @@
 using SkelTech.RPEST.Pathfinding;
 using SkelTech.RPEST.Animations.Sprites;
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,11 +9,16 @@ using UnityEngine;
 
 namespace SkelTech.RPEST.World.Elements.Objects {
     public class WalkableObject : ColliderObject {
+        #region Events
+        public event EventHandler OnStartedMovement;
+        public event EventHandler OnFinishedMovement;
+        public event EventHandler<float> OnUpdateMovement;
+        public event EventHandler<Vector3Int> OnUpdateDirection;
+        #endregion
+
         #region Properties
         public bool IsMoving { get; private set; }
         public bool IsRunning { get { return this.isRunning; } set { this.isRunning = this.canRun && value; } }
-
-        public bool IsAnimated { get { return this.walkableAnimation != null && this.animator != null; } }
 
         public float WalkingSpeed { get { return this.walkingSpeed; } set { this.walkingSpeed = value; } }
         public float RunningSpeed { get { return this.runningSpeed; } set { this.runningSpeed = value; } }
@@ -27,9 +33,6 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #region Fields
         [SerializeField] private WalkableTilemap walkable;
 
-        [SerializeField] private SpriteAnimator animator;
-        [SerializeField] private WalkableAnimation walkableAnimation;
-
         [SerializeField] private float walkingSpeed = 4f;
         [SerializeField] private bool canRun = true;
         [SerializeField] private float runningSpeed = 6.5f;
@@ -41,7 +44,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Unity
-        protected void Awake() {
+        protected virtual void Awake() {
             this.directionsQueue = new Queue<Vector3Int>();
             this.IsMoving = false;
         }
@@ -54,9 +57,6 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Operators
-        protected virtual void OnStartedMovement() {}
-        protected virtual void OnFinishedMovement() {}
-
         public void MoveUp() {
             this.Move(Vector3Int.up);
         }
@@ -124,7 +124,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                 this.UpdateDirection(this.directionsQueue.Dequeue());
                 finalPosition = this.transform.localPosition + this.lastDirection;
                 if (this.CanMoveTo(finalPosition)) {
-                    this.OnStartedMovement();
+                    this.OnStartedMovement.Invoke(this, EventArgs.Empty);
                     this.cellDistance = missingDelta;
                     this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, missingDelta);
                     missingDelta = 0f;
@@ -137,15 +137,13 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                         this.transform.localPosition = Vector3.MoveTowards(currentPosition, finalPosition, delta);
                         this.cellDistance += delta;
 
-                        // TODO: OPTIMIZATION: ONLY CALCULATE IF IS ANIMATED
-                        this.UpdateSprite(this.cellDistance / this.world.GetGrid().cellSize.x);
+                        this.OnUpdateMovement.Invoke(this, this.cellDistance / this.world.GetGrid().cellSize.x);
 
                         yield return null;
                     }
                     this.transform.localPosition = finalPosition;
-                    this.UpdateSprite(0);
                     missingDelta = delta - (this.transform.localPosition - currentPosition).magnitude;
-                    this.OnFinishedMovement();
+                    this.OnFinishedMovement.Invoke(this, EventArgs.Empty);
                 } else {
                     this.directionsQueue.Clear();
                 }
@@ -168,21 +166,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         private void UpdateDirection(Vector3Int direction) {
             this.lastDirection = direction;
-            if (this.IsAnimated) {
-                SpriteAnimation animation;
-                if (direction == Vector3Int.up) animation = this.walkableAnimation.GetUpAnimation();
-                else if (direction == Vector3Int.left) animation = this.walkableAnimation.GetLeftAnimation();
-                else if (direction == Vector3Int.right) animation = this.walkableAnimation.GetRightAnimation();
-                else animation = this.walkableAnimation.GetDownAnimation();
-
-                this.animator.SetAnimation(animation);
-                this.animator.UpdateSprite(0);
-            }
-        }
-
-        private void UpdateSprite(float progress) {
-            if (this.IsAnimated)
-                this.animator.UpdateSprite(progress);
+            this.OnUpdateDirection.Invoke(this, direction);
         }
         #endregion
     }

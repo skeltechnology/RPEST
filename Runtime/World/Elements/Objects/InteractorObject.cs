@@ -7,6 +7,14 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         [SerializeField] private bool canInteract = true, canTrigger = true;
         #endregion
 
+        #region Unity
+        protected override void Awake() {
+            base.Awake();
+            this.OnStartedMovement += this.OnStartedMovementHandler;
+            this.OnFinishedMovement += this.OnFinishedMovementHandler;
+        }
+        #endregion
+
         #region Getters
         public string GetInteractorId() {
             return this.interactorId;
@@ -14,14 +22,6 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Operators
-        protected override void OnStartedMovement() {
-            this.Trigger(this.transform.position, false);
-        }
-
-        protected override void OnFinishedMovement() {
-            this.Trigger(this.transform.position, true);
-        }
-
         public void Interact() {
             if (this.canInteract) {
                 Vector3 interactablePosition = this.transform.position + this.lastDirection;
@@ -55,6 +55,16 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                 if (onEnter) trigger.OnEnterTrigger(this);
                 else trigger.OnExitTrigger(this);
             }
+        }
+        #endregion
+
+        #region Helpers
+        private void OnStartedMovementHandler(object sender, System.EventArgs e) {
+            this.Trigger(this.transform.position, false);
+        }
+
+        protected void OnFinishedMovementHandler(object sender, System.EventArgs e) {
+            this.Trigger(this.transform.position, true);
         }
         #endregion
     }
