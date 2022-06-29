@@ -5,31 +5,17 @@ using UnityEngine;
 namespace SkelTech.RPEST.Animations.Sprites {
     public class WalkableAnimator : SpriteAnimator {
         #region Fields
-        [SerializeField] private WalkableAnimation walkableAnimation;
-        [SerializeField] private WalkableObject worldObject;
+        [SerializeField] private DirectedAnimation walkableAnimation;
+        [SerializeField] protected WalkableObject walkableObject;
         #endregion
 
         #region Unity
         protected override void Awake() {
             base.Awake();
-            this.worldObject.OnFinishedMovement += this.OnFinishedMovement;
-            this.worldObject.OnUpdateMovement += this.OnUpdateMovement;
-            this.worldObject.OnUpdateDirection += this.OnUpdateDirection;
+            this.walkableObject.OnFinishedMovement += this.OnFinishedMovement;
+            this.walkableObject.OnUpdateMovement += this.OnUpdateMovement;
+            this.walkableObject.OnUpdateDirection += this.OnUpdateDirection;
         }
-        #endregion
-
-        #region Getters
-        private SpriteAnimation GetAnimation(Vector3Int direction){
-            if (direction == Vector3Int.up) return this.walkableAnimation.GetUpAnimation();
-            else if (direction == Vector3Int.down) return this.walkableAnimation.GetDownAnimation();
-            else if (direction == Vector3Int.left) return this.walkableAnimation.GetLeftAnimation();
-            else if (direction == Vector3Int.right) return this.walkableAnimation.GetRightAnimation();
-            return null;
-        }
-        #endregion
-
-        #region Operators
-        
         #endregion
 
         #region Helpers
@@ -42,7 +28,7 @@ namespace SkelTech.RPEST.Animations.Sprites {
         }
 
         private void OnUpdateDirection(object sender, Vector3Int direction) {
-            SpriteAnimation animation = this.GetAnimation(direction);
+            SpriteAnimation animation = this.walkableAnimation.GetAnimation(direction);
             this.SetAnimation(animation);
             this.UpdateSprite(0f);
         }

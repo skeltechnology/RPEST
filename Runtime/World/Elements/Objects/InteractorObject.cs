@@ -1,7 +1,13 @@
+using System;
+
 using UnityEngine;
 
 namespace SkelTech.RPEST.World.Elements.Objects {
     public class InteractorObject : WalkableObject {
+        #region Events
+        public event EventHandler<Interactable> OnInteract;
+        #endregion
+
         #region Fields
         [SerializeField] private string interactorId;
         [SerializeField] private bool canInteract = true, canTrigger = true;
@@ -40,6 +46,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             // Check if there's an interactable in the next cell
             if (interactable != null) {
                 interactable.Interact(this);
+                this.OnInteract.Invoke(this, interactable);
             }
         }
 

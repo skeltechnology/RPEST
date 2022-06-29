@@ -54,6 +54,10 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         public WalkableTilemap GetWalkableTilemap() {
             return this.walkable;
         }
+
+        public Vector3Int GetCurrentDirection() {
+            return this.lastDirection;
+        }
         #endregion
 
         #region Operators
@@ -124,7 +128,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                 this.UpdateDirection(this.directionsQueue.Dequeue());
                 finalPosition = this.transform.localPosition + this.lastDirection;
                 if (this.CanMoveTo(finalPosition)) {
-                    this.OnStartedMovement.Invoke(this, EventArgs.Empty);
+                    this.OnStartedMovement?.Invoke(this, EventArgs.Empty);
                     this.cellDistance = missingDelta;
                     this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, missingDelta);
                     missingDelta = 0f;
@@ -137,13 +141,13 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                         this.transform.localPosition = Vector3.MoveTowards(currentPosition, finalPosition, delta);
                         this.cellDistance += delta;
 
-                        this.OnUpdateMovement.Invoke(this, this.cellDistance / this.world.GetGrid().cellSize.x);
+                        this.OnUpdateMovement?.Invoke(this, this.cellDistance / this.world.GetGrid().cellSize.x);
 
                         yield return null;
                     }
                     this.transform.localPosition = finalPosition;
                     missingDelta = delta - (this.transform.localPosition - currentPosition).magnitude;
-                    this.OnFinishedMovement.Invoke(this, EventArgs.Empty);
+                    this.OnFinishedMovement?.Invoke(this, EventArgs.Empty);
                 } else {
                     this.directionsQueue.Clear();
                 }
@@ -166,7 +170,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         private void UpdateDirection(Vector3Int direction) {
             this.lastDirection = direction;
-            this.OnUpdateDirection.Invoke(this, direction);
+            this.OnUpdateDirection?.Invoke(this, direction);
         }
         #endregion
     }
