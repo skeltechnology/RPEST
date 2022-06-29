@@ -27,16 +27,22 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
         #endregion
 
+        #region Setters
+        public void SetCanInteract(bool canInteract) {
+            this.canInteract = canInteract;
+        }
+        #endregion
+
         #region Operators
         public void Interact() {
-            if (this.canInteract) {
+            if (this.CanInteract()) {
                 Vector3 interactablePosition = this.transform.position + this.lastDirection;
                 this.Interact(interactablePosition);
             }
         }
 
         public void Interact(Vector3 interactablePosition) {
-            if (this.canInteract) {
+            if (this.CanInteract()) {
                 Interactable interactable = this.world.InteractableDatabase.GetInteractable(interactablePosition);
                 this.Interact(interactable);
             }
@@ -44,7 +50,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         private void Interact(Interactable interactable) {
             // Check if there's an interactable in the next cell
-            if (interactable != null) {
+            if (interactable != null && this.CanInteract()) {
                 interactable.Interact(this);
                 this.OnInteract.Invoke(this, interactable);
             }
@@ -72,6 +78,10 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         protected void OnFinishedMovementHandler(object sender, System.EventArgs e) {
             this.Trigger(this.transform.position, true);
+        }
+
+        private bool CanInteract() {
+            return this.canInteract && !this.IsMoving;
         }
         #endregion
     }

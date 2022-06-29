@@ -33,6 +33,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #region Fields
         [SerializeField] private WalkableTilemap walkable;
 
+        [SerializeField] private bool canMove = true;
         [SerializeField] private float walkingSpeed = 4f;
         [SerializeField] private bool canRun = true;
         [SerializeField] private float runningSpeed = 6.5f;
@@ -60,6 +61,12 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
         #endregion
 
+        #region Setters
+        public void SetCanMove(bool canMove) {
+            this.canMove = canMove;
+        }
+        #endregion
+
         #region Operators
         public void MoveUp() {
             this.Move(Vector3Int.up);
@@ -78,16 +85,18 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
 
         private void Move(Vector3Int direction) {
-            if (!this.IsMoving) {
-                if (this.CanMoveTo(this.transform.localPosition + direction)) {  // Small optimization
-                    this.directionsQueue.Enqueue(direction);
-                    StartCoroutine(this.MoveQueuedDirections());
+            if (this.canMove) {
+                if (!this.IsMoving) {
+                    if (this.CanMoveTo(this.transform.localPosition + direction)) {  // Small optimization
+                        this.directionsQueue.Enqueue(direction);
+                        StartCoroutine(this.MoveQueuedDirections());
+                    } else {
+                        this.UpdateDirection(direction);
+                    }
                 } else {
-                    this.UpdateDirection(direction);
-                }
-            } else {
-                if (this.directionsQueue.Count < 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.85f) {
-                    this.directionsQueue.Enqueue(direction);
+                    if (this.directionsQueue.Count < 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.85f) {
+                        this.directionsQueue.Enqueue(direction);
+                    }
                 }
             }
         }
@@ -97,7 +106,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
 
         public void MoveTo(Vector3Int position) {
-            if (!this.IsMoving) {
+            if (this.canMove && !this.IsMoving) {
                 Path path = this.walkable.FindShortestPath(
                     Vector3Int.FloorToInt(this.transform.localPosition), 
                     position,
