@@ -8,7 +8,8 @@ namespace SkelTech.RPEST.Animations.Sprites {
     public class InteractorAnimator : WalkableAnimator {
         #region Fields
         [SerializeField] private DirectedAnimation interactionAnimation;
-        [SerializeField] protected InteractorObject interactableObject;  // TODO: HAVE ONLY ONE WORLD OBJECT REFERENCE
+        [SerializeField] protected new InteractorObject interactableObject;  // TODO: HAVE ONLY ONE WORLD OBJECT REFERENCE
+        [SerializeField] private float interactionDuration = 0.5f;
         #endregion
 
         #region Unity
@@ -16,14 +17,19 @@ namespace SkelTech.RPEST.Animations.Sprites {
             base.Awake();
             this.interactableObject.OnInteract += this.OnInteract;
         }
+
+        protected override void OnDestroy() {
+            this.interactableObject.OnInteract -= this.OnInteract;
+            base.OnDestroy();
+        }
         #endregion
 
         #region Helpers
         private void OnInteract(object sender, Interactable interactable) {
-            StartCoroutine(this.InteractionAnimation(0.5f));
+            StartCoroutine(this.InteractionAnimation());
         }
 
-        private IEnumerator InteractionAnimation(float totalTime) {
+        private IEnumerator InteractionAnimation() {
             this.LockActions(false);
             this.PushSprite();
 
@@ -31,9 +37,9 @@ namespace SkelTech.RPEST.Animations.Sprites {
             this.SetAnimation(animation);
 
             float time = 0;
-            while (time < totalTime) {
+            while (time < this.interactionDuration) {
                 time += Time.deltaTime;
-                this.UpdateSprite(time / totalTime);
+                this.UpdateSprite(time / this.interactionDuration);
                 yield return null;
             }
 

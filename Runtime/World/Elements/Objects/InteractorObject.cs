@@ -19,6 +19,12 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             this.OnStartedMovement += this.OnStartedMovementHandler;
             this.OnFinishedMovement += this.OnFinishedMovementHandler;
         }
+
+        protected override void OnDestroy() {
+            this.OnStartedMovement -= this.OnStartedMovementHandler;
+            this.OnFinishedMovement -= this.OnFinishedMovementHandler;
+            base.OnDestroy();
+        }
         #endregion
 
         #region Getters

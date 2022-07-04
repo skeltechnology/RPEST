@@ -16,6 +16,12 @@ namespace SkelTech.RPEST.Animations.Sprites {
             this.walkableObject.OnUpdateMovement += this.OnUpdateMovement;
             this.walkableObject.OnUpdateDirection += this.OnUpdateDirection;
         }
+
+        protected virtual void OnDestroy() {
+            this.walkableObject.OnFinishedMovement -= this.OnFinishedMovement;
+            this.walkableObject.OnUpdateMovement -= this.OnUpdateMovement;
+            this.walkableObject.OnUpdateDirection -= this.OnUpdateDirection;
+        }
         #endregion
 
         #region Helpers
