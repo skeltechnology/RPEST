@@ -13,22 +13,24 @@ namespace SkelTech.RPEST.Utilities {
         private Type[] implementations;
         private int implementationTypeIndex;
 
+        protected A behaviour;
         private SerializedProperty listProperty;
         private ReorderableList reorderableList; 
 
         private string listName;
         private string caption;
-        private bool uniqueElements = false;
+        private bool uniqueImplementations = false;
         #endregion
 
         #region Unity
-        protected void Awake(string listName, string caption, bool uniqueElements) {
+        protected void Awake(string listName, string caption, bool uniqueImplementations) {
             this.listName = listName;
             this.caption = caption;
-            this.uniqueElements = uniqueElements; // TODO: IMPLEMENT UNIQUE
+            this.uniqueImplementations = uniqueImplementations;
         }
 
         private void OnEnable() {
+            this.behaviour = this.target as A;
             this.listProperty = serializedObject.FindProperty(this.listName);
             this.reorderableList = new ReorderableList(this.serializedObject, this.listProperty, true, true, false, true);
             this.reorderableList.drawHeaderCallback = rect => {
@@ -56,9 +58,9 @@ namespace SkelTech.RPEST.Utilities {
         #endregion
 
         #region Helpers
-        private void DrawInterface() {
-            A behaviour = this.target as A ;
+        protected abstract B CreateImplementation(Type type);
 
+        private void DrawInterface() {
             if (behaviour == null) return;
             
             if (implementations == null || GUILayout.Button("Refresh Implementations")) {
@@ -73,9 +75,11 @@ namespace SkelTech.RPEST.Utilities {
                 implementationTypeIndex, implementations.Select(impl => impl.Name).ToArray());
 
             if (GUILayout.Button("Create Instance")) {
-                object[] args = { behaviour };
-                object o = Activator.CreateInstance(implementations[implementationTypeIndex], args);
-                behaviour.AddImplementation((B) o);
+                if (this.uniqueImplementations && this.Contains(implementations[implementationTypeIndex].FullName)) {
+                    Debug.LogWarning("Invalid Operation. This list must contain a unique implementation for each class.");
+                } else {
+                    behaviour.AddImplementation(this.CreateImplementation(implementations[implementationTypeIndex]));
+                }
             }
         }
 
@@ -83,6 +87,14 @@ namespace SkelTech.RPEST.Utilities {
             System.Collections.Generic.IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes());
             Type interfaceType = typeof(B);
             return types.Where(p => interfaceType.IsAssignableFrom(p) && !p.IsAbstract).ToArray();
+        }
+
+        private bool Contains(string typeFullname) {
+            for (int i = 0; i < this.listProperty.arraySize; ++i) {
+                if (this.listProperty.GetArrayElementAtIndex(i).managedReferenceFullTypename.Split(' ').Last().Equals(typeFullname))
+                    return true;
+            }
+            return false;
         }
         #endregion
     }
