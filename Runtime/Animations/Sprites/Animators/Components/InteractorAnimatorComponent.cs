@@ -4,47 +4,49 @@ using System.Collections;
 
 using UnityEngine;
 
-namespace SkelTech.RPEST.Animations.Sprites {
-    public class InteractorAnimator : WalkableAnimator {
+namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
+    public class InteractorAnimatorComponent : WorldObjectAnimatorComponent {
         #region Fields
-        [SerializeField] private DirectedAnimation interactionAnimation;
-        [SerializeField] protected new InteractorObject interactableObject;  // TODO: HAVE ONLY ONE WORLD OBJECT REFERENCE
-        [SerializeField] private float interactionDuration = 0.5f;
+        [SerializeReference] private DirectedAnimation interactionAnimation;
+        [SerializeReference] protected InteractorObject interactableObject;
+        [SerializeReference] private float interactionDuration = 0.5f;
         #endregion
 
-        #region Unity
-        protected override void Awake() {
-            base.Awake();
+        #region Constructors
+        public InteractorAnimatorComponent(WorldObjectAnimator animator) : base(animator) {}
+        #endregion
+
+        #region Initialization
+        public override void Initialize() {
             this.interactableObject.OnInteract += this.OnInteract;
         }
-
-        protected override void OnDestroy() {
+        public override void Disable() {
             this.interactableObject.OnInteract -= this.OnInteract;
-            base.OnDestroy();
         }
         #endregion
 
         #region Helpers
         private void OnInteract(object sender, Interactable interactable) {
-            StartCoroutine(this.InteractionAnimation());
+            if (!this.animator.IsAnimating)
+                this.animator.Animate(this.InteractionAnimation());
         }
 
         private IEnumerator InteractionAnimation() {
             this.LockActions(false);
-            this.PushSprite();
+            this.animator.PushSprite();
 
             SpriteAnimation animation = this.interactionAnimation.GetAnimation(this.interactableObject.GetCurrentDirection());
-            this.SetAnimation(animation);
+            this.animator.SetAnimation(animation);
 
             float time = 0;
             while (time < this.interactionDuration) {
                 time += Time.deltaTime;
-                this.UpdateSprite(time / this.interactionDuration);
+                this.animator.UpdateSprite(time / this.interactionDuration);
                 yield return null;
             }
 
-            this.LoadSpriteFromStack();
-            this.PopSprite();
+            this.animator.LoadSpriteFromStack();
+            this.animator.PopSprite();
             this.LockActions(true);
         }
 

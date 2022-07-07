@@ -1,10 +1,15 @@
+using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace SkelTech.RPEST.Animations.Sprites {
+namespace SkelTech.RPEST.Animations.Sprites.Animators {
     [RequireComponent(typeof(SpriteRenderer))]
     public class SpriteAnimator : MonoBehaviour {
+        #region Properties
+        public bool IsAnimating { get; private set; } = false;
+        #endregion
+
         #region Fields
         private new SpriteRenderer renderer;
         private new Sprite[] animation;
@@ -17,19 +22,30 @@ namespace SkelTech.RPEST.Animations.Sprites {
         }
         #endregion
 
+        #region Getters
+        public SpriteRenderer GetRenderer() {
+            return this.renderer;
+        }
+        #endregion
+
         #region Setters
-        protected void SetAnimation(SpriteAnimation animation) {
+        public void SetAnimation(SpriteAnimation animation) {
             this.animation = animation.GetSprites();
         }
 
-        protected void SetSprite(Sprite sprite) {
+        public void SetSprite(Sprite sprite) {
             if (this.renderer.sprite != sprite)
                 this.renderer.sprite = sprite;
         }
         #endregion
 
         #region Operators
-        protected void UpdateSprite(float progress) {
+        public void Animate(IEnumerator coroutine) {
+            if (!this.IsAnimating)
+                this.StartCoroutine(this.AnimateCoroutine(coroutine));
+        }
+
+        public void UpdateSprite(float progress) {
             if (animation != null) {
                 progress = Mathf.Clamp01(progress);
                 int index = Mathf.FloorToInt(this.animation.Length * progress);
@@ -39,20 +55,28 @@ namespace SkelTech.RPEST.Animations.Sprites {
             }
         }
 
-        protected void PushSprite() {
+        public void PushSprite() {
             Sprite sprite = this.renderer.sprite;
             if (sprite != null)
                 this.stack.Push(sprite);
         }
 
-        protected void PopSprite() {
+        public void PopSprite() {
             if (this.stack.Count > 0)
                 this.stack.Pop();
         }
 
-        protected void LoadSpriteFromStack() {
+        public void LoadSpriteFromStack() {
             if (this.stack.Count > 0)
                 this.renderer.sprite = this.stack.Peek();
+        }
+        #endregion
+
+        #region Helpers
+        private IEnumerator AnimateCoroutine(IEnumerator coroutine) {
+            this.IsAnimating = true;
+            yield return this.StartCoroutine(coroutine);
+            this.IsAnimating = false;
         }
         #endregion
     }
