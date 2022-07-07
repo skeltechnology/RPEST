@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace SkelTech.RPEST.Utilities.Tilemaps {
+namespace SkelTech.RPEST.Animations.Tilemaps {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Tilemap))]
     public class TileHighlighter : MonoBehaviour {

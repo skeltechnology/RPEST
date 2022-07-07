@@ -1,5 +1,7 @@
 using SkelTech.RPEST.Pathfinding;
+using SkelTech.RPEST.Animations.Sprites;
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,6 +9,13 @@ using UnityEngine;
 
 namespace SkelTech.RPEST.World.Elements.Objects {
     public class WalkableObject : ColliderObject {
+        #region Events
+        public event EventHandler OnStartedMovement;
+        public event EventHandler OnFinishedMovement;
+        public event EventHandler<float> OnUpdateMovement;
+        public event EventHandler<Vector3Int> OnUpdateDirection;
+        #endregion
+
         #region Properties
         public bool IsMoving { get; private set; }
         public bool IsRunning { get { return this.isRunning; } set { this.isRunning = this.canRun && value; } }
@@ -23,6 +32,8 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         #region Fields
         [SerializeField] private WalkableTilemap walkable;
+
+        [SerializeField] private bool canMove = true;
         [SerializeField] private float walkingSpeed = 4f;
         [SerializeField] private bool canRun = true;
         [SerializeField] private float runningSpeed = 6.5f;
@@ -34,7 +45,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #endregion
 
         #region Unity
-        protected void Awake() {
+        protected virtual void Awake() {
             this.directionsQueue = new Queue<Vector3Int>();
             this.IsMoving = false;
         }
@@ -44,12 +55,19 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         public WalkableTilemap GetWalkableTilemap() {
             return this.walkable;
         }
+
+        public Vector3Int GetCurrentDirection() {
+            return this.lastDirection;
+        }
+        #endregion
+
+        #region Setters
+        public void SetCanMove(bool canMove) {
+            this.canMove = canMove;
+        }
         #endregion
 
         #region Operators
-        protected virtual void OnStartedMovement() {}
-        protected virtual void OnFinishedMovement() {}
-
         public void MoveUp() {
             this.Move(Vector3Int.up);
         }
@@ -67,16 +85,18 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
 
         private void Move(Vector3Int direction) {
-            if (!this.IsMoving) {
-                if (this.CanMoveTo(this.transform.localPosition + direction)) {  // Small optimization
-                    this.directionsQueue.Enqueue(direction);
-                    StartCoroutine(this.MoveQueuedDirections());
+            if (this.canMove) {
+                if (!this.IsMoving) {
+                    if (this.CanMoveTo(this.transform.localPosition + direction)) {  // Small optimization
+                        this.directionsQueue.Enqueue(direction);
+                        StartCoroutine(this.MoveQueuedDirections());
+                    } else {
+                        this.UpdateDirection(direction);
+                    }
                 } else {
-                    this.lastDirection = direction;
-                }
-            } else {
-                if (this.directionsQueue.Count < 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.85f) {
-                    this.directionsQueue.Enqueue(direction);
+                    if (this.directionsQueue.Count < 1 && this.cellDistance > this.world.GetGrid().cellSize.x * 0.85f) {
+                        this.directionsQueue.Enqueue(direction);
+                    }
                 }
             }
         }
@@ -86,7 +106,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
 
         public void MoveTo(Vector3Int position) {
-            if (!this.IsMoving) {
+            if (this.canMove && !this.IsMoving) {
                 Path path = this.walkable.FindShortestPath(
                     Vector3Int.FloorToInt(this.transform.localPosition), 
                     position,
@@ -114,10 +134,10 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             Vector3 finalPosition;
             float missingDelta = 0f;
             while (this.directionsQueue.Count > 0) {
-                this.lastDirection = this.directionsQueue.Dequeue();
+                this.UpdateDirection(this.directionsQueue.Dequeue());
                 finalPosition = this.transform.localPosition + this.lastDirection;
                 if (this.CanMoveTo(finalPosition)) {
-                    this.OnStartedMovement();
+                    this.OnStartedMovement?.Invoke(this, EventArgs.Empty);
                     this.cellDistance = missingDelta;
                     this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, missingDelta);
                     missingDelta = 0f;
@@ -129,11 +149,14 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                         currentPosition = this.transform.localPosition;
                         this.transform.localPosition = Vector3.MoveTowards(currentPosition, finalPosition, delta);
                         this.cellDistance += delta;
+
+                        this.OnUpdateMovement?.Invoke(this, this.cellDistance / this.world.GetGrid().cellSize.x);
+
                         yield return null;
                     }
                     this.transform.localPosition = finalPosition;
                     missingDelta = delta - (this.transform.localPosition - currentPosition).magnitude;
-                    this.OnFinishedMovement();
+                    this.OnFinishedMovement?.Invoke(this, EventArgs.Empty);
                 } else {
                     this.directionsQueue.Clear();
                 }
@@ -152,6 +175,11 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             }
 
             return this.walkable.IsWalkable(position);
+        }
+
+        private void UpdateDirection(Vector3Int direction) {
+            this.lastDirection = direction;
+            this.OnUpdateDirection?.Invoke(this, direction);
         }
         #endregion
     }

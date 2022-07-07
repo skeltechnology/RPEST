@@ -7,7 +7,7 @@ namespace SkelTech.RPEST.World.Elements {
         #endregion;
 
         #region Unity
-        protected void OnDestroy() {
+        protected virtual void OnDestroy() {
             if (this.world) this.DisableWorldElement();
         }
         #endregion

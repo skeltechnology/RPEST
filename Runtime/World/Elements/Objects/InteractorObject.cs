@@ -1,10 +1,30 @@
+using System;
+
 using UnityEngine;
 
 namespace SkelTech.RPEST.World.Elements.Objects {
     public class InteractorObject : WalkableObject {
+        #region Events
+        public event EventHandler<Interactable> OnInteract;
+        #endregion
+
         #region Fields
         [SerializeField] private string interactorId;
         [SerializeField] private bool canInteract = true, canTrigger = true;
+        #endregion
+
+        #region Unity
+        protected override void Awake() {
+            base.Awake();
+            this.OnStartedMovement += this.OnStartedMovementHandler;
+            this.OnFinishedMovement += this.OnFinishedMovementHandler;
+        }
+
+        protected override void OnDestroy() {
+            this.OnStartedMovement -= this.OnStartedMovementHandler;
+            this.OnFinishedMovement -= this.OnFinishedMovementHandler;
+            base.OnDestroy();
+        }
         #endregion
 
         #region Getters
@@ -13,24 +33,22 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
         #endregion
 
+        #region Setters
+        public void SetCanInteract(bool canInteract) {
+            this.canInteract = canInteract;
+        }
+        #endregion
+
         #region Operators
-        protected override void OnStartedMovement() {
-            this.Trigger(this.transform.position, false);
-        }
-
-        protected override void OnFinishedMovement() {
-            this.Trigger(this.transform.position, true);
-        }
-
         public void Interact() {
-            if (this.canInteract) {
+            if (this.CanInteract()) {
                 Vector3 interactablePosition = this.transform.position + this.lastDirection;
                 this.Interact(interactablePosition);
             }
         }
 
         public void Interact(Vector3 interactablePosition) {
-            if (this.canInteract) {
+            if (this.CanInteract()) {
                 Interactable interactable = this.world.InteractableDatabase.GetInteractable(interactablePosition);
                 this.Interact(interactable);
             }
@@ -38,8 +56,9 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         private void Interact(Interactable interactable) {
             // Check if there's an interactable in the next cell
-            if (interactable != null) {
+            if (interactable != null && this.CanInteract()) {
                 interactable.Interact(this);
+                this.OnInteract.Invoke(this, interactable);
             }
         }
 
@@ -55,6 +74,20 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                 if (onEnter) trigger.OnEnterTrigger(this);
                 else trigger.OnExitTrigger(this);
             }
+        }
+        #endregion
+
+        #region Helpers
+        private void OnStartedMovementHandler(object sender, System.EventArgs e) {
+            this.Trigger(this.transform.position, false);
+        }
+
+        protected void OnFinishedMovementHandler(object sender, System.EventArgs e) {
+            this.Trigger(this.transform.position, true);
+        }
+
+        private bool CanInteract() {
+            return this.canInteract && !this.IsMoving;
         }
         #endregion
     }
