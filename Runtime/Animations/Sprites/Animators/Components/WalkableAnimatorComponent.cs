@@ -3,6 +3,7 @@ using SkelTech.RPEST.World.Elements.Objects;
 using UnityEngine;
 
 namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
+    [System.Serializable]
     public class WalkableAnimatorComponent : WorldObjectAnimatorComponent {
         #region Fields
         [SerializeField] private DirectedAnimation walkableAnimation;

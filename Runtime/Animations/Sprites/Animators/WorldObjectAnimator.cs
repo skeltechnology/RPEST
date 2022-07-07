@@ -1,13 +1,14 @@
 using SkelTech.RPEST.Animations.Sprites.Animators.Components;
+using SkelTech.RPEST.Utilities.Structures;
 
 using System.Collections.Generic;
 
 using UnityEngine;
 
 namespace SkelTech.RPEST.Animations.Sprites.Animators {
-    public class WorldObjectAnimator : SpriteAnimator {
+    public class WorldObjectAnimator : SpriteAnimator, SelectImplementation<WorldObjectAnimatorComponent> {
         #region Fields
-        [SerializeReference, NonReorderable] private List<WorldObjectAnimatorComponent> components;
+        [SerializeReference] private List<WorldObjectAnimatorComponent> components;
         #endregion
 
         #region Unity
@@ -26,7 +27,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         #endregion
 
         #region Setters
-        public void AddComponent(WorldObjectAnimatorComponent component) {
+        public void AddImplementation(WorldObjectAnimatorComponent component) {
             this.components.Add(component);
         }
         #endregion
