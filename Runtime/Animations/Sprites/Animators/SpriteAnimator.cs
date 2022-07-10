@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SkelTech.RPEST.Animations.Sprites.Animators {
     /// <summary>
-    /// Base class and MonoBehaviour for creating sprite animators.
+    /// Base class and <c>MonoBehaviour</c> for creating sprite animators.
     /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
     public abstract class SpriteAnimator : MonoBehaviour {

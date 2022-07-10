@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace SkelTech.RPEST.Animations.Sprites.Animators {
     /// <summary>
-    /// MonoBehaviour class that contains a collection of animator components.
+    /// <c>MonoBehaviour</c> class that contains a collection of animator components.
     /// </summary>
     public class WorldObjectAnimator : SpriteAnimator, SelectImplementation<WorldObjectAnimatorComponent> {
         #region Fields

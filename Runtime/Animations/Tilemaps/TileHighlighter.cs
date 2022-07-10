@@ -1,22 +1,40 @@
 using SkelTech.RPEST.World.Elements;
 using SkelTech.RPEST.World.Elements.Objects;
 
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace SkelTech.RPEST.Animations.Tilemaps {
+    /// <summary>
+    /// <c>MonoBehaviour</c> that is responsible for highlighting tiles, according to the given parameters.
+    /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Tilemap))]
     public class TileHighlighter : MonoBehaviour {
         #region Fields
+        /// <summary>
+        /// Reference to the camera component.
+        /// </summary>
         [SerializeField] private new Camera camera;
+
+        /// <summary>
+        /// Reference to the walkable object.
+        /// </summary>
         [SerializeField] private WalkableObject walkableObject;
+
+        /// <summary>
+        /// Reference to the highlighted tile prefab.
+        /// </summary>
         [SerializeField] private Tile highlightTile;
 
+        /// <summary>
+        /// Reference to the tilemap that will have its tiles highlighted.
+        /// </summary>
         private Tilemap highlighterTilemap;
+
+        /// <summary>
+        /// Mouse position of the previous frame.
+        /// </summary>
         private Vector3Int previousMousePosition = new Vector3Int();
         #endregion
 
@@ -40,7 +58,13 @@ namespace SkelTech.RPEST.Animations.Tilemaps {
         }
         #endregion
 
-        #region Helpers
+        #region Getters
+        /// <summary>
+        /// Gets the mouse position according to the camera and tilemap.
+        /// </summary>
+        /// <param name="tilemap">Tilemap</param>
+        /// <param name="camera">Camera</param>
+        /// <returns></returns>
         private static Vector3Int GetMousePosition(Tilemap tilemap, Camera camera) {
             return tilemap.WorldToCell(camera.ScreenToWorldPoint(UnityEngine.Input.mousePosition));
         }
