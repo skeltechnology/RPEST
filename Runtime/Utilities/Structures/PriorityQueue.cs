@@ -2,24 +2,47 @@ using System;
 using System.Collections.Generic;
 
 namespace SkelTech.RPEST.Utilities.Structures {
+    /// <summary>
+    /// Data Structure that behaves lika a priority queue.
+    /// It is implemented with a <c>List</c>.
+    /// </summary>
+    /// <typeparam name="T">Queue elements type.</typeparam>
     public class PriorityQueue<T> where T : IComparable<T>{
         #region Properties
+        /// <summary>
+        /// Number of elements in the queue.
+        /// </summary>
         public int Count {get { return this.data.Count; }}
         #endregion
 
         #region Fields
+        /// <summary>
+        /// List of the queue elements (representing a tree).
+        /// </summary>
         private List<T> data;
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Constructor of the class.
+        /// </summary>
         public PriorityQueue() : this(20) {}
 
+        /// <summary>
+        /// Constructor of the class.
+        /// </summary>
+        /// <param name="capacity">Initial capacity of the queue.</param>
         public PriorityQueue(int capacity) {
             this.data = new List<T>(capacity);
         }
         #endregion
 
         #region Operators
+        /// <summary>
+        /// Adds an element to the priority queue.
+        /// This operation is performed with a time complexity of O(log n).
+        /// </summary>
+        /// <param name="item">Element to be added.</param>
         public void Enqueue(T item) {
             int parentIndex, childIndex = this.data.Count;
 
@@ -33,6 +56,11 @@ namespace SkelTech.RPEST.Utilities.Structures {
             }
         }
 
+        /// <summary>
+        /// Removes and returns the first element of the priority queue.
+        /// This operation is performed with a time complexity of O(1).
+        /// </summary>
+        /// <returns>First element of the priority queue.</returns>
         public T Dequeue() {
             if (this.data.Count <= 0)throw new InvalidOperationException("Priority Queue is empty.");
 
@@ -57,6 +85,11 @@ namespace SkelTech.RPEST.Utilities.Structures {
             return firstItem;
         }
 
+        /// <summary>
+        /// Gets the first element of the priority queue.
+        /// This operation is performed with a time complexity of O(1).
+        /// </summary>
+        /// <returns>First element of the priority queue.</returns>
         public T Peek() {
             if (this.data.Count <= 0)throw new InvalidOperationException("Priority Queue is empty.");
             return this.data[0];
@@ -64,6 +97,11 @@ namespace SkelTech.RPEST.Utilities.Structures {
         #endregion
 
         #region Helpers
+        /// <summary>
+        /// Helper method to swap two elements.
+        /// </summary>
+        /// <param name="idx1">Index of the first element.</param>
+        /// <param name="idx2">Index of the second element.</param>
         private void SwapItems(int idx1, int idx2) {
             T temp = this.data[idx1];
             this.data[idx1] = this.data[idx2];
