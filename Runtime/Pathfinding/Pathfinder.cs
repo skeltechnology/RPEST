@@ -41,7 +41,7 @@ namespace SkelTech.RPEST.Pathfinding {
         /// <param name="endGridPosition">End position of the path (grid coordinates).</param>
         /// <param name="obstacles">Collection of positions the represent obstacles (grid coordinates).</param>
         /// <param name="maxIterations">Maximum number of iterations that the algorithm will go through.</param>
-        /// <returns></returns>
+        /// <returns>Shortest path.</returns>
         public Path FindShortestPath(Vector3Int startGridPosition, Vector3Int endGridPosition, ICollection<Vector3Int> obstacles, int maxIterations) {
             if (!this.IsValidPath(startGridPosition, endGridPosition)) return null;
 
