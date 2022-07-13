@@ -14,7 +14,7 @@ namespace SkelTech.RPEST.Input.Listeners.Keys {
         [SerializeField] protected KeyHoldInputController inputController;
 
         /// <summary>
-        /// Key associated to the movement.
+        /// Key associated with the movement.
         /// </summary>
         [SerializeField] private KeyCode upKey = KeyCode.W, downKey = KeyCode.S, leftKey = KeyCode.A, rightKey = KeyCode.D;
         #endregion

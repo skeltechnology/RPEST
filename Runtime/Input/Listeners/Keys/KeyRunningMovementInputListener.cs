@@ -8,8 +8,19 @@ namespace SkelTech.RPEST.Input.Listeners.Keys {
     /// </summary>
     public class KeyRunningMovementInputListener : WalkableObjectInputListener {
         #region Fields
+        /// <summary>
+        /// Reference to the input controller.
+        /// </summary>
         [SerializeField] protected KeyUpInputController upInputController;
+
+        /// <summary>
+        /// Reference to the input controller.
+        /// </summary>
         [SerializeField] protected KeyDownInputController downInputController;
+
+        /// <summary>
+        /// Key associated with the movement.
+        /// </summary>
         [SerializeField] private KeyCode runningKey = KeyCode.LeftShift;
         #endregion
 
@@ -26,6 +37,10 @@ namespace SkelTech.RPEST.Input.Listeners.Keys {
         #endregion
 
         #region Helpers
+        /// <summary>
+        /// Callback method to change the running state of the <c>WalkableObject</c>.
+        /// </summary>
+        /// <param name="isRunning"></param>
         private void ChangeRunningState(bool isRunning) {
             this.walkableObject.IsRunning = isRunning;
         }
