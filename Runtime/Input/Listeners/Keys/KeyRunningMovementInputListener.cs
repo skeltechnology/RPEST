@@ -3,6 +3,9 @@ using SkelTech.RPEST.Input.Controllers.Keys;
 using UnityEngine;
 
 namespace SkelTech.RPEST.Input.Listeners.Keys {
+    /// <summary>
+    /// <c>MonoBehaviour</c> responsible for handling input event to make the <c>WalkableObject</c> run.
+    /// </summary>
     public class KeyRunningMovementInputListener : WalkableObjectInputListener {
         #region Fields
         [SerializeField] protected KeyUpInputController upInputController;
