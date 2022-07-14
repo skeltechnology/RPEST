@@ -5,7 +5,7 @@ namespace SkelTech.RPEST.Animations.Chasers {
     /// MonoBehaviour that, when attached to a renderer, follows the target <c>Transform</c>.
     /// </summary>
     [RequireComponent(typeof(Renderer))]
-    public class RendererChaser : ObjectChaser {
+    public class ChaserRenderer : ObjectChaser {
         #region Fields
         /// <summary>
         /// Renderer component that will follow the target.

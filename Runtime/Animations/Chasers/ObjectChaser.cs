@@ -64,9 +64,9 @@ namespace SkelTech.RPEST.Animations.Chasers {
                   y = this.transform.position.y, 
                   z = this.transform.position.z;
             
-            if (!this.xAxisFrozen) x = OffsetPosition(x, this.offset.x);
-            if (!this.yAxisFrozen) y = OffsetPosition(y, this.offset.y);
-            if (!this.zAxisFrozen) z = OffsetPosition(z, this.offset.z);
+            if (!this.xAxisFrozen) x = OffsetPosition(this.target.position.x, this.offset.x);
+            if (!this.yAxisFrozen) y = OffsetPosition(this.target.position.y, this.offset.y);
+            if (!this.zAxisFrozen) z = OffsetPosition(this.target.position.z, this.offset.z);
 
             if (this.border != null) {
                 Bounds bounds = this.border.bounds;

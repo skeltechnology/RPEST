@@ -5,7 +5,7 @@ namespace SkelTech.RPEST.Animations.Chasers {
     /// MonoBehaviour that, when attached to a camera, follows the target <c>Transform</c>.
     /// </summary>
     [RequireComponent(typeof(Camera))]
-    public class CameraChaser : ObjectChaser {
+    public class ChaserCamera : ObjectChaser {
         #region Fields
         /// <summary>
         /// Camera component that will follow the target.
