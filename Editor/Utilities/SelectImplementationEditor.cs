@@ -8,17 +8,44 @@ using UnityEditor;
 using UnityEditorInternal;
 
 namespace SkelTech.RPEST.Utilities {
+    /// <summary>
+    /// Base class for <c>Editor</c>s that have a "Select Implementation" layout.
+    /// </summary>
+    /// <typeparam name="A">Type of the class that has this editor.</typeparam>
+    /// <typeparam name="B">Type of the implementation.</typeparam>
     public abstract class SelectImplementationEditor<A, B> : Editor where A : UnityEngine.Object, SelectImplementation<B> {
         #region Fields
+        /// <summary>
+        /// Array of available implementations.
+        /// </summary>
         private Type[] implementations;
+
+        /// <summary>
+        /// Index of the currently selected implementation.
+        /// </summary>
         private int implementationTypeIndex;
 
+        /// <summary>
+        /// Reference to the class that uses this editor.
+        /// </summary>
         protected A behaviour;
+
         private SerializedProperty listProperty;
         private ReorderableList reorderableList; 
 
+        /// <summary>
+        /// Name of the list attribute.
+        /// </summary>
         private string listName;
+
+        /// <summary>
+        /// Visible name of the list (displayed on the editor).
+        /// </summary>
         private string caption;
+
+        /// <summary>
+        /// Indicates if it is not allowed to have multiple instances of the same class.
+        /// </summary>
         private bool uniqueImplementations = false;
         #endregion
 
@@ -58,8 +85,16 @@ namespace SkelTech.RPEST.Utilities {
         #endregion
 
         #region Helpers
+        /// <summary>
+        /// Creates an implementation of the given type.
+        /// </summary>
+        /// <param name="type">Type of the implementation to be instantiated.</param>
+        /// <returns>Instantiated implementation.</returns>
         protected abstract B CreateImplementation(Type type);
 
+        /// <summary>
+        /// Draws the interface of the editor.
+        /// </summary>
         private void DrawInterface() {
             if (behaviour == null) return;
             
@@ -83,12 +118,21 @@ namespace SkelTech.RPEST.Utilities {
             }
         }
 
+        /// <summary>
+        /// Retreives all the available implementations of the base class.
+        /// </summary>
+        /// <returns>Array with all the available implementations.</returns>
         private static Type[] GetImplementations() {
             System.Collections.Generic.IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes());
             Type interfaceType = typeof(B);
             return types.Where(p => interfaceType.IsAssignableFrom(p) && !p.IsAbstract).ToArray();
         }
 
+        /// <summary>
+        /// Checks if the list of instantiated implementations contains the given type.
+        /// </summary>
+        /// <param name="typeFullname">Fullname of the class type.</param>
+        /// <returns>Boolean indicating if the list of instantiated implementations contains the given type.</returns>
         private bool Contains(string typeFullname) {
             for (int i = 0; i < this.listProperty.arraySize; ++i) {
                 if (this.listProperty.GetArrayElementAtIndex(i).managedReferenceFullTypename.Split(' ').Last().Equals(typeFullname))
