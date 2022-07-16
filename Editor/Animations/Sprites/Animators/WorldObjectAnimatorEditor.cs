@@ -5,6 +5,9 @@ using System;
 using UnityEditor;
 
 namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
+    /// <summary>
+    /// Custom editor for the <c>WorldObjectAnimator</c> class.
+    /// </summary>
     [CustomEditor(typeof(WorldObjectAnimator))]
     public class WorldObjectAnimatorEditor : SelectImplementationEditor<WorldObjectAnimator, WorldObjectAnimatorComponent> {
         #region Unity

@@ -5,17 +5,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SkelTech.RPEST.Pathfinding.Search {
+    /// <summary>
+    /// Solver to the shortest path between two cells.
+    /// </summary>
     public class ShortestPathSolver : SearchSolver<Cell> {
         #region Properties
+        /// <summary>
+        /// Cell that represents the final position.
+        /// </summary>
+        /// <value></value>
         public Cell FinalState { get; set; }
         #endregion
 
         #region Fields
+        /// <summary>
+        /// Grid representation.
+        /// </summary>
         private readonly Cell[,] grid;
-        private int rows, columns;
+
+        /// <summary>
+        /// Number of rows of the grid.
+        /// </summary>
+        private int rows;
+        
+        /// <summary>
+        /// Number of columns of the grid.
+        /// </summary>
+        private int columns;
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Constructor of the class.
+        /// </summary>
+        /// <param name="grid">Grid representation.</param>
         public ShortestPathSolver(Cell[,] grid) {
             this.grid = grid;
             this.rows = grid.GetLength(0);
@@ -71,6 +94,12 @@ namespace SkelTech.RPEST.Pathfinding.Search {
         #endregion
 
         #region Helpers
+        /// <summary>
+        /// Indicates if the given position is valid (has a cell in it).
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        /// <returns></returns>
         public bool IsValidPosition(int i, int j) {
             if(i >= 0 && i < this.rows && j >= 0 && j < this.columns) {
                 return this.grid[i, j] != null;

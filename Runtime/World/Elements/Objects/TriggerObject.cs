@@ -1,9 +1,11 @@
 namespace SkelTech.RPEST.World.Elements.Objects {
+    /// <summary>
+    /// Base class for a trigger object.
+    /// It must be a (sub-)child of a <c>World</c> component.
+    /// </summary>
     public abstract class TriggerObject : WorldObject, Trigger {
         #region Getters
-        public WorldObject GetWorldObject() {
-            return this;
-        }
+        public WorldObject GetWorldObject() { return this; }
         #endregion
 
         #region Operators

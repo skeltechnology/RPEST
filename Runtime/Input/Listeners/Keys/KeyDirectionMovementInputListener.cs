@@ -3,9 +3,19 @@ using SkelTech.RPEST.Input.Controllers.Keys;
 using UnityEngine;
 
 namespace SkelTech.RPEST.Input.Listeners.Keys {
+    /// <summary>
+    /// <c>MonoBehaviour</c> responsible for handling input event to move the <c>WalkableObject</c> in the correspondent direction.
+    /// </summary>
     public class KeyDirectionMovementInputListener : WalkableObjectInputListener {
         #region Fields
+        /// <summary>
+        /// Reference to the input controller.
+        /// </summary>
         [SerializeField] protected KeyHoldInputController inputController;
+
+        /// <summary>
+        /// Key associated with the movement.
+        /// </summary>
         [SerializeField] private KeyCode upKey = KeyCode.W, downKey = KeyCode.S, leftKey = KeyCode.A, rightKey = KeyCode.D;
         #endregion
 

@@ -6,8 +6,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SkelTech.RPEST.Animations.Sprites.Animators {
+    /// <summary>
+    /// <c>MonoBehaviour</c> class that contains a collection of animator components.
+    /// </summary>
     public class WorldObjectAnimator : SpriteAnimator, SelectImplementation<WorldObjectAnimatorComponent> {
         #region Fields
+        /// <summary>
+        /// Collection of animator components.
+        /// </summary>
         [SerializeReference] private List<WorldObjectAnimatorComponent> components;
         #endregion
 
@@ -27,6 +33,10 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         #endregion
 
         #region Setters
+        /// <summary>
+        /// Adds the given component to the collection of animator components.
+        /// </summary>
+        /// <param name="component">Animator component that will be added to the collection.</param>
         public void AddImplementation(WorldObjectAnimatorComponent component) {
             this.components.Add(component);
         }
