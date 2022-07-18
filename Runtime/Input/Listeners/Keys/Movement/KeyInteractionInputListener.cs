@@ -3,7 +3,7 @@ using SkelTech.RPEST.World.Elements.Objects;
 
 using UnityEngine;
 
-namespace SkelTech.RPEST.Input.Listeners.Keys {
+namespace SkelTech.RPEST.Input.Listeners.Keys.Movement {
     /// <summary>
     /// <c>MonoBehaviour</c> responsible for handling input event to make the <c>InteractorObject</c> interact.
     /// </summary>

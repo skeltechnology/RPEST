@@ -2,7 +2,7 @@ using SkelTech.RPEST.Input.Controllers.Keys;
 
 using UnityEngine;
 
-namespace SkelTech.RPEST.Input.Listeners.Keys {
+namespace SkelTech.RPEST.Input.Listeners.Keys.Movement {
     /// <summary>
     /// <c>MonoBehaviour</c> responsible for handling input event to move the <c>WalkableObject</c> to the correspondent position.
     /// </summary>

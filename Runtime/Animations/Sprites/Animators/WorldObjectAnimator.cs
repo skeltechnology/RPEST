@@ -25,7 +25,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
             }
         }
 
-        protected void OnDestroy() {
+        protected virtual void OnDestroy() {
             foreach (WorldObjectAnimatorComponent component in components) {
                 component.Disable();
             }
