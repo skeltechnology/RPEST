@@ -6,7 +6,8 @@ using UnityEngine.Tilemaps;
 
 namespace SkelTech.RPEST.Animations.Tilemaps {
     /// <summary>
-    /// <c>MonoBehaviour</c> that is responsible for highlighting tiles, according to the given parameters.
+    /// <c>MonoBehaviour</c> that is responsible for highlighting tiles, according to the given parameters, when the user hovers the mouse over the tile.
+    /// Only tiles that are contained in the <c>Tilemap</c> that the <c>WalkableObject</c> is on can be highlighted.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Tilemap))]
