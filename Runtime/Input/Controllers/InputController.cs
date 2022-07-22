@@ -21,7 +21,7 @@ namespace SkelTech.RPEST.Input.Controllers {
             InputListenerData<T>[] inputListeners;
             foreach (T input in this.GetInputEvents()) {
                 if (this.listeners.ContainsKey(input)) {
-                    inputListeners = this.listeners[input].ToArray();
+                    inputListeners = this.listeners[input].ToArray();  // TODO: optimize
                     foreach (InputListenerData<T> data in inputListeners) {
                         data.Callback.Invoke();
                     }
