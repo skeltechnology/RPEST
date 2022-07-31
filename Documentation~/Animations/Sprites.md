@@ -1,6 +1,6 @@
 # Sprites
 
-Every animation that involves a sprite is included in this module.
+Animations that involve sprites are included in this module.
 
 ## `SpriteAnimation`
 

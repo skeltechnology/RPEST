@@ -15,7 +15,7 @@ This package contains the following modules:
 ## Animations
 
 - [Chasers](./Animations/Chasers.md)
-- [Sprites]()
+- [Sprites](./Animations/Sprites.md)
     - [Sprite Animators](./Animations/SpriteAnimators.md)
 - [Tilemaps](./Animations/Tilemaps.md)
 
