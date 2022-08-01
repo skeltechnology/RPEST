@@ -1,0 +1,11 @@
+# Visual Studio cache directory
+.vs/
+.vscode/
+
+# Gradle cache directory
+.gradle/
+
+# Unity3D generated meta files
+README.md.meta
+LICENSE.md.meta
+CHANGELOG.md.meta
