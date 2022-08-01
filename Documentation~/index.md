@@ -24,3 +24,7 @@ This package contains the following modules:
 
 ## Pathfinding
 - [Pathfinding](./Pathfinding/Pathfinding.md)
+
+## Utilities
+- [Search](./Utilities/Search.md)
+- [Structures](./Utilities/Structures.md)

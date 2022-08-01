@@ -10,7 +10,7 @@ namespace SkelTech.RPEST.Utilities.Search {
     public abstract class SearchSolver<T> {
         #region Getters
         /// <summary>
-        /// Gets the cost of the given search state.
+        /// Gets the cumulative cost of the given search state.
         /// This method is called after Previous is updated.
         /// </summary>
         /// <param name="state">Search state.</param>
