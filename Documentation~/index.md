@@ -6,11 +6,9 @@ This package contains the following modules:
 
 - [Animations](#animations)
 - [Input](#input)
-- []()
-- []()
-- []()
-- []()
-- []()
+- [Pathfinding](#pathfinding)
+- [Utilities](#utilities)
+- [World](#world)
 
 ## Animations
 - [Chasers](./Animations/Chasers.md)
@@ -28,3 +26,9 @@ This package contains the following modules:
 ## Utilities
 - [Search](./Utilities/Search.md)
 - [Structures](./Utilities/Structures.md)
+
+## World
+- [World Representation](./World/WorldRepresentation.md)
+- [Databases](./World/Databases.md)
+- [World Elements](./World/WorldElements.md)
+    - [World Objects](./World/WorldObjects.md)
