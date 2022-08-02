@@ -84,7 +84,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// <summary>
         /// Interacts with the interactable in front of the object.
         /// </summary>
-        public void Interact() {
+        public virtual void Interact() {
             // TODO: ALSO INTERACT IN THE CURRENT POSITION
             if (this.CanInteract()) {
                 Vector3 interactablePosition = this.transform.position + this.lastDirection;
