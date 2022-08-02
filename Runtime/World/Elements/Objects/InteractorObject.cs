@@ -13,7 +13,11 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// Called when this <c>InteractorObject</c> interacts with an interactable.
         /// </summary>
         public event EventHandler<Interactable> OnInteract;
-        // TODO: ONTRIGGER
+        
+        /// <summary>
+        /// Called when this <c>InteractorObject</c> interacts with a trigger.
+        /// </summary>
+        public event EventHandler<Trigger> OnTrigger;
         #endregion
 
         #region Fields
@@ -107,7 +111,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             // Check if there's an interactable in the next cell
             if (interactable != null && this.CanInteract()) {
                 interactable.Interact(this);
-                this.OnInteract.Invoke(this, interactable);
+                this.OnInteract?.Invoke(this, interactable);
             }
         }
 
@@ -132,6 +136,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             if (trigger != null) {
                 if (onEnter) trigger.OnEnterTrigger(this);
                 else trigger.OnExitTrigger(this);
+                this.OnTrigger?.Invoke(this, trigger);
             }
         }
         #endregion
