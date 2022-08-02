@@ -84,35 +84,46 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// <summary>
         /// Interacts with the interactable in front of the object.
         /// </summary>
-        public virtual void Interact() {
-            // TODO: ALSO INTERACT IN THE CURRENT POSITION
+        /// <returns>Boolean indicating if an interaction occurred.</returns>
+        public virtual bool Interact() {
             if (this.CanInteract()) {
-                Vector3 interactablePosition = this.transform.position + this.lastDirection;
-                this.Interact(interactablePosition);
+                // First, check for interactable in the same position
+                if (!this.Interact(this.transform.position)) {
+                    // If an interactable was not found, check for it forward.
+                    Vector3 interactablePosition = this.transform.position + this.lastDirection;
+                    return this.Interact(interactablePosition);
+                }
+                return true;
             }
+            return false;
         }
 
         /// <summary>
         /// Interacts with the interactable in the given position.
         /// </summary>
         /// <param name="interactablePosition">Interactable position.</param>
-        public void Interact(Vector3 interactablePosition) {
+        /// <returns>Boolean indicating if an interaction occurred.</returns>
+        public bool Interact(Vector3 interactablePosition) {
             if (this.CanInteract()) {
                 Interactable interactable = this.world.InteractableDatabase.GetInteractable(interactablePosition);
-                this.Interact(interactable);
+                return this.Interact(interactable);
             }
+            return false;
         }
 
         /// <summary>
         /// Interacts with the given interactable.
         /// </summary>
         /// <param name="interactable">Interactable.</param>
-        private void Interact(Interactable interactable) {
+        /// <returns>Boolean indicating if an interaction occurred.</returns>
+        private bool Interact(Interactable interactable) {
             // Check if there's an interactable in the next cell
             if (interactable != null && this.CanInteract()) {
                 interactable.Interact(this);
                 this.OnInteract?.Invoke(this, interactable);
+                return true;
             }
+            return false;
         }
 
         /// <summary>
