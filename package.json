@@ -12,11 +12,18 @@
   "keywords": [
     "RPG",
     "2D",
-    "Pathfinding"
+    "World",
+    "Pathfinding",
+    "Movement",
+    "Chasers",
+    "Obstacles",
+    "Input",
+    "Interaction",
+    "Trigger",
+    "Animation"
   ],
   "author": {
     "name": "Skel Tech",
     "url": "https://skeltechnology.blogspot.com/"
-  },
-  "type": "library"
+  }
 }
