@@ -18,7 +18,7 @@ namespace SkelTech.RPEST.Input.Controllers.Keys {
         /// Checks of the given key is active.
         /// </summary>
         /// <param name="key">Key that will be checked.</param>
-        /// <returns>Boolean indicating if the key is active</returns>
+        /// <returns>Boolean indicating if the key is active.</returns>
         protected abstract bool IsInputKeyActive(KeyCode key);
 
         /// <summary>

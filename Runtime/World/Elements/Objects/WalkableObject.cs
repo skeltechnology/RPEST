@@ -104,6 +104,8 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// </summary>
         protected Vector3Int lastDirection = Vector3Int.down;
 
+        // TODO: ADD START DIRECTION
+
         /// <summary>
         /// Queue of directions that the object will travel.
         /// </summary>
@@ -119,6 +121,10 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         protected virtual void Awake() {
             this.directionsQueue = new Queue<Vector3Int>();
             this.IsMoving = false;
+        }
+
+        protected virtual void Start() {
+            this.OnUpdateDirection?.Invoke(this, this.lastDirection);
         }
         #endregion
 
