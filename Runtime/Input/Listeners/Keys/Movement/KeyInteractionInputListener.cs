@@ -34,7 +34,7 @@ namespace SkelTech.RPEST.Input.Listeners.Keys.Movement {
 
         #region Initialization
         protected override void SetListeners() {
-            this.inputController.SetListener(this, this.interactionKey, this.interactorObject.Interact);
+            this.inputController.SetListener(this, this.interactionKey, () => this.interactorObject.Interact());
         }
 
         protected override void RemoveListeners() {
