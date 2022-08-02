@@ -5,13 +5,25 @@
   "description": "A Unity package to develop 2D RPG.",
   "unity": "2021.3",
   "unityRelease": "4f1",
+  "documentationUrl": "https://github.com/skeltechnology/RPEST/blob/master/Documentation%7E/index.md",
+  "changelogUrl": "https://github.com/skeltechnology/RPEST/blob/master/CHANGELOG.md",
+  "license": "MIT",
+  "licensesUrl": "https://github.com/skeltechnology/RPEST/blob/master/LICENSE.md",
   "keywords": [
     "RPG",
-    "2D"
+    "2D",
+    "World",
+    "Pathfinding",
+    "Movement",
+    "Chasers",
+    "Obstacles",
+    "Input",
+    "Interaction",
+    "Trigger",
+    "Animation"
   ],
   "author": {
     "name": "Skel Tech",
     "url": "https://skeltechnology.blogspot.com/"
-  },
-  "type": "library"
+  }
 }
