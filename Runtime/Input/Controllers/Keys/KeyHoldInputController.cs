@@ -8,7 +8,14 @@ namespace SkelTech.RPEST.Input.Controllers.Keys {
     /// </summary>
     public class KeyHoldInputController : KeyInputController {
         #region Fields
-        // TODO: DOCUMENT
+        /// <summary>
+        /// Boolean indicating if only the latest key is returned.
+        /// </summary>
+        [SerializeField] private bool latestKeyOnly = false;
+
+        /// <summary>
+        /// Linked list with the keys that are currently activated, maintaining its pressing order.
+        /// </summary>
         private LinkedList<KeyCode> activeKeys = new LinkedList<KeyCode>();
         #endregion
 
@@ -26,6 +33,11 @@ namespace SkelTech.RPEST.Input.Controllers.Keys {
                 }
             }
 
+            if (this.latestKeyOnly && this.activeKeys.Count > 1) {
+                LinkedList<KeyCode> result = new LinkedList<KeyCode>();
+                result.AddLast(this.activeKeys.First.Value);
+                return result;
+            }
             return this.activeKeys;
         }
         #endregion
