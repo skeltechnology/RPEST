@@ -67,7 +67,7 @@ namespace SkelTech.RPEST.Utilities {
                 if (this.listProperty.isExpanded) {
                     EditorGUI.indentLevel = 1;
                     SerializedProperty property = listProperty.GetArrayElementAtIndex(index);
-                    EditorGUI.PropertyField(rect, property, new GUIContent(property.managedReferenceFullTypename.Split('.').Last()), true); // TODO: NAME CHOICE
+                    EditorGUI.PropertyField(rect, property, new GUIContent(property.managedReferenceFullTypename.Split('.').Last()), true);
                 }
             };
             this.reorderableList.elementHeightCallback = (int index) => {
