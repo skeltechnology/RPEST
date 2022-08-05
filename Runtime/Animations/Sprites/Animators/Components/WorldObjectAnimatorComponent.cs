@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+
 using UnityEngine;
 
 namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
@@ -38,6 +40,28 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// This mehod is called as soon as the animator is destroyed.
         /// </summary>
         public abstract void Disable();
+        #endregion
+
+        #region Helpers
+        /// <summary>
+        /// Coroutine that play an animation during the given amount of time.
+        /// </summary>
+        /// <param name="animation">Animation that will be played.</param>
+        /// <param name="duration">Duration of the animation.</param>
+        protected IEnumerator AnimationCoroutine(SpriteAnimation animation, float duration) {
+            this.animator.PushSprite();
+            this.animator.SetAnimation(animation);
+
+            float time = 0;
+            while (time < duration) {
+                time += Time.deltaTime;
+                this.animator.UpdateSprite(time / duration);
+                yield return null;
+            }
+
+            this.animator.LoadSpriteFromStack();
+            this.animator.PopSprite();
+        }
         #endregion
     }
 }
