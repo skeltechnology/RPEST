@@ -18,10 +18,10 @@ namespace SkelTech.RPEST.Input.Controllers {
 
         #region Unity
         private void Update() {
-            InputListenerData<T>[] inputListeners;
+            LinkedList<InputListenerData<T>> inputListeners;
             foreach (T input in this.GetInputEvents()) {
                 if (this.listeners.ContainsKey(input)) {
-                    inputListeners = this.listeners[input].ToArray();  // TODO: optimize
+                    inputListeners = this.listeners[input];
                     foreach (InputListenerData<T> data in inputListeners) {
                         data.Callback.Invoke();
                     }

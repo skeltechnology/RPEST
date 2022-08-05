@@ -8,7 +8,7 @@ namespace SkelTech.RPEST.World {
     /// Class that represents the scene world.
     /// This class is responsible for storing and initializing all the <c>WorldElements<c> contained inside its game object.
     /// </summary>
-    // TODO: REQUIRES GRID
+    [RequireComponent(typeof(Grid))]
     [DisallowMultipleComponent]
     public class World : MonoBehaviour {
         #region Properties
