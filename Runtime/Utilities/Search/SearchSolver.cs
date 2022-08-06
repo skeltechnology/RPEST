@@ -47,7 +47,7 @@ namespace SkelTech.RPEST.Utilities.Search {
         /// <param name="initialState">Initial state of the problem.</param>
         /// <param name="maxIterations">Maximum number of iterations that the algorithm will go through.</param>
         /// <returns>Array of visited states that solved the problem.</returns>
-        public virtual T[] solve(T initialState, int maxIterations) {
+        public virtual T[] Solve(T initialState, int maxIterations) {
             PriorityQueue<SearchState<T>> queue = new PriorityQueue<SearchState<T>>(100);
 
             SearchState<T> start = new SearchState<T>(initialState);
