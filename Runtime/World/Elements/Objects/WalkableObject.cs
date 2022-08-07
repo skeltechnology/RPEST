@@ -102,7 +102,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// <summary>
         /// Current direction of the object.
         /// </summary>
-        protected Vector3Int lastDirection = Vector3Int.down;
+        protected Vector3Int direction = Vector3Int.down;
 
         // TODO: ADD START DIRECTION
 
@@ -124,7 +124,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
 
         protected virtual void Start() {
-            this.OnUpdateDirection?.Invoke(this, this.lastDirection);
+            this.OnUpdateDirection?.Invoke(this, this.direction);
         }
         #endregion
 
@@ -142,7 +142,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// </summary>
         /// <returns>Current direction of the object.</returns>
         public Vector3Int GetCurrentDirection() {
-            return this.lastDirection;
+            return this.direction;
         }
         #endregion
 
@@ -263,7 +263,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             float missingDelta = 0f;
             while (this.directionsQueue.Count > 0) {
                 this.UpdateDirection(this.directionsQueue.Dequeue());
-                finalPosition = this.transform.localPosition + this.lastDirection;
+                finalPosition = this.transform.localPosition + this.direction;
                 if (this.CanMoveTo(finalPosition)) {
                     this.OnStartedMovement?.Invoke(this, EventArgs.Empty);
                     this.cellDistance = missingDelta;
@@ -315,9 +315,9 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// Updates the current direction of the object.
         /// </summary>
         /// <param name="direction">New direction.</param>
-        private void UpdateDirection(Vector3Int direction) {
-            if (!this.lastDirection.Equals(direction)) {
-                this.lastDirection = direction;
+        public void UpdateDirection(Vector3Int direction) {
+            if (!this.direction.Equals(direction)) {
+                this.direction = direction;
                 this.OnUpdateDirection?.Invoke(this, direction);
             }
         }
