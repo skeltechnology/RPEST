@@ -1,3 +1,5 @@
+using SkelTech.RPEST.Utilities.Structures;
+
 using UnityEngine;
 
 namespace SkelTech.RPEST.Animations.Sprites {
@@ -19,11 +21,11 @@ namespace SkelTech.RPEST.Animations.Sprites {
         /// </summary>
         /// <param name="direction">Animation direction.</param>
         /// <returns>Correspondent sprite animation.</returns>
-        public SpriteAnimation GetAnimation(Vector3Int direction){
-            if (direction == Vector3Int.up) return this.GetUpAnimation();
-            else if (direction == Vector3Int.down) return this.GetDownAnimation();
-            else if (direction == Vector3Int.left) return this.GetLeftAnimation();
-            else if (direction == Vector3Int.right) return this.GetRightAnimation();
+        public SpriteAnimation GetAnimation(Direction direction){
+            if (direction == Direction.Up) return this.GetUpAnimation();
+            else if (direction == Direction.Down) return this.GetDownAnimation();
+            else if (direction == Direction.Left) return this.GetLeftAnimation();
+            else if (direction == Direction.Right) return this.GetRightAnimation();
             return null;
         }
 

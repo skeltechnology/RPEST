@@ -1,4 +1,7 @@
+using SkelTech.RPEST.Utilities.Structures;
+
 using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace SkelTech.RPEST.Pathfinding {
@@ -45,8 +48,8 @@ namespace SkelTech.RPEST.Pathfinding {
         /// Gets the collection of directions of the path.
         /// </summary>
         /// <returns>Collection of directions of the path.</returns>
-        public ICollection<Vector3Int> GetDirections() {
-            ICollection<Vector3Int> directions = new LinkedList<Vector3Int>();
+        public ICollection<Direction> GetDirections() {
+            ICollection<Direction> directions = new LinkedList<Direction>();
 
             if (this.positions.Count > 1) {
                 Vector3 previous;
@@ -55,7 +58,7 @@ namespace SkelTech.RPEST.Pathfinding {
                 previous = position.Current;
                 
                 while (position.MoveNext()) {
-                    directions.Add(Vector3Int.RoundToInt(position.Current - previous));
+                    directions.Add(Direction.FromVector3Int(Vector3Int.RoundToInt(position.Current - previous)));
                     previous = position.Current;
                 }
             }

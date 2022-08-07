@@ -1,5 +1,3 @@
-using SkelTech.RPEST.Utilities.Structures;
-
 using System;
 using System.Linq;
 
@@ -7,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 
-namespace SkelTech.RPEST.Utilities {
+namespace SkelTech.RPEST.Utilities.Structures {
     /// <summary>
     /// Base class for <c>Editor</c>s that have a "Select Implementation" layout.
     /// </summary>

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace SkelTech.RPEST.Utilities.Structures {
     [Serializable]
     public class Direction {
-        public enum DirectionEnum { Up, Left, Down, Right };
+        [Serializable] public enum DirectionEnum { Up, Left, Down, Right };
 
         #region Properties
         public static Direction Up { get { return new Direction(DirectionEnum.Up); }}
@@ -15,7 +15,7 @@ namespace SkelTech.RPEST.Utilities.Structures {
         #endregion
 
         #region Fields
-        private DirectionEnum direction;
+        [SerializeField] private DirectionEnum direction;
         #endregion
 
         #region Constructors
