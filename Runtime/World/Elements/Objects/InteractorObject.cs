@@ -90,7 +90,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                 // First, check for interactable in the same position
                 if (!this.Interact(this.transform.position)) {
                     // If an interactable was not found, check for it forward.
-                    Vector3 interactablePosition = this.transform.position + this.lastDirection;
+                    Vector3 interactablePosition = this.transform.position + this.direction.ToVector3Int();
                     return this.Interact(interactablePosition);
                 }
                 return true;

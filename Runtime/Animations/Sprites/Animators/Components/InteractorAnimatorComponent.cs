@@ -60,7 +60,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         protected IEnumerator InteractionAnimation() {
             this.LockActions(false);
 
-            SpriteAnimation animation = this.interactionAnimation.GetAnimation(this.interactableObject.GetCurrentDirection());
+            SpriteAnimation animation = this.interactionAnimation.GetAnimation(this.interactableObject.GetDirection());
             yield return this.AnimationCoroutine(animation, this.interactionDuration);
             
             this.LockActions(true);
