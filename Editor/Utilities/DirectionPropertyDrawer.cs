@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEditor;
 
 namespace SkelTech.RPEST.Utilities.Structures {
+    /// <summary>
+    /// Custom property drawer for the <c>Direction</c> class.
+    /// </summary>
     [CustomPropertyDrawer(typeof(Direction))]
     public class DirectionPropertyDrawer : PropertyDrawer {
         #region Unity
