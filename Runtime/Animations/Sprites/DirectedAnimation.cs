@@ -21,7 +21,7 @@ namespace SkelTech.RPEST.Animations.Sprites {
         /// </summary>
         /// <param name="direction">Animation direction.</param>
         /// <returns>Correspondent sprite animation.</returns>
-        public SpriteAnimation GetAnimation(Direction direction){
+        public SpriteAnimation GetAnimation(Direction direction) {
             if (direction == Direction.Up) return this.GetUpAnimation();
             else if (direction == Direction.Down) return this.GetDownAnimation();
             else if (direction == Direction.Left) return this.GetLeftAnimation();

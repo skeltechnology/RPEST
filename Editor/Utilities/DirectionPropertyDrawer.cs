@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 using UnityEditor;
 
@@ -13,10 +15,13 @@ namespace SkelTech.RPEST.Utilities.Structures {
             int indent = EditorGUI.indentLevel;
             EditorGUI.indentLevel = 0;
 
-            // Calculate rects
-            var rect = new Rect(position.x, position.y, position.width, position.height);
+            Rect rect = new Rect(position.x, position.y, position.width, position.height);
 
-            EditorGUI.PropertyField(rect, property.FindPropertyRelative("direction"), GUIContent.none);
+            SerializedProperty enumProperty = property.FindPropertyRelative("direction");
+            Enum option = EditorGUI.EnumPopup(rect, (Direction.DirectionEnum) enumProperty.enumValueIndex);
+
+            Direction direction = Direction.FromInt(Convert.ToInt32(option));
+            property.managedReferenceValue = direction;
 
             EditorGUI.indentLevel = indent;
 

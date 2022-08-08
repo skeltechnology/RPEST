@@ -103,7 +103,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// <summary>
         /// Current direction of the object.
         /// </summary>
-        [SerializeField] protected Direction direction = Direction.Down;
+        [SerializeReference] protected Direction direction = Direction.Down;
 
         /// <summary>
         /// Queue of directions that the object will travel.
@@ -315,7 +315,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// </summary>
         /// <param name="direction">New direction.</param>
         public void UpdateDirection(Direction direction) {
-            if (!this.direction.Equals(direction)) {
+            if (this.direction != direction) {
                 this.direction = direction;
                 this.OnUpdateDirection?.Invoke(this, direction);
             }
