@@ -269,6 +269,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// </summary>
         private IEnumerator MoveQueuedDirections() {
             this.IsMoving = true;
+            this.OnStartedMovement?.Invoke(this, EventArgs.Empty);
 
             Vector3 finalPosition;
             float missingDelta = 0f;
@@ -302,6 +303,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             }
 
             this.IsMoving = false;
+            this.OnFinishedMovement?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 
