@@ -39,42 +39,46 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
             this.walkableObject.OnFinishedMovement += this.OnFinishedMovement;
             this.walkableObject.OnUpdateDirection += this.OnUpdateDirection;
 
-            if (!this.walkableObject.IsMoving) this.OnFinishedMovement(null, System.EventArgs.Empty); // TODO: HELPER FUNC
+            if (!this.walkableObject.IsMoving) this.StartStandingAnimation();
         }
         public override void Disable() {
             this.walkableObject.OnStartedMovement -= this.OnStartedMovement;
             this.walkableObject.OnFinishedMovement -= this.OnFinishedMovement;
             this.walkableObject.OnUpdateDirection -= this.OnUpdateDirection;
+
+            // TODO: VERIFY IF IT'S STANDING ANIMATION
+            if (!this.walkableObject.IsMoving) this.animator.StopAnimation();
         }
         #endregion
 
         #region Helpers
         // TODO: DOCUMENTATION
         private void OnStartedMovement(object sender, System.EventArgs e) {
-            Debug.Log("STARTED MOVING");
             this.animator.StopAnimation();
             // TODO: CONFLICTS WITH INTERACTION.
 
         }
 
         private void OnFinishedMovement(object sender, System.EventArgs e) {
-            Debug.Log("STOPPED MOVING");
-            this.standingDirection = this.walkableObject.GetDirection();
-            SpriteAnimation spriteAnimation = this.standingAnimation.GetAnimation(this.standingDirection);
-            IEnumerator coroutine = this.AnimationLoopCoroutine(spriteAnimation, this.loopDuration);
-            this.animator.StartAnimation(coroutine);
+            this.StartStandingAnimation();
         }
 
         private void OnUpdateDirection(object sender, Direction direction) {
-            // if not walking, then start standing animation with new direction
             if (direction != this.standingDirection) {
                 this.animator.StopAnimation();
-
-                this.standingDirection = direction;
-                SpriteAnimation spriteAnimation = this.standingAnimation.GetAnimation(this.standingDirection);
-                IEnumerator coroutine = this.AnimationLoopCoroutine(spriteAnimation, this.loopDuration);
-                this.animator.StartAnimation(coroutine);
+                this.StartStandingAnimation(direction);
             }
+        }
+
+        private void StartStandingAnimation() {
+            this.StartStandingAnimation(this.walkableObject.GetDirection());
+        }
+
+        private void StartStandingAnimation(Direction direction) {
+            this.standingDirection = direction;
+            SpriteAnimation spriteAnimation = this.standingAnimation.GetAnimation(direction);
+            IEnumerator coroutine = this.AnimationLoopCoroutine(spriteAnimation, this.loopDuration);
+            this.animator.StartAnimation(coroutine);
         }
         #endregion
     }

@@ -33,7 +33,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         private Stack<Sprite> stack = new Stack<Sprite>();
 
         // TODO: DOCUMENTATION
-        private IEnumerator animationCoroutine = null;
+        private IEnumerator animationCoroutine = null;  // TODO: STORE ANIMATION TAG
         #endregion
 
         #region Unity
