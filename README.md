@@ -19,7 +19,7 @@ Coming Soon...
 - Interaction and Trigger Systems
 - Sprite Animation
 
-And soon:
+And coming soon:
 
 - Character Objects
 - Inventory System
@@ -33,6 +33,10 @@ And soon:
 ## Installation
 
 Download or clone this repository into your project in the folder `Packages/com.skeltech.rpest`.
+
+## Changelog
+
+To view all the notable changes throughout this project, check the [CHANGELOG.md](./CHANGELOG.md) file.
 
 ## Documentation
 
