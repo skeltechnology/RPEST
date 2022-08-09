@@ -22,7 +22,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
 
         [SerializeField] private float loopDuration = 0.5f;
 
-        private IEnumerator coroutine;
+        private Direction standingDirection;
         #endregion
 
         #region Constructors
@@ -54,19 +54,27 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
             Debug.Log("STARTED MOVING");
             this.animator.StopAnimation();
             // TODO: CONFLICTS WITH INTERACTION.
-            
+
         }
 
         private void OnFinishedMovement(object sender, System.EventArgs e) {
             Debug.Log("STOPPED MOVING");
-            SpriteAnimation spriteAnimation = this.standingAnimation.GetAnimation(this.walkableObject.GetDirection());
+            this.standingDirection = this.walkableObject.GetDirection();
+            SpriteAnimation spriteAnimation = this.standingAnimation.GetAnimation(this.standingDirection);
             IEnumerator coroutine = this.AnimationLoopCoroutine(spriteAnimation, this.loopDuration);
             this.animator.StartAnimation(coroutine);
         }
 
         private void OnUpdateDirection(object sender, Direction direction) {
             // if not walking, then start standing animation with new direction
-            // TODO
+            if (direction != this.standingDirection) {
+                this.animator.StopAnimation();
+
+                this.standingDirection = direction;
+                SpriteAnimation spriteAnimation = this.standingAnimation.GetAnimation(this.standingDirection);
+                IEnumerator coroutine = this.AnimationLoopCoroutine(spriteAnimation, this.loopDuration);
+                this.animator.StartAnimation(coroutine);
+            }
         }
         #endregion
     }

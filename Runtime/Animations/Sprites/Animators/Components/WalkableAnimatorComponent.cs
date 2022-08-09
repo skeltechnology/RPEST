@@ -67,9 +67,11 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="direction">Direction of the walkable object.</param>
         private void OnUpdateDirection(object sender, Direction direction) {
-            SpriteAnimation animation = this.walkableAnimation.GetAnimation(direction);
-            this.animator.SetAnimation(animation);
-            this.animator.UpdateSprite(0f);
+            if (!this.animator.IsAnimating) {
+                SpriteAnimation animation = this.walkableAnimation.GetAnimation(direction);
+                this.animator.SetAnimation(animation);
+                this.animator.UpdateSprite(0f);
+            }
         }
         #endregion
     }

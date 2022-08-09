@@ -40,6 +40,9 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         public void AddImplementation(WorldObjectAnimatorComponent component) {
             this.components.Add(component);
         }
+
+        // TODO: REMOVE COMPONENT
+        // TODO: PAUSE/UNPAUSE COMPONENT
         #endregion
     }
 }
