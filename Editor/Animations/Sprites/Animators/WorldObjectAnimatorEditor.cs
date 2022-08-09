@@ -1,4 +1,4 @@
-using SkelTech.RPEST.Utilities;
+using SkelTech.RPEST.Utilities.Structures;
 
 using System;
 

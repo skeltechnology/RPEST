@@ -1,5 +1,7 @@
 using SkelTech.RPEST.Input.Controllers.Keys;
 
+using System.Collections;
+
 using UnityEngine;
 
 namespace SkelTech.RPEST.Input.Listeners.Keys.Movement {
@@ -22,6 +24,8 @@ namespace SkelTech.RPEST.Input.Listeners.Keys.Movement {
         /// Key associated with the movement.
         /// </summary>
         [SerializeField] private KeyCode clickKey = KeyCode.Mouse0, stopKey = KeyCode.Mouse1;
+
+        private bool waitingToMove = false;
         #endregion
 
         #region Initialization
@@ -41,7 +45,26 @@ namespace SkelTech.RPEST.Input.Listeners.Keys.Movement {
         /// </summary>
         private void MoveObject() {
             Vector3 mousePosition = this.camera.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
-            this.walkableObject.MoveTo(new Vector3(mousePosition.x, mousePosition.y, this.walkableObject.transform.position.z));
+            Vector3 cellPosition = new Vector3(mousePosition.x, mousePosition.y, this.walkableObject.transform.position.z);
+            if (this.walkableObject.IsMoving) {
+                if (!this.waitingToMove && this.walkableObject.CanMoveTo(cellPosition)) {
+                    this.waitingToMove = true;
+                    this.walkableObject.StopMoving();
+                    StartCoroutine(this.WaitForStopMovement(cellPosition));
+                }
+            }
+            else {
+                this.walkableObject.MoveTo(cellPosition);
+            }
+        }
+
+        private IEnumerator WaitForStopMovement(Vector3 position) {
+
+            while (this.walkableObject.IsMoving)
+                yield return null;
+            
+            this.walkableObject.MoveTo(position);
+            this.waitingToMove = false;
         }
         #endregion
     }

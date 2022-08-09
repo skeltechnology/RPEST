@@ -1,6 +1,6 @@
 {
   "name": "com.skeltech.rpest",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "displayName": "RPEST",
   "description": "A Unity package to develop 2D RPG.",
   "unity": "2021.3",

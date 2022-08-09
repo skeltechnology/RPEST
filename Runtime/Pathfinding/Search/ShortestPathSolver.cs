@@ -1,6 +1,7 @@
 using SkelTech.RPEST.Utilities.Search;
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using UnityEngine;
 
@@ -86,10 +87,10 @@ namespace SkelTech.RPEST.Pathfinding.Search {
         #endregion
 
         #region Operators
-        public override Cell[] solve(Cell initialState, int maxIterations) {
+        public override Cell[] Solve(Cell initialState, int maxIterations) {
             if (initialState == null || this.FinalState == null) return null;
             initialState.Visited = true;
-            return base.solve(initialState, maxIterations);
+            return base.Solve(initialState, maxIterations);
         }
         #endregion
 

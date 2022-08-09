@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace SkelTech.RPEST.Input.Controllers.Keys {
@@ -21,10 +22,6 @@ namespace SkelTech.RPEST.Input.Controllers.Keys {
         /// <returns>Boolean indicating if the key is active.</returns>
         protected abstract bool IsInputKeyActive(KeyCode key);
 
-        /// <summary>
-        /// Gets the collection of keys that will trigger listening callbacks.
-        /// </summary>
-        /// <returns>Collection of active keys.</returns>
         protected override ICollection<KeyCode> GetInputEvents() {
             LinkedList<KeyCode> result = new LinkedList<KeyCode>();
 

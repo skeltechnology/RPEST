@@ -1,4 +1,5 @@
 using SkelTech.RPEST.World.Elements.Objects;
+using SkelTech.RPEST.Utilities.Structures;
 
 using UnityEngine;
 
@@ -65,7 +66,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// </summary>
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="direction">Direction of the walkable object.</param>
-        private void OnUpdateDirection(object sender, Vector3Int direction) {
+        private void OnUpdateDirection(object sender, Direction direction) {
             SpriteAnimation animation = this.walkableAnimation.GetAnimation(direction);
             this.animator.SetAnimation(animation);
             this.animator.UpdateSprite(0f);

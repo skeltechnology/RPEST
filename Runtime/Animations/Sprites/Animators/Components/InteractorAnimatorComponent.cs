@@ -58,22 +58,11 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// Coroutine that plays the interaction animation.
         /// </summary>
         protected IEnumerator InteractionAnimation() {
-            // TODO: THIS COULD BE IN BASE CLASS
             this.LockActions(false);
-            this.animator.PushSprite();
 
-            SpriteAnimation animation = this.interactionAnimation.GetAnimation(this.interactableObject.GetCurrentDirection());
-            this.animator.SetAnimation(animation);
-
-            float time = 0;
-            while (time < this.interactionDuration) {
-                time += Time.deltaTime;
-                this.animator.UpdateSprite(time / this.interactionDuration);
-                yield return null;
-            }
-
-            this.animator.LoadSpriteFromStack();
-            this.animator.PopSprite();
+            SpriteAnimation animation = this.interactionAnimation.GetAnimation(this.interactableObject.GetDirection());
+            yield return this.AnimationCoroutine(animation, this.interactionDuration);
+            
             this.LockActions(true);
         }
 

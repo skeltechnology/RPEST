@@ -1,6 +1,7 @@
 using SkelTech.RPEST.Pathfinding.Search;
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -48,7 +49,7 @@ namespace SkelTech.RPEST.Pathfinding {
             this.ResetGrid();
             this.InitializeObstacles(obstacles);
             this.solver.FinalState = this.grid[endGridPosition.y, endGridPosition.x];
-            Cell[] result = this.solver.solve(this.grid[startGridPosition.y, startGridPosition.x], maxIterations);
+            Cell[] result = this.solver.Solve(this.grid[startGridPosition.y, startGridPosition.x], maxIterations);
             if (result == null) return null;
 
             Path path = new Path();
@@ -56,6 +57,22 @@ namespace SkelTech.RPEST.Pathfinding {
                 path.AddPosition(new Vector3(cell.Column, cell.Row, 0));
             }
             return path;
+        }
+
+        /// <summary>
+        /// Finds the shortest path of the two given positions, taking into account the given obstacles.
+        /// </summary>
+        /// <param name="startGridPosition">Start position of the path (grid coordinates).</param>
+        /// <param name="endGridPosition">End position of the path (grid coordinates).</param>
+        /// <param name="obstacles">Collection of positions the represent obstacles (grid coordinates).</param>
+        /// <param name="maxIterations">Maximum number of iterations that the algorithm will go through.</param>
+        /// <param name="callback">Method that will be called when pathfinding is completed.</param>
+        /// <returns>Shortest path.</returns>
+        public async void FindShortestPathAsync(Vector3Int startGridPosition, Vector3Int endGridPosition, ICollection<Vector3Int> obstacles, int maxIterations, System.Action<Path> callback) {
+            await Task.Factory.StartNew(() => {
+                Path path = this.FindShortestPath(startGridPosition, endGridPosition, obstacles, maxIterations);
+                callback.Invoke(path);
+            });
         }
         #endregion
 

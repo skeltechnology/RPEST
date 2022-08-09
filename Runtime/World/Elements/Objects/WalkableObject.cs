@@ -1,4 +1,5 @@
 using SkelTech.RPEST.Pathfinding;
+using SkelTech.RPEST.Utilities.Structures;
 
 using System;
 using System.Collections;
@@ -31,7 +32,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// <summary>
         /// Called when the object changes its direction.
         /// </summary>
-        public event EventHandler<Vector3Int> OnUpdateDirection;
+        public event EventHandler<Direction> OnUpdateDirection;
         #endregion
 
         #region Properties
@@ -102,14 +103,12 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// <summary>
         /// Current direction of the object.
         /// </summary>
-        protected Vector3Int lastDirection = Vector3Int.down;
-
-        // TODO: ADD START DIRECTION
+        [SerializeReference] protected Direction direction = Direction.Down;
 
         /// <summary>
         /// Queue of directions that the object will travel.
         /// </summary>
-        private Queue<Vector3Int> directionsQueue;
+        private Queue<Direction> directionsQueue;
 
         /// <summary>
         /// Indicates if the object is currently running.
@@ -119,12 +118,12 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         #region Unity
         protected virtual void Awake() {
-            this.directionsQueue = new Queue<Vector3Int>();
+            this.directionsQueue = new Queue<Direction>();
             this.IsMoving = false;
         }
 
         protected virtual void Start() {
-            this.OnUpdateDirection?.Invoke(this, this.lastDirection);
+            this.OnUpdateDirection?.Invoke(this, this.direction);
         }
         #endregion
 
@@ -141,8 +140,8 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// Gets the current direction of the object.
         /// </summary>
         /// <returns>Current direction of the object.</returns>
-        public Vector3Int GetCurrentDirection() {
-            return this.lastDirection;
+        public Direction GetDirection() {
+            return this.direction;
         }
         #endregion
 
@@ -169,38 +168,38 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// Moves the object to the cell above.
         /// </summary>
         public void MoveUp() {
-            this.Move(Vector3Int.up);
-        }
-
-        /// <summary>
-        /// Moves the object to the cell bellow.
-        /// </summary>
-        public void MoveDown() {
-            this.Move(Vector3Int.down);
+            this.Move(Direction.Up);
         }
 
         /// <summary>
         /// Moves the object to left cell.
         /// </summary>
         public void MoveLeft() {
-            this.Move(Vector3Int.left);
+            this.Move(Direction.Left);
+        }
+
+        /// <summary>
+        /// Moves the object to the cell bellow.
+        /// </summary>
+        public void MoveDown() {
+            this.Move(Direction.Down);
         }
 
         /// <summary>
         /// Moves the object to the right cell.
         /// </summary>
         public void MoveRight() {
-            this.Move(Vector3Int.right);
+            this.Move(Direction.Right);
         }
 
         /// <summary>
         /// Moves the object in the given direction.
         /// </summary>
         /// <param name="direction">Direction in which the object will be moved one.</param>
-        private void Move(Vector3Int direction) {
+        private void Move(Direction direction) {
             if (this.canMove) {
                 if (!this.IsMoving) {
-                    if (this.CanMoveTo(this.transform.localPosition + direction)) {  // Small optimization
+                    if (this.CanMoveTo(this.transform.localPosition + direction.ToVector3Int())) {  // Small optimization
                         this.directionsQueue.Enqueue(direction);
                         StartCoroutine(this.MoveQueuedDirections());
                     } else {
@@ -234,7 +233,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                     this.HasCollision()
                 );
                 if (path != null && path.GetPositions().Count > 1) {
-                    foreach (Vector3Int direction in path.GetDirections()) {
+                    foreach (Direction direction in path.GetDirections()) {
                         this.directionsQueue.Enqueue(direction);
                     }
                     StartCoroutine(MoveQueuedDirections());
@@ -263,7 +262,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             float missingDelta = 0f;
             while (this.directionsQueue.Count > 0) {
                 this.UpdateDirection(this.directionsQueue.Dequeue());
-                finalPosition = this.transform.localPosition + this.lastDirection;
+                finalPosition = this.transform.localPosition + this.direction.ToVector3Int();
                 if (this.CanMoveTo(finalPosition)) {
                     this.OnStartedMovement?.Invoke(this, EventArgs.Empty);
                     this.cellDistance = missingDelta;
@@ -315,9 +314,9 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// Updates the current direction of the object.
         /// </summary>
         /// <param name="direction">New direction.</param>
-        private void UpdateDirection(Vector3Int direction) {
-            if (!this.lastDirection.Equals(direction)) {
-                this.lastDirection = direction;
+        public void UpdateDirection(Direction direction) {
+            if (this.direction != direction) {
+                this.direction = direction;
                 this.OnUpdateDirection?.Invoke(this, direction);
             }
         }

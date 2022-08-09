@@ -1,5 +1,3 @@
-using SkelTech.RPEST.Utilities.Structures;
-
 using System;
 using System.Linq;
 
@@ -7,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 
-namespace SkelTech.RPEST.Utilities {
+namespace SkelTech.RPEST.Utilities.Structures {
     /// <summary>
     /// Base class for <c>Editor</c>s that have a "Select Implementation" layout.
     /// </summary>
@@ -67,7 +65,7 @@ namespace SkelTech.RPEST.Utilities {
                 if (this.listProperty.isExpanded) {
                     EditorGUI.indentLevel = 1;
                     SerializedProperty property = listProperty.GetArrayElementAtIndex(index);
-                    EditorGUI.PropertyField(rect, property, new GUIContent(property.managedReferenceFullTypename.Split('.').Last()), true); // TODO: NAME CHOICE
+                    EditorGUI.PropertyField(rect, property, new GUIContent(property.managedReferenceFullTypename.Split('.').Last()), true);
                 }
             };
             this.reorderableList.elementHeightCallback = (int index) => {
