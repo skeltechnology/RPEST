@@ -31,12 +31,12 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
 
         #region Initialization
         public override void Initialize() {
-            this.walkableObject.OnFinishedMovement += this.OnFinishedMovement;
+            this.walkableObject.OnFinishedCellMovement += this.OnFinishedCellMovement;
             this.walkableObject.OnUpdateMovement += this.OnUpdateMovement;
             this.walkableObject.OnUpdateDirection += this.OnUpdateDirection;
         }
         public override void Disable() {
-            this.walkableObject.OnFinishedMovement -= this.OnFinishedMovement;
+            this.walkableObject.OnFinishedCellMovement -= this.OnFinishedCellMovement;
             this.walkableObject.OnUpdateMovement -= this.OnUpdateMovement;
             this.walkableObject.OnUpdateDirection -= this.OnUpdateDirection;
         }
@@ -48,7 +48,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// </summary>
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="e">Callback arguments.</param>
-        private void OnFinishedMovement(object sender, System.EventArgs e) {
+        private void OnFinishedCellMovement(object sender, System.EventArgs e) {
             this.animator.UpdateSprite(0f);
         }
 
