@@ -15,14 +15,24 @@ namespace SkelTech.RPEST.World.Elements.Objects {
     public class WalkableObject : ColliderObject {
         #region Events
         /// <summary>
-        /// Called when the object starts moving to other cell.
+        /// Called when the object starts moving.
         /// </summary>
         public event EventHandler OnStartedMovement;
 
         /// <summary>
-        /// Called when the object finishes moving to other cell.
+        /// Called when the object finishes moving.
         /// </summary>
         public event EventHandler OnFinishedMovement;
+
+        /// <summary>
+        /// Called when the object starts moving to other cell.
+        /// </summary>
+        public event EventHandler OnStartedCellMovement;
+
+        /// <summary>
+        /// Called when the object finishes moving to other cell.
+        /// </summary>
+        public event EventHandler OnFinishedCellMovement;
 
         /// <summary>
         /// Called every frame while the object is moving, passing as parameter the percentage of walking.
@@ -241,6 +251,8 @@ namespace SkelTech.RPEST.World.Elements.Objects {
             }
         }
 
+        // TODO: MOVE DIRECTIONS
+
         /// <summary>
         /// Deletes any following movement instructions.
         /// If the object is currently moving, it will not stop until it finalizes the current movement.
@@ -257,6 +269,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// </summary>
         private IEnumerator MoveQueuedDirections() {
             this.IsMoving = true;
+            this.OnStartedMovement?.Invoke(this, EventArgs.Empty);
 
             Vector3 finalPosition;
             float missingDelta = 0f;
@@ -264,7 +277,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                 this.UpdateDirection(this.directionsQueue.Dequeue());
                 finalPosition = this.transform.localPosition + this.direction.ToVector3Int();
                 if (this.CanMoveTo(finalPosition)) {
-                    this.OnStartedMovement?.Invoke(this, EventArgs.Empty);
+                    this.OnStartedCellMovement?.Invoke(this, EventArgs.Empty);
                     this.cellDistance = missingDelta;
                     this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, finalPosition, missingDelta);
                     missingDelta = 0f;
@@ -283,13 +296,14 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                     }
                     this.transform.localPosition = finalPosition;
                     missingDelta = delta - (this.transform.localPosition - currentPosition).magnitude;
-                    this.OnFinishedMovement?.Invoke(this, EventArgs.Empty);
+                    this.OnFinishedCellMovement?.Invoke(this, EventArgs.Empty);
                 } else {
                     this.directionsQueue.Clear();
                 }
             }
 
             this.IsMoving = false;
+            this.OnFinishedMovement?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 

@@ -13,7 +13,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// <summary>
         /// Boolean indicating if the sprite is currently being animated.
         /// </summary>
-        public bool IsAnimating { get; private set; } = false;
+        public bool IsAnimating { get { return this.animationCoroutine != null; }}
         #endregion
 
         #region Fields
@@ -31,6 +31,9 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// Stack used to push and pop sprites, facilitating animations to the programmer.
         /// </summary>
         private Stack<Sprite> stack = new Stack<Sprite>();
+
+        // TODO: DOCUMENTATION
+        private IEnumerator animationCoroutine = null;  // TODO: STORE ANIMATION TAG
         #endregion
 
         #region Unity
@@ -69,14 +72,27 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         #endregion
 
         #region Operators
+        // TODO: DOCUMENTATE BOOL
         /// <summary>
         /// Animates the <c>SpriteRenderer</c>, by starting the given coroutine.
         /// The coroutine is only executed of the animator is not animating.
         /// </summary>
         /// <param name="coroutine">Coroutine that will be executed.</param>
-        public void Animate(IEnumerator coroutine) {
-            if (!this.IsAnimating)
+        public void StartAnimation(IEnumerator coroutine, bool force) {
+            if (!this.IsAnimating) {
                 this.StartCoroutine(this.AnimateCoroutine(coroutine));
+            } else if (force) {
+                Debug.Log("forced");
+                this.StartCoroutine(this.RestoreCoroutine(coroutine));
+            }
+        }
+
+        // TODO: DOCUMENTATION
+        public void StopAnimation() {
+            if (this.IsAnimating && this.animationCoroutine != null) {
+                this.StopCoroutine(this.animationCoroutine);
+                this.animationCoroutine = null;
+            }
         }
 
         /// <summary>
@@ -125,9 +141,18 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// </summary>
         /// <param name="coroutine">Coroutine that will be executed</param>
         private IEnumerator AnimateCoroutine(IEnumerator coroutine) {
-            this.IsAnimating = true;
+            this.animationCoroutine = coroutine;
             yield return this.StartCoroutine(coroutine);
-            this.IsAnimating = false;
+            this.animationCoroutine = null;
+        }
+
+        private IEnumerator RestoreCoroutine(IEnumerator newCoroutine) {
+            IEnumerator oldCoroutine = this.animationCoroutine;
+            this.StopCoroutine(oldCoroutine);
+
+            yield return this.StartCoroutine(this.AnimateCoroutine(newCoroutine));
+
+            this.StartCoroutine(this.AnimateCoroutine(oldCoroutine));
         }
         #endregion
     }

@@ -41,13 +41,13 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #region Unity
         protected override void Awake() {
             base.Awake();
-            this.OnStartedMovement += this.OnStartedMovementHandler;
-            this.OnFinishedMovement += this.OnFinishedMovementHandler;
+            this.OnStartedCellMovement += this.OnStartedCellMovementHandler;
+            this.OnFinishedCellMovement += this.OnFinishedCellMovementHandler;
         }
 
         protected override void OnDestroy() {
-            this.OnStartedMovement -= this.OnStartedMovementHandler;
-            this.OnFinishedMovement -= this.OnFinishedMovementHandler;
+            this.OnStartedCellMovement -= this.OnStartedCellMovementHandler;
+            this.OnFinishedCellMovement -= this.OnFinishedCellMovementHandler;
             base.OnDestroy();
         }
         #endregion
@@ -154,20 +154,20 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         #region Helpers
         /// <summary>
-        /// Helper callback to handle OnStartedMovement.
+        /// Helper callback to handle OnStartedCellMovement.
         /// </summary>
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="e">Arguments.</param>
-        private void OnStartedMovementHandler(object sender, System.EventArgs e) {
+        private void OnStartedCellMovementHandler(object sender, System.EventArgs e) {
             this.Trigger(this.transform.position, false);
         }
 
         /// <summary>
-        /// Helper callback to handle OnFinishedMovement.
+        /// Helper callback to handle OnFinishedCellMovement.
         /// </summary>
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="e">Arguments.</param>
-        protected void OnFinishedMovementHandler(object sender, System.EventArgs e) {
+        protected void OnFinishedCellMovementHandler(object sender, System.EventArgs e) {
             this.Trigger(this.transform.position, true);
         }
 

@@ -50,8 +50,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="interactable">Interactable that the interactor object is interacting with.</param>
         protected virtual void OnInteract(object sender, Interactable interactable) {
-            if (!this.animator.IsAnimating)
-                this.animator.Animate(this.InteractionAnimation());
+            this.animator.StartAnimation(this.InteractionAnimation(), true);
         }
 
         /// <summary>

@@ -62,6 +62,18 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
             this.animator.LoadSpriteFromStack();
             this.animator.PopSprite();
         }
+
+        // TODO: DOCUMENTATION
+        protected IEnumerator AnimationLoopCoroutine(SpriteAnimation animation, float duration) {
+            return this.AnimationLoopCoroutine(animation, duration, int.MaxValue);
+        }
+
+        protected IEnumerator AnimationLoopCoroutine(SpriteAnimation animation, float duration, int count) {
+            while (count > 0) {
+                yield return this.AnimationCoroutine(animation, duration);
+                --count;
+            }
+        }
         #endregion
     }
 }
