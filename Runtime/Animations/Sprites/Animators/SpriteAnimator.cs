@@ -72,20 +72,24 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         #endregion
 
         #region Operators
+        // TODO: DOCUMENTATE BOOL
         /// <summary>
         /// Animates the <c>SpriteRenderer</c>, by starting the given coroutine.
         /// The coroutine is only executed of the animator is not animating.
         /// </summary>
         /// <param name="coroutine">Coroutine that will be executed.</param>
-        public void StartAnimation(IEnumerator coroutine) {
-            if (!this.IsAnimating)
+        public void StartAnimation(IEnumerator coroutine, bool force) {
+            if (!this.IsAnimating) {
                 this.StartCoroutine(this.AnimateCoroutine(coroutine));
+            } else if (force) {
+                Debug.Log("forced");
+                this.StartCoroutine(this.RestoreCoroutine(coroutine));
+            }
         }
 
         // TODO: DOCUMENTATION
         public void StopAnimation() {
             if (this.IsAnimating && this.animationCoroutine != null) {
-                //Debug.Log(this.animationCoroutine);
                 this.StopCoroutine(this.animationCoroutine);
                 this.animationCoroutine = null;
             }
@@ -140,6 +144,15 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
             this.animationCoroutine = coroutine;
             yield return this.StartCoroutine(coroutine);
             this.animationCoroutine = null;
+        }
+
+        private IEnumerator RestoreCoroutine(IEnumerator newCoroutine) {
+            IEnumerator oldCoroutine = this.animationCoroutine;
+            this.StopCoroutine(oldCoroutine);
+
+            yield return this.StartCoroutine(this.AnimateCoroutine(newCoroutine));
+
+            this.StartCoroutine(this.AnimateCoroutine(oldCoroutine));
         }
         #endregion
     }

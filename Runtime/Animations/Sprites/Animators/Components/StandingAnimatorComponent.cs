@@ -55,7 +55,6 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         // TODO: DOCUMENTATION
         private void OnStartedMovement(object sender, System.EventArgs e) {
             this.animator.StopAnimation();
-            // TODO: CONFLICTS WITH INTERACTION.
 
         }
 
@@ -64,7 +63,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         }
 
         private void OnUpdateDirection(object sender, Direction direction) {
-            if (direction != this.standingDirection) {
+            if (direction != this.standingDirection && !this.walkableObject.IsMoving) {
                 this.animator.StopAnimation();
                 this.StartStandingAnimation(direction);
             }
@@ -78,7 +77,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
             this.standingDirection = direction;
             SpriteAnimation spriteAnimation = this.standingAnimation.GetAnimation(direction);
             IEnumerator coroutine = this.AnimationLoopCoroutine(spriteAnimation, this.loopDuration);
-            this.animator.StartAnimation(coroutine);
+            this.animator.StartAnimation(coroutine, false);
         }
         #endregion
     }
