@@ -82,7 +82,6 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
             if (!this.IsAnimating) {
                 this.StartCoroutine(this.AnimateCoroutine(coroutine));
             } else if (force) {
-                Debug.Log("forced");
                 this.StartCoroutine(this.RestoreCoroutine(coroutine));
             }
         }
@@ -94,6 +93,9 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
                 this.animationCoroutine = null;
             }
         }
+        // TODO: STOP ALL ANIMATION
+        // TODO: STOP ANIMATION BY TAG
+        // TODO: STOP MOST RECENT ANIMATION
 
         /// <summary>
         /// Updates the <c>SpriteRenderer></c> with a sprite in the sprite collection, based on a certain progress.
@@ -146,6 +148,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
             this.animationCoroutine = null;
         }
 
+        // TODO: REFACTOR, BECAUSE IT FAILS WITH 3-STACK
         private IEnumerator RestoreCoroutine(IEnumerator newCoroutine) {
             IEnumerator oldCoroutine = this.animationCoroutine;
             this.StopCoroutine(oldCoroutine);

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+// TODO: DOCUMENTATION
 namespace SkelTech.RPEST.Animations.Sprites.Animators {
     /// <summary>
     /// <c>MonoBehaviour</c> class that contains a collection of animator components.
