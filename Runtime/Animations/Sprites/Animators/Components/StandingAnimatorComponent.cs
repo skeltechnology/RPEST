@@ -34,14 +34,14 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         #endregion
 
         #region Initialization
-        public override void Initialize() {
+        protected override void Initialize() {
             this.walkableObject.OnStartedMovement += this.OnStartedMovement;
             this.walkableObject.OnFinishedMovement += this.OnFinishedMovement;
             this.walkableObject.OnUpdateDirection += this.OnUpdateDirection;
 
             if (!this.walkableObject.IsMoving) this.StartStandingAnimation();
         }
-        public override void Disable() {
+        protected override void Disable() {
             this.walkableObject.OnStartedMovement -= this.OnStartedMovement;
             this.walkableObject.OnFinishedMovement -= this.OnFinishedMovement;
             this.walkableObject.OnUpdateDirection -= this.OnUpdateDirection;

@@ -1,3 +1,5 @@
+using SkelTech.RPEST.Utilities.Structures;
+
 using System;
 using System.Collections;
 
@@ -8,7 +10,11 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
     /// <summary>
     /// Base class for animator components.
     /// </summary>
-    public abstract class WorldObjectAnimatorComponent {
+    public abstract class WorldObjectAnimatorComponent : Pausable {
+        #region Properties
+        public bool IsInitialized { get; private set; } = false;
+        #endregion
+
         #region Fields
         /// <summary>
         /// Reference to the animator that manages this component.
@@ -26,20 +32,36 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         }
         #endregion
 
+        #region Operators
+        public void Pause() {
+            if (!this.IsInitialized) return;
+
+            this.IsInitialized = false;
+            this.Disable();
+        }
+
+        public void Play() {
+            if (this.IsInitialized) return;
+
+            this.IsInitialized = true;
+            this.Initialize();
+        }
+        #endregion
+
         #region Initialization
         /// <summary>
         /// Method responsible for initializing the component.
         /// Every listening operation should be performed here.
         /// This method is called as soon as the animator is created.
         /// </summary>
-        public abstract void Initialize();
+        protected abstract void Initialize();
 
         /// <summary>
         /// Method responsible for disabling the necessary operations.
         /// Every unlistening operation should be performed here.
         /// This mehod is called as soon as the animator is destroyed.
         /// </summary>
-        public abstract void Disable();
+        protected abstract void Disable();
         #endregion
 
         #region Helpers

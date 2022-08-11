@@ -35,10 +35,10 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         #endregion
 
         #region Initialization
-        public override void Initialize() {
+        protected override void Initialize() {
             this.interactableObject.OnInteract += this.OnInteract;
         }
-        public override void Disable() {
+        protected override void Disable() {
             this.interactableObject.OnInteract -= this.OnInteract;
         }
         #endregion

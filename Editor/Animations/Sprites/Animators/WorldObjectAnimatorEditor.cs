@@ -28,11 +28,17 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
                 
                 WorldObjectAnimatorComponent component = (WorldObjectAnimatorComponent) serializedProperty.GetArrayElementAtIndex(index).managedReferenceValue;
                 if (component != null)
-                    component.Disable();
+                    component.Pause();
 
                 serializedProperty.DeleteArrayElementAtIndex(index);
                 list.index = -1;
             };
+        }
+        #endregion
+
+        #region Initialization
+        protected override void AddEditorImplementation(WorldObjectAnimatorComponent component) {
+            this.behaviour.GetComponents().Add(component);
         }
         #endregion
 

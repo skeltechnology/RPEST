@@ -11,7 +11,7 @@ namespace SkelTech.RPEST.Utilities.Structures {
     /// </summary>
     /// <typeparam name="A">Type of the class that has this editor.</typeparam>
     /// <typeparam name="B">Type of the implementation.</typeparam>
-    public abstract class SelectImplementationEditor<A, B> : Editor where A : UnityEngine.Object, SelectImplementation<B> {
+    public abstract class SelectImplementationEditor<A, B> : Editor where A : UnityEngine.Object {
         #region Fields
         /// <summary>
         /// Array of available implementations.
@@ -79,6 +79,8 @@ namespace SkelTech.RPEST.Utilities.Structures {
         #endregion
 
         #region Initialization
+        protected abstract void AddEditorImplementation(B implementation);
+
         /// <summary>
         /// Initializes the generic Select Implementation editor with the given values.
         /// </summary>
@@ -104,7 +106,7 @@ namespace SkelTech.RPEST.Utilities.Structures {
         /// Draws the interface of the editor.
         /// </summary>
         private void DrawInterface() {
-            if (behaviour == null) return;
+            if (this.behaviour == null) return;
             
             if (implementations == null || GUILayout.Button("Refresh Implementations")) {
                 // Find all implementations of WorldObjectAnimatorComponent using System.Reflection.Module
@@ -121,7 +123,7 @@ namespace SkelTech.RPEST.Utilities.Structures {
                 if (this.uniqueImplementations && this.Contains(implementations[implementationTypeIndex].FullName)) {
                     Debug.LogWarning("Invalid Operation. This list must contain a unique implementation for each class.");
                 } else {
-                    behaviour.AddImplementation(this.CreateImplementation(implementations[implementationTypeIndex]));
+                    this.AddEditorImplementation(this.CreateImplementation(implementations[implementationTypeIndex]));
                 }
             }
         }
