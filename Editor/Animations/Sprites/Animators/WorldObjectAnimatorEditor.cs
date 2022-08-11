@@ -2,7 +2,9 @@ using SkelTech.RPEST.Utilities.Structures;
 
 using System;
 
+using UnityEngine;
 using UnityEditor;
+using UnityEditorInternal;
 
 namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
     /// <summary>
@@ -12,7 +14,25 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
     public class WorldObjectAnimatorEditor : SelectImplementationEditor<WorldObjectAnimator, WorldObjectAnimatorComponent> {
         #region Unity
         protected void Awake() {
-            this.Awake("components", "Components", true);
+            this.Initialize("components", "Components", true);
+        }
+
+        protected override void OnEnable() {
+            base.OnEnable();
+            this.reorderableList.onRemoveCallback = (ReorderableList list) => {
+                int index = list.index;
+                if (index < 0 || index > list.count)
+                    return;
+                
+                SerializedProperty serializedProperty = list.serializedProperty;
+                
+                WorldObjectAnimatorComponent component = (WorldObjectAnimatorComponent) serializedProperty.GetArrayElementAtIndex(index).managedReferenceValue;
+                if (component != null)
+                    component.Disable();
+
+                serializedProperty.DeleteArrayElementAtIndex(index);
+                list.index = -1;
+            };
         }
         #endregion
 

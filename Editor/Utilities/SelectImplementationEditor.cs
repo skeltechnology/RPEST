@@ -28,8 +28,10 @@ namespace SkelTech.RPEST.Utilities.Structures {
         /// </summary>
         protected A behaviour;
 
-        private SerializedProperty listProperty;
-        private ReorderableList reorderableList; 
+        /// <summary>
+        /// Reference to the reorderable list.
+        /// </summary>
+        protected ReorderableList reorderableList; 
 
         /// <summary>
         /// Name of the list attribute.
@@ -48,21 +50,15 @@ namespace SkelTech.RPEST.Utilities.Structures {
         #endregion
 
         #region Unity
-        protected void Awake(string listName, string caption, bool uniqueImplementations) {
-            this.listName = listName;
-            this.caption = caption;
-            this.uniqueImplementations = uniqueImplementations;
-        }
-
-        private void OnEnable() {
+        protected virtual void OnEnable() {
             this.behaviour = this.target as A;
-            this.listProperty = serializedObject.FindProperty(this.listName);
-            this.reorderableList = new ReorderableList(this.serializedObject, this.listProperty, true, true, false, true);
+            SerializedProperty listProperty = serializedObject.FindProperty(this.listName);
+            this.reorderableList = new ReorderableList(this.serializedObject, listProperty, true, true, false, true);
             this.reorderableList.drawHeaderCallback = rect => {
                 EditorGUI.LabelField(rect, this.caption, EditorStyles.boldLabel);
             };
             this.reorderableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
-                if (this.listProperty.isExpanded) {
+                if (listProperty.isExpanded) {
                     EditorGUI.indentLevel = 1;
                     SerializedProperty property = listProperty.GetArrayElementAtIndex(index);
                     EditorGUI.PropertyField(rect, property, new GUIContent(property.managedReferenceFullTypename.Split('.').Last()), true);
@@ -79,6 +75,20 @@ namespace SkelTech.RPEST.Utilities.Structures {
             this.DrawInterface();
             this.reorderableList.DoLayoutList();        
             serializedObject.ApplyModifiedProperties();
+        }
+        #endregion
+
+        #region Initialization
+        /// <summary>
+        /// Initializes the generic Select Implementation editor with the given values.
+        /// </summary>
+        /// <param name="listName">Name of the field that stores the selected implementations.</param>
+        /// <param name="caption">Caption to be displayed as the title of the list at the inspector.</param>
+        /// <param name="uniqueImplementations">Boolean indicating if it is possible or not to have multiple implementations of the same class.</param>
+        protected void Initialize(string listName, string caption, bool uniqueImplementations) {
+            this.listName = listName;
+            this.caption = caption;
+            this.uniqueImplementations = uniqueImplementations;
         }
         #endregion
 
@@ -132,8 +142,8 @@ namespace SkelTech.RPEST.Utilities.Structures {
         /// <param name="typeFullname">Fullname of the class type.</param>
         /// <returns>Boolean indicating if the list of instantiated implementations contains the given type.</returns>
         private bool Contains(string typeFullname) {
-            for (int i = 0; i < this.listProperty.arraySize; ++i) {
-                if (this.listProperty.GetArrayElementAtIndex(i).managedReferenceFullTypename.Split(' ').Last().Equals(typeFullname))
+            for (int i = 0; i < this.reorderableList.serializedProperty.arraySize; ++i) {
+                if (this.reorderableList.serializedProperty.GetArrayElementAtIndex(i).managedReferenceFullTypename.Split(' ').Last().Equals(typeFullname))
                     return true;
             }
             return false;
