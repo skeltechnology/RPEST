@@ -72,7 +72,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="duration">Duration of the animation.</param>
         protected IEnumerator AnimationCoroutine(SpriteAnimation animation, float duration) {
             this.animator.PushSprite();
-            this.animator.SetAnimation(animation);
+            this.animator.SetSpriteAnimation(animation);
 
             float time = 0;
             while (time < duration) {

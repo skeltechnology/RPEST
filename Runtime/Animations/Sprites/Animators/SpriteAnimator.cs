@@ -13,19 +13,19 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// <summary>
         /// Boolean indicating if the sprite is currently being animated.
         /// </summary>
-        public bool IsAnimating { get { return this.animationCoroutine != null; }}
+        public bool IsAnimating { get { return this.animations.Count > 0; }}
         #endregion
 
         #region Fields
         /// <summary>
         /// Reference to the sprite renderer that will be animated.
         /// </summary>
-        private new SpriteRenderer renderer;
+        private SpriteRenderer spriteRenderer;
 
         /// <summary>
         /// Sprite collection that is currently being used to animate.
         /// </summary>
-        private new Sprite[] animation;
+        private Sprite[] spriteAnimation;
 
         /// <summary>
         /// Stack used to push and pop sprites, facilitating animations to the programmer.
@@ -33,12 +33,12 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         private Stack<Sprite> stack = new Stack<Sprite>();
 
         // TODO: DOCUMENTATION
-        private IEnumerator animationCoroutine = null;  // TODO: STORE ANIMATION TAG
+        private LinkedList<AnimationData> animations = new LinkedList<AnimationData>();
         #endregion
 
         #region Unity
         protected virtual void Awake() {
-            this.renderer = this.GetComponent<SpriteRenderer>();
+            this.spriteRenderer = this.GetComponent<SpriteRenderer>();
         }
         #endregion
 
@@ -47,8 +47,8 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// Gets the sprite renderer of the animator.
         /// </summary>
         /// <returns>Sprite renderer of the animator.</returns>
-        public SpriteRenderer GetRenderer() {
-            return this.renderer;
+        public SpriteRenderer GetSpriteRenderer() {
+            return this.spriteRenderer;
         }
         #endregion
 
@@ -57,8 +57,8 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// Sets a new collection of sprites that can be used to animate.
         /// </summary>
         /// <param name="animation"><c>SpriteAnimation</c> that contains a collection of sprites.</param>
-        public void SetAnimation(SpriteAnimation animation) {
-            this.animation = animation.GetSprites();
+        public void SetSpriteAnimation(SpriteAnimation animation) {
+            this.spriteAnimation = animation.GetSprites();
         }
 
         /// <summary>
@@ -66,8 +66,8 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// </summary>
         /// <param name="sprite"></param>
         public void SetSprite(Sprite sprite) {
-            if (this.renderer.sprite != sprite)
-                this.renderer.sprite = sprite;
+            if (this.spriteRenderer.sprite != sprite)
+                this.spriteRenderer.sprite = sprite;
         }
         #endregion
 
@@ -78,36 +78,45 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// The coroutine is only executed of the animator is not animating.
         /// </summary>
         /// <param name="coroutine">Coroutine that will be executed.</param>
-        public void StartAnimation(IEnumerator coroutine, bool force) {
+        public void StartAnimation(AnimationData animationData, bool force) {
             if (!this.IsAnimating) {
-                this.StartCoroutine(this.AnimateCoroutine(coroutine));
+                this.animations.AddFirst(animationData);
+                this.StartCoroutine(this.AnimationCoroutine());
             } else if (force) {
-                this.StartCoroutine(this.RestoreCoroutine(coroutine));
+                AnimationData currentAnimation = this.animations.First.Value;
+                currentAnimation.IsFinished = true;
+
+                LinkedListNode<AnimationData> firstNode = this.animations.First;
+                this.animations.AddAfter(firstNode, currentAnimation.Copy());
+                this.animations.AddAfter(firstNode, animationData);
+
+                this.StopCoroutine(currentAnimation.Coroutine);
             }
         }
 
         // TODO: DOCUMENTATION
         public void StopAnimation() {
-            if (this.IsAnimating && this.animationCoroutine != null) {
-                this.StopCoroutine(this.animationCoroutine);
-                this.animationCoroutine = null;
+            if (this.IsAnimating) {
+                AnimationData animation = this.animations.First.Value;
+                this.animations.RemoveFirst();
+                animation.IsFinished = true;
+                this.StopCoroutine(animation.Coroutine);
             }
         }
         // TODO: STOP ALL ANIMATION
         // TODO: STOP ANIMATION BY TAG
-        // TODO: STOP MOST RECENT ANIMATION
 
         /// <summary>
         /// Updates the <c>SpriteRenderer></c> with a sprite in the sprite collection, based on a certain progress.
         /// </summary>
         /// <param name="progress">Progress in percentage, between 0 and 1.</param>
         public void UpdateSprite(float progress) {
-            if (animation != null) {
+            if (this.spriteAnimation != null) {
                 progress = Mathf.Clamp01(progress);
-                int index = Mathf.FloorToInt(this.animation.Length * progress);
-                index = Mathf.Clamp(index, 0, this.animation.Length - 1);
+                int index = Mathf.FloorToInt(this.spriteAnimation.Length * progress);
+                index = Mathf.Clamp(index, 0, this.spriteAnimation.Length - 1);
 
-                this.SetSprite(this.animation[index]);
+                this.SetSprite(this.spriteAnimation[index]);
             }
         }
 
@@ -115,7 +124,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// Pushes the current sprite of the <c>SpriteRenderer</c> to the stack.
         /// </summary>
         public void PushSprite() {
-            Sprite sprite = this.renderer.sprite;
+            Sprite sprite = this.spriteRenderer.sprite;
             if (sprite != null)
                 this.stack.Push(sprite);
         }
@@ -133,29 +142,33 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// </summary>
         public void LoadSpriteFromStack() {
             if (this.stack.Count > 0)
-                this.renderer.sprite = this.stack.Peek();
+                this.spriteRenderer.sprite = this.stack.Peek();
         }
         #endregion
 
         #region Helpers
         /// <summary>
-        /// Helper coroutine that is used to execute an animation coroutine.
+        /// Helper coroutine that is used to execute the animations at the list.
         /// </summary>
-        /// <param name="coroutine">Coroutine that will be executed</param>
-        private IEnumerator AnimateCoroutine(IEnumerator coroutine) {
-            this.animationCoroutine = coroutine;
-            yield return this.StartCoroutine(coroutine);
-            this.animationCoroutine = null;
+        private IEnumerator AnimationCoroutine() {
+            // TODO: ADD NULL VERIFICATION
+            AnimationData animation;
+            while (this.animations.Count > 0) {
+                animation = this.animations.First.Value;
+                this.StartCoroutine(this.AnimationWrapperCoroutine(animation));
+                yield return new WaitUntil(() => {
+                    return animation.IsFinished;
+                });
+                if (this.animations.Count > 0)
+                    this.animations.RemoveFirst();
+            }
         }
 
-        // TODO: REFACTOR, BECAUSE IT FAILS WITH 3-STACK
-        private IEnumerator RestoreCoroutine(IEnumerator newCoroutine) {
-            IEnumerator oldCoroutine = this.animationCoroutine;
-            this.StopCoroutine(oldCoroutine);
+        private IEnumerator AnimationWrapperCoroutine(AnimationData animation) {
+            animation.IsFinished = false;
+            yield return this.StartCoroutine(animation.Coroutine);
+            animation.IsFinished = true;
 
-            yield return this.StartCoroutine(this.AnimateCoroutine(newCoroutine));
-
-            this.StartCoroutine(this.AnimateCoroutine(oldCoroutine));
         }
         #endregion
     }

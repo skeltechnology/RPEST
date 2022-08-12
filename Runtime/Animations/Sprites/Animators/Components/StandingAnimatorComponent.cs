@@ -77,7 +77,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
             this.standingDirection = direction;
             SpriteAnimation spriteAnimation = this.standingAnimation.GetAnimation(direction);
             IEnumerator coroutine = this.AnimationLoopCoroutine(spriteAnimation, this.loopDuration);
-            this.animator.StartAnimation(coroutine, false);
+            this.animator.StartAnimation(new AnimationData(coroutine, "STANDING"), false);
         }
         #endregion
     }

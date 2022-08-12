@@ -52,7 +52,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="e">Callback arguments.</param>
         private void OnStartedCellMovement(object sender, System.EventArgs e) {
             SpriteAnimation animation = this.walkableAnimation.GetAnimation(this.walkableObject.GetDirection());
-            this.animator.SetAnimation(animation);
+            this.animator.SetSpriteAnimation(animation);
             this.animator.UpdateSprite(0f);
         }
 
@@ -82,7 +82,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         private void OnUpdateDirection(object sender, Direction direction) {
             if (!this.animator.IsAnimating) {
                 SpriteAnimation animation = this.walkableAnimation.GetAnimation(direction);
-                this.animator.SetAnimation(animation);
+                this.animator.SetSpriteAnimation(animation);
                 this.animator.UpdateSprite(0f);
             }
         }
