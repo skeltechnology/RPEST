@@ -52,8 +52,8 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="e">Callback arguments.</param>
         private void OnStartedCellMovement(object sender, System.EventArgs e) {
             SpriteAnimation animation = this.walkableAnimation.GetAnimation(this.walkableObject.GetDirection());
-            this.animator.SetSpriteAnimation(animation);
-            this.animator.UpdateSprite(0f);
+            //this.animator.SetSpriteAnimation(animation);
+            //this.animator.UpdateSprite(0f);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="e">Callback arguments.</param>
         private void OnFinishedCellMovement(object sender, System.EventArgs e) {
-            this.animator.UpdateSprite(0f);
+            //this.animator.UpdateSprite(0f);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="progress">Progress in percentage, between 0 and 1, of the walking.</param>
         private void OnUpdateMovement(object sender, float progress) {
-            this.animator.UpdateSprite(progress);
+            //this.animator.UpdateSprite(progress);
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         private void OnUpdateDirection(object sender, Direction direction) {
             if (!this.animator.IsAnimating) {
                 SpriteAnimation animation = this.walkableAnimation.GetAnimation(direction);
-                this.animator.SetSpriteAnimation(animation);
-                this.animator.UpdateSprite(0f);
+                //this.animator.SetSpriteAnimation(animation);
+                //this.animator.UpdateSprite(0f);
             }
         }
         #endregion

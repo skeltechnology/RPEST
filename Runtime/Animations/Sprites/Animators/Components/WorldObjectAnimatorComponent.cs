@@ -71,18 +71,13 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="animation">Animation that will be played.</param>
         /// <param name="duration">Duration of the animation.</param>
         protected IEnumerator AnimationCoroutine(SpriteAnimation animation, float duration) {
-            this.animator.PushSprite();
-            this.animator.SetSpriteAnimation(animation);
-
+            Sprite[] sprites = animation.GetSprites();
             float time = 0;
             while (time < duration) {
                 time += Time.deltaTime;
-                this.animator.UpdateSprite(time / duration);
+                this.animator.UpdateSprite(sprites, time / duration);
                 yield return null;
             }
-
-            this.animator.LoadSpriteFromStack();
-            this.animator.PopSprite();
         }
 
         // TODO: DOCUMENTATION
@@ -92,6 +87,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
 
         protected IEnumerator AnimationLoopCoroutine(SpriteAnimation animation, float duration, int count) {
             while (count > 0) {
+                Debug.Log(animation.GetSprites().GetHashCode());
                 yield return this.AnimationCoroutine(animation, duration);
                 --count;
             }
