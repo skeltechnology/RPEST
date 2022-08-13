@@ -31,7 +31,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// Constructor of the interactor animator component.
         /// </summary>
         /// <param name="animator">Animator that manages this component.</param>
-        public InteractorAnimatorComponent(WorldObjectAnimator animator) : base(animator) {}
+        public InteractorAnimatorComponent(WorldObjectAnimator animator) : base(animator, "INTERACTION") {}
         #endregion
 
         #region Initialization
@@ -50,7 +50,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="interactable">Interactable that the interactor object is interacting with.</param>
         protected virtual void OnInteract(object sender, Interactable interactable) {
-            this.animator.StartAnimation(new AnimationData(this.InteractionAnimation(), "INTERACTION"), true);
+            this.animator.StartAnimation(new AnimationData(this.InteractionAnimation(), this.tag), true);
         }
 
         /// <summary>

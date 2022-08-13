@@ -1,5 +1,6 @@
 using System.Collections;
 
+// TODO: DOCUMENTATION
 namespace SkelTech.RPEST.Animations.Sprites.Animators {
     public enum AnimationStatus { Waiting, Animating, Canceled, Finished }
 
@@ -8,6 +9,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         public IEnumerator Coroutine { get; private set; }
         public string Tag { get; private set; }
         public AnimationStatus Status { get; set; }
+        
         #endregion
 
         #region Constructors

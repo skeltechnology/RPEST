@@ -22,6 +22,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// </summary>
         [SerializeField] private DirectedAnimation walkableAnimation;
 
+        // TODO: DOCUMENTATION
         private float progress = 0f;
         #endregion
 
@@ -30,7 +31,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// Constructor of the walkable animator component.
         /// </summary>
         /// <param name="animator">Animator that manages this component.</param>
-        public WalkableAnimatorComponent(WorldObjectAnimator animator) : base(animator) {}
+        public WalkableAnimatorComponent(WorldObjectAnimator animator) : base(animator, "WALKING") {}
         #endregion
 
         #region Initialization
@@ -53,7 +54,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="e">Callback arguments.</param>
         private void OnStartedCellMovement(object sender, System.EventArgs e) {
-            AnimationData animation = new AnimationData(this.WalkingAnimation(this.walkableObject.GetDirection()), "WALKING");
+            AnimationData animation = new AnimationData(this.WalkingAnimation(this.walkableObject.GetDirection()), this.tag);
             this.progress = 0f;
             this.animator.StartAnimation(animation, true);
         }
@@ -77,6 +78,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
             this.animator.UpdateSprite(animation.GetSprites(), 0f);
         }
 
+        // TODO: DOCUMENTATION
         private IEnumerator WalkingAnimation(Direction direction) {
             Sprite[] sprites = this.walkableAnimation.GetAnimation(direction).GetSprites();
             while (this.progress < 1f) {

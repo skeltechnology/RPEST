@@ -20,6 +20,9 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// Reference to the animator that manages this component.
         /// </summary>
         [SerializeReference, HideInInspector] protected WorldObjectAnimator animator;
+
+        // TODO: DOCUMENTATION
+        [SerializeField, HideInInspector] protected string tag;
         #endregion
 
         #region Constructors
@@ -27,12 +30,14 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// Constructor of the animator component.
         /// </summary>
         /// <param name="animator">Animator that manages this component.</param>
-        public WorldObjectAnimatorComponent(WorldObjectAnimator animator) {
+        public WorldObjectAnimatorComponent(WorldObjectAnimator animator, string tag) {
             this.animator = animator;
+            this.tag = tag;
         }
         #endregion
 
         #region Operators
+        // TODO: DOCUMENTATION
         public void Pause() {
             if (!this.IsInitialized) return;
 

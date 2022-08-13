@@ -13,7 +13,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// <summary>
         /// Boolean indicating if the sprite is currently being animated.
         /// </summary>
-        public bool IsAnimating { get { return this.animations.Count > 0; }}
+        public bool IsAnimating { get; private set; }
         #endregion
 
         #region Fields
@@ -61,9 +61,12 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// </summary>
         /// <param name="coroutine">Coroutine that will be executed.</param>
         public void StartAnimation(AnimationData animationData, bool force) {
-            if (!this.IsAnimating) {
+            if (this.animations.Count == 0) {
                 this.animations.AddFirst(animationData);
-                this.StartCoroutine(this.AnimationCoroutine());
+                if (!this.IsAnimating) {
+                    this.IsAnimating = true;
+                    this.StartCoroutine(this.AnimationCoroutine());
+                }
             } else if (force) {
                 AnimationData currentAnimation = this.animations.First.Value;
                 currentAnimation.Status = AnimationStatus.Canceled;
@@ -77,14 +80,45 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         // TODO: DOCUMENTATION
         public void StopAnimation() {
             if (this.IsAnimating) {
-                AnimationData animation = this.animations.First.Value;
-                animation.Status = AnimationStatus.Canceled;
-                this.animations.RemoveFirst();
-                this.StopCoroutine(animation.Coroutine);
+                this.StopAnimation(this.animations.First);
             }
         }
-        // TODO: STOP ALL ANIMATION
-        // TODO: STOP ANIMATION BY TAG
+
+        public void StopAnimation(string tag) {
+            if (this.IsAnimating) {
+                if (this.animations.First.Value.Tag.Equals(tag)) {
+                    this.StopAnimation();
+                } else if (this.animations.Count > 1) {
+                    for(LinkedListNode<AnimationData> node = this.animations.First; node != null; node = node.Next) {
+                        if (node.Value.Tag.Equals(tag)) {
+                            this.StopAnimation(node);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void StopAnimation(LinkedListNode<AnimationData> node) {
+            AnimationData animation = node.Value;
+            this.animations.Remove(node);
+
+            if (animation.Status == AnimationStatus.Animating) {
+                animation.Status = AnimationStatus.Canceled;
+                this.StopCoroutine(animation.Coroutine);
+            } else {
+                animation.Status = AnimationStatus.Canceled;
+            }
+
+        }
+
+        public void StopAllAnimations() {
+            if (this.IsAnimating) {
+                LinkedListNode<AnimationData> first = this.animations.First;
+                this.animations.Clear();
+                this.StopAnimation(first);
+            }
+        }
 
         /// <summary>
         /// Updates the <c>SpriteRenderer></c> with a sprite in the sprite collection, based on a certain progress.
@@ -106,17 +140,25 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// Helper coroutine that is used to execute the animations at the list.
         /// </summary>
         private IEnumerator AnimationCoroutine() {
-            // TODO: ADD NULL VERIFICATION
             AnimationData animation;
+            IEnumerator wrapper;
             while (this.animations.Count > 0) {
                 animation = this.animations.First.Value;
-                this.StartCoroutine(this.AnimationWrapperCoroutine(animation));
+                wrapper = this.AnimationWrapperCoroutine(animation);
+
+                this.StartCoroutine(wrapper);
                 yield return new WaitWhile(() => {
                     return animation.Status == AnimationStatus.Animating;
                 });
-                if (this.animations.Count > 0 && animation.Status == AnimationStatus.Finished)
-                    this.animations.RemoveFirst();
+
+                if (animation.Status == AnimationStatus.Finished) {
+                    if (this.animations.Count > 0) this.animations.RemoveFirst();
+                } else {  // Canceled
+                    this.StopCoroutine(wrapper);
+                }
             }
+
+            this.IsAnimating = false;
         }
 
         private IEnumerator AnimationWrapperCoroutine(AnimationData animation) {
