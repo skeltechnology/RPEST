@@ -1,6 +1,8 @@
 using SkelTech.RPEST.World.Elements.Objects;
 using SkelTech.RPEST.Utilities.Structures;
 
+using System.Collections;
+
 using UnityEngine;
 
 namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
@@ -19,6 +21,9 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// Animation that will be played when the walkable object walks.
         /// </summary>
         [SerializeField] private DirectedAnimation walkableAnimation;
+
+        // TODO: DOCUMENTATION
+        private float progress = 0f;
         #endregion
 
         #region Constructors
@@ -26,19 +31,17 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// Constructor of the walkable animator component.
         /// </summary>
         /// <param name="animator">Animator that manages this component.</param>
-        public WalkableAnimatorComponent(WorldObjectAnimator animator) : base(animator) {}
+        public WalkableAnimatorComponent(WorldObjectAnimator animator) : base(animator, "WALKING") {}
         #endregion
 
         #region Initialization
-        public override void Initialize() {
+        protected override void Initialize() {
             this.walkableObject.OnStartedCellMovement += this.OnStartedCellMovement;
-            this.walkableObject.OnFinishedCellMovement += this.OnFinishedCellMovement;
             this.walkableObject.OnUpdateMovement += this.OnUpdateMovement;
             this.walkableObject.OnUpdateDirection += this.OnUpdateDirection;
         }
-        public override void Disable() {
+        protected override void Disable() {
             this.walkableObject.OnStartedCellMovement -= this.OnStartedCellMovement;
-            this.walkableObject.OnFinishedCellMovement -= this.OnFinishedCellMovement;
             this.walkableObject.OnUpdateMovement -= this.OnUpdateMovement;
             this.walkableObject.OnUpdateDirection -= this.OnUpdateDirection;
         }
@@ -51,18 +54,9 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="e">Callback arguments.</param>
         private void OnStartedCellMovement(object sender, System.EventArgs e) {
-            SpriteAnimation animation = this.walkableAnimation.GetAnimation(this.walkableObject.GetDirection());
-            this.animator.SetAnimation(animation);
-            this.animator.UpdateSprite(0f);
-        }
-
-        /// <summary>
-        /// Callback responsible for updating the sprite at the end of the movement.
-        /// </summary>
-        /// <param name="sender">Sender of the callback.</param>
-        /// <param name="e">Callback arguments.</param>
-        private void OnFinishedCellMovement(object sender, System.EventArgs e) {
-            this.animator.UpdateSprite(0f);
+            AnimationData animation = new AnimationData(this.WalkingAnimation(this.walkableObject.GetDirection()), this.tag);
+            this.progress = 0f;
+            this.animator.StartAnimation(animation, true);
         }
 
         /// <summary>
@@ -71,7 +65,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="progress">Progress in percentage, between 0 and 1, of the walking.</param>
         private void OnUpdateMovement(object sender, float progress) {
-            this.animator.UpdateSprite(progress);
+            this.progress = progress;
         }
 
         /// <summary>
@@ -80,11 +74,18 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="direction">Direction of the walkable object.</param>
         private void OnUpdateDirection(object sender, Direction direction) {
-            if (!this.animator.IsAnimating) {
-                SpriteAnimation animation = this.walkableAnimation.GetAnimation(direction);
-                this.animator.SetAnimation(animation);
-                this.animator.UpdateSprite(0f);
+            SpriteAnimation animation = this.walkableAnimation.GetAnimation(direction);
+            this.animator.UpdateSprite(animation.GetSprites(), 0f);
+        }
+
+        // TODO: DOCUMENTATION
+        private IEnumerator WalkingAnimation(Direction direction) {
+            Sprite[] sprites = this.walkableAnimation.GetAnimation(direction).GetSprites();
+            while (this.progress < 1f) {
+                this.animator.UpdateSprite(sprites, progress);
+                yield return null;
             }
+            this.animator.UpdateSprite(sprites, 0f);
         }
         #endregion
     }

@@ -2,7 +2,6 @@ using SkelTech.RPEST.World.Elements.Objects;
 using SkelTech.RPEST.Utilities.Structures;
 
 using System.Collections;
-using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -30,31 +29,30 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// Constructor of the standing animator component.
         /// </summary>
         /// <param name="animator">Animator that manages this component.</param>
-        public StandingAnimatorComponent(WorldObjectAnimator animator) : base(animator) {}
+        public StandingAnimatorComponent(WorldObjectAnimator animator) : base(animator, "STANDING") {}
         #endregion
 
         #region Initialization
-        public override void Initialize() {
+        protected override void Initialize() {
             this.walkableObject.OnStartedMovement += this.OnStartedMovement;
             this.walkableObject.OnFinishedMovement += this.OnFinishedMovement;
             this.walkableObject.OnUpdateDirection += this.OnUpdateDirection;
 
             if (!this.walkableObject.IsMoving) this.StartStandingAnimation();
         }
-        public override void Disable() {
+        protected override void Disable() {
             this.walkableObject.OnStartedMovement -= this.OnStartedMovement;
             this.walkableObject.OnFinishedMovement -= this.OnFinishedMovement;
             this.walkableObject.OnUpdateDirection -= this.OnUpdateDirection;
 
-            // TODO: VERIFY IF IT'S STANDING ANIMATION
-            if (!this.walkableObject.IsMoving) this.animator.StopAnimation();
+            if (!this.walkableObject.IsMoving) this.animator.StopAnimation(this.tag);
         }
         #endregion
 
         #region Helpers
         // TODO: DOCUMENTATION
         private void OnStartedMovement(object sender, System.EventArgs e) {
-            this.animator.StopAnimation();
+            this.animator.StopAnimation(this.tag);
 
         }
 
@@ -77,7 +75,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
             this.standingDirection = direction;
             SpriteAnimation spriteAnimation = this.standingAnimation.GetAnimation(direction);
             IEnumerator coroutine = this.AnimationLoopCoroutine(spriteAnimation, this.loopDuration);
-            this.animator.StartAnimation(coroutine, false);
+            this.animator.StartAnimation(new AnimationData(coroutine, this.tag), false);
         }
         #endregion
     }

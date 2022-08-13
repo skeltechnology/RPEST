@@ -1,3 +1,5 @@
+using SkelTech.RPEST.Utilities.Structures;
+
 using System;
 using System.Collections;
 
@@ -8,12 +10,19 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
     /// <summary>
     /// Base class for animator components.
     /// </summary>
-    public abstract class WorldObjectAnimatorComponent {
+    public abstract class WorldObjectAnimatorComponent : Pausable {
+        #region Properties
+        public bool IsInitialized { get; private set; } = false;
+        #endregion
+
         #region Fields
         /// <summary>
         /// Reference to the animator that manages this component.
         /// </summary>
         [SerializeReference, HideInInspector] protected WorldObjectAnimator animator;
+
+        // TODO: DOCUMENTATION
+        [SerializeField, HideInInspector] protected string tag;
         #endregion
 
         #region Constructors
@@ -21,8 +30,26 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// Constructor of the animator component.
         /// </summary>
         /// <param name="animator">Animator that manages this component.</param>
-        public WorldObjectAnimatorComponent(WorldObjectAnimator animator) {
+        public WorldObjectAnimatorComponent(WorldObjectAnimator animator, string tag) {
             this.animator = animator;
+            this.tag = tag;
+        }
+        #endregion
+
+        #region Operators
+        // TODO: DOCUMENTATION
+        public void Pause() {
+            if (!this.IsInitialized) return;
+
+            this.IsInitialized = false;
+            this.Disable();
+        }
+
+        public void Play() {
+            if (this.IsInitialized) return;
+
+            this.IsInitialized = true;
+            this.Initialize();
         }
         #endregion
 
@@ -32,14 +59,14 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// Every listening operation should be performed here.
         /// This method is called as soon as the animator is created.
         /// </summary>
-        public abstract void Initialize();
+        protected abstract void Initialize();
 
         /// <summary>
         /// Method responsible for disabling the necessary operations.
         /// Every unlistening operation should be performed here.
         /// This mehod is called as soon as the animator is destroyed.
         /// </summary>
-        public abstract void Disable();
+        protected abstract void Disable();
         #endregion
 
         #region Helpers
@@ -49,18 +76,13 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// <param name="animation">Animation that will be played.</param>
         /// <param name="duration">Duration of the animation.</param>
         protected IEnumerator AnimationCoroutine(SpriteAnimation animation, float duration) {
-            this.animator.PushSprite();
-            this.animator.SetAnimation(animation);
-
+            Sprite[] sprites = animation.GetSprites();
             float time = 0;
             while (time < duration) {
                 time += Time.deltaTime;
-                this.animator.UpdateSprite(time / duration);
+                this.animator.UpdateSprite(sprites, time / duration);
                 yield return null;
             }
-
-            this.animator.LoadSpriteFromStack();
-            this.animator.PopSprite();
         }
 
         // TODO: DOCUMENTATION
