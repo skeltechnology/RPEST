@@ -87,7 +87,6 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
 
         protected IEnumerator AnimationLoopCoroutine(SpriteAnimation animation, float duration, int count) {
             while (count > 0) {
-                Debug.Log(animation.GetSprites().GetHashCode());
                 yield return this.AnimationCoroutine(animation, duration);
                 --count;
             }

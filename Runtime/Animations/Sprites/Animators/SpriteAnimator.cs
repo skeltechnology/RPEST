@@ -47,7 +47,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// Changes the current sprite of the <c>SpriteRenderer</c>.
         /// </summary>
         /// <param name="sprite"></param>
-        private void SetSprite(Sprite sprite) {
+        public void SetSprite(Sprite sprite) {
             if (this.spriteRenderer.sprite != sprite)
                 this.spriteRenderer.sprite = sprite;
         }
@@ -61,8 +61,6 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// </summary>
         /// <param name="coroutine">Coroutine that will be executed.</param>
         public void StartAnimation(AnimationData animationData, bool force) {
-            Debug.Log("sta");
-            Debug.Log(this.animations.Count);
             if (!this.IsAnimating) {
                 this.animations.AddFirst(animationData);
                 this.StartCoroutine(this.AnimationCoroutine());
@@ -111,8 +109,6 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
             // TODO: ADD NULL VERIFICATION
             AnimationData animation;
             while (this.animations.Count > 0) {
-                Debug.Log("beg");
-                Debug.Log(this.animations.Count);
                 animation = this.animations.First.Value;
                 this.StartCoroutine(this.AnimationWrapperCoroutine(animation));
                 yield return new WaitWhile(() => {
@@ -120,8 +116,6 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
                 });
                 if (this.animations.Count > 0 && animation.Status == AnimationStatus.Finished)
                     this.animations.RemoveFirst();
-                Debug.Log("end");
-                Debug.Log(this.animations.Count);
             }
         }
 
