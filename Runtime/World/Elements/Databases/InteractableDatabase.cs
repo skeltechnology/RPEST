@@ -1,5 +1,7 @@
 using SkelTech.RPEST.World.Elements.Objects;
 
+using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace SkelTech.RPEST.World.Database {
@@ -20,6 +22,17 @@ namespace SkelTech.RPEST.World.Database {
                     return interactable;
             }
             return null;
+        }
+
+        // TODO: DOCUMENTATION
+        public ICollection<Interactable> GetInteractables(Vector3 globalPosition) {
+            ICollection<Interactable> result = new LinkedList<Interactable>();
+
+            foreach (Interactable interactable in this.database) {
+                if (interactable.GetWorldObject().Intersects(globalPosition))
+                    result.Add(interactable);
+            }
+            return result;
         }
         #endregion
     }

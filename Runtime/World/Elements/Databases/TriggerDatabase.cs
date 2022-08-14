@@ -1,5 +1,7 @@
 using SkelTech.RPEST.World.Elements.Objects;
 
+using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace SkelTech.RPEST.World.Database {
@@ -20,6 +22,17 @@ namespace SkelTech.RPEST.World.Database {
                     return trigger;
             }
             return null;
+        }
+
+        // TODO: DOCUMENTATION
+        public ICollection<Trigger> GetTriggers(Vector3 globalPosition) {
+            ICollection<Trigger> result = new LinkedList<Trigger>();
+
+            foreach (Trigger trigger in this.database) {
+                if (trigger.GetWorldObject().Intersects(globalPosition))
+                    result.Add(trigger);
+            }
+            return result;
         }
         #endregion
     }
