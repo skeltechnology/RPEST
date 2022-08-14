@@ -113,6 +113,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         }
 
         public void StopAllAnimations() {
+            // TODO: BUG
             if (this.IsAnimating) {
                 LinkedListNode<AnimationData> first = this.animations.First;
                 this.animations.Clear();
