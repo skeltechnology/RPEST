@@ -27,11 +27,9 @@ namespace SkelTech.RPEST.World.Database {
         /// <returns>Collider at the correspondet position. <c>null</c> if there isn't one.</returns>
         public ColliderObject GetCollider(Vector3 globalPosition) {
             // TODO: GLOBAL POSITION NOT WORKING, REFACTOR POSITIONS IN WALKABLE
-            foreach (ColliderObject worldObject in this.database) {
-                if (worldObject.CollidesWith(globalPosition))
-                    return worldObject;
-            }
-            return null;
+            return GetFirst(this.database, (collider) => {
+                return collider.CollidesWith(globalPosition);
+            });
         }
 
         /// <summary>
@@ -40,13 +38,9 @@ namespace SkelTech.RPEST.World.Database {
         /// <param name="bounds">Bounds of the search area.</param>
         /// <returns>Collection of colliders that intersect the given bounds.</returns>
         public ICollection<ColliderObject> GetColliders(Bounds bounds) {
-            ICollection<ColliderObject> result = new LinkedList<ColliderObject>();
-
-            foreach (ColliderObject worldObject in this.database) {
-                if (worldObject.HasCollision() && worldObject.Intersects(bounds))
-                    result.Add(worldObject);
-            }
-            return result;
+            return GetAll(this.database, (collider) => {
+                return collider.HasCollision() && collider.Intersects(bounds);
+            });
         }
         #endregion
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SkelTech.RPEST.World.Database {
@@ -52,6 +53,26 @@ namespace SkelTech.RPEST.World.Database {
         /// <param name="item"></param>
         public virtual void Remove(T item) {
             this.database.Remove(item);
+        }
+        #endregion
+
+        #region Helpers
+        protected static A GetFirst<A>(ICollection<A> collection, Func<A, bool> evaluator) where A : class {
+            foreach (A element in collection) {
+                if (evaluator.Invoke(element))
+                    return element;
+            }
+            return null;
+        }
+
+        protected static ICollection<A> GetAll<A>(ICollection<A> collection, Func<A, bool> evaluator) where A : class {
+            ICollection<A> result = new LinkedList<A>();
+
+            foreach (A element in collection) {
+                if (evaluator.Invoke(element))
+                    result.Add(element);
+            }
+            return result;
         }
         #endregion
     }
