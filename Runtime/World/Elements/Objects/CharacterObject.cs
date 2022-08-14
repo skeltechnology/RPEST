@@ -1,10 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 namespace SkelTech.RPEST.World.Elements.Objects {
-    public abstract class CharacterObject : InteractorObject, Interactable {
+    public abstract class CharacterObject<T> : InteractorObject, Interactable {
+        #region Properties
+        public T Data { get { return this.data; } set { this.data = value; }}
+        #endregion
+
+        #region Fields
+        [SerializeField] private T data;
+        #endregion
+
         #region Getters
         public WorldObject GetWorldObject() { return this; }
         #endregion
