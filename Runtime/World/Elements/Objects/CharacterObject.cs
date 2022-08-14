@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace SkelTech.RPEST.World.Elements.Objects {
+    // TODO: DOCUMENTATION
     public abstract class CharacterObject<T> : InteractorObject, Interactable {
         #region Properties
         public T Data { get { return this.data; } set { this.data = value; }}
