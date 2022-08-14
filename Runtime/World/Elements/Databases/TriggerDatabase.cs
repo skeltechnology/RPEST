@@ -17,22 +17,16 @@ namespace SkelTech.RPEST.World.Database {
         /// <param name="globalPosition">Position of the trigger (global coordinates).</param>
         /// <returns>Trigger at the correspondet position. <c>null</c> if there isn't one.</returns>
         public Trigger GetTrigger(Vector3 globalPosition) {
-            foreach (Trigger trigger in this.database) {
-                if (trigger.GetWorldObject().Intersects(globalPosition))
-                    return trigger;
-            }
-            return null;
+            return GetFirst(this.database, (trigger) => {
+                return trigger.GetWorldObject().Intersects(globalPosition);
+            });
         }
 
         // TODO: DOCUMENTATION
         public ICollection<Trigger> GetTriggers(Vector3 globalPosition) {
-            ICollection<Trigger> result = new LinkedList<Trigger>();
-
-            foreach (Trigger trigger in this.database) {
-                if (trigger.GetWorldObject().Intersects(globalPosition))
-                    result.Add(trigger);
-            }
-            return result;
+            return GetAll(this.database, (trigger) => {
+                return trigger.GetWorldObject().Intersects(globalPosition);
+            });
         }
         #endregion
     }

@@ -17,22 +17,16 @@ namespace SkelTech.RPEST.World.Database {
         /// <param name="globalPosition">Position of the interactable (global coordinates).</param>
         /// <returns>Interactable at the correspondet position. <c>null</c> if there isn't one.</returns>
         public Interactable GetInteractable(Vector3 globalPosition) {
-            foreach (Interactable interactable in this.database) {
-                if (interactable.GetWorldObject().Intersects(globalPosition))
-                    return interactable;
-            }
-            return null;
+            return GetFirst(this.database, (interactable) => {
+                return interactable.GetWorldObject().Intersects(globalPosition); 
+            });
         }
 
         // TODO: DOCUMENTATION
         public ICollection<Interactable> GetInteractables(Vector3 globalPosition) {
-            ICollection<Interactable> result = new LinkedList<Interactable>();
-
-            foreach (Interactable interactable in this.database) {
-                if (interactable.GetWorldObject().Intersects(globalPosition))
-                    result.Add(interactable);
-            }
-            return result;
+            return GetAll(this.database, (interactable) => {
+                return interactable.GetWorldObject().Intersects(globalPosition); 
+            });
         }
         #endregion
     }
