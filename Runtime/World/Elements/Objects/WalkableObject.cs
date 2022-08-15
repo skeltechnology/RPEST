@@ -40,7 +40,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         public event EventHandler<float> OnUpdateMovement;
 
         /// <summary>
-        /// Called when the object changes its direction.
+        /// Called when the object changes its direction, passing as parameter the new direction.
         /// </summary>
         public event EventHandler<Direction> OnUpdateDirection;
         #endregion
@@ -224,6 +224,19 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         }
 
         /// <summary>
+        /// Makes the object walk in the given directions.
+        /// </summary>
+        /// <param name="directions">Collection of directions.</param>
+        public void Move(ICollection<Direction> directions) {
+            if (this.canMove && !this.IsMoving && direction != null) {
+                foreach (Direction direction in directions) {
+                    this.directionsQueue.Enqueue(direction);
+                }
+                StartCoroutine(MoveQueuedDirections());
+            }
+        }
+
+        /// <summary>
         /// Moves the object to the given position.
         /// </summary>
         /// <param name="position">Destination position.</param>
@@ -250,8 +263,6 @@ namespace SkelTech.RPEST.World.Elements.Objects {
                 }
             }
         }
-
-        // TODO: MOVE DIRECTIONS
 
         /// <summary>
         /// Deletes any following movement instructions.
