@@ -1,3 +1,5 @@
+using System;
+
 namespace SkelTech.RPEST.Utilities.Inventories {
     public class Item<T> where T : ItemData {
         #region Properties
@@ -10,7 +12,34 @@ namespace SkelTech.RPEST.Utilities.Inventories {
 
         public Item(T itemData, int count) {
             this.ItemData = itemData;
-            this.Count = count;
+            this.SetCount(count);
+        }
+        #endregion
+
+        #region Setters
+        public void SetCount(int value) {
+            if (this.ItemData.MaximumCount > 0)
+                value = Math.Min(value, this.ItemData.MaximumCount);
+            
+            this.Count = Math.Max(value, 0);
+        }
+
+        public int Increment() {
+            return this.Increment(1);
+        }
+
+        public int Increment(int amount) {
+            this.SetCount(this.Count + amount);
+            return this.Count;
+        }
+
+        public int Decrement() {
+            return this.Decrement(1);
+        }
+
+        public int Decrement(int amount) {
+            this.SetCount(this.Count - amount);
+            return this.Count;
         }
         #endregion
     }
