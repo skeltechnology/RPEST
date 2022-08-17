@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SkelTech.RPEST.Utilities.Inventories {
+namespace SkelTech.RPEST.Utilities.InventorySystem {
     public class ItemData : ScriptableObject {
         #region Properties
         public int Id { get { return this.id; }}

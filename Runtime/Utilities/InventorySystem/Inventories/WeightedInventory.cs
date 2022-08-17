@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SkelTech.RPEST.Utilities.Inventories {
+namespace SkelTech.RPEST.Utilities.InventorySystem {
     public class WeightedInventory<T> : MapInventory<WeightedItem<T>, T> where T : WeightedItemData {
         #region Properties
         public float MaximumTotalWeight { get; private set; }

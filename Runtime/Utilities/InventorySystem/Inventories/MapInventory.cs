@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SkelTech.RPEST.Utilities.Inventories {
+namespace SkelTech.RPEST.Utilities.InventorySystem {
     public abstract class MapInventory<A, B> : Inventory<A, B> where A : Item<B> where B : ItemData {
         #region Fields
         protected Dictionary<int, A> items;

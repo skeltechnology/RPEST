@@ -1,6 +1,6 @@
 using System;
 
-namespace SkelTech.RPEST.Utilities.Inventories {
+namespace SkelTech.RPEST.Utilities.InventorySystem {
     public class Item<T> where T : ItemData {
         #region Properties
         public T ItemData { get; protected set; }
