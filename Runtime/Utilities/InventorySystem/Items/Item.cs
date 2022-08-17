@@ -3,8 +3,8 @@ using System;
 namespace SkelTech.RPEST.Utilities.Inventories {
     public class Item<T> where T : ItemData {
         #region Properties
-        public T ItemData { get; private set; }
-        public int Count { get; private set; }
+        public T ItemData { get; protected set; }
+        public int Count { get; protected set; }
         #endregion
 
         #region Constructors
