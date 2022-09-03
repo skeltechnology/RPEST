@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 
 namespace SkelTech.RPEST.Utilities.InventorySystem {
-    public abstract class MapInventory<A, B> : Inventory<A, B> where A : Item<B> where B : ItemData {
+    public abstract class MapInventory<A, B> : Inventory<A, B> where A : ClassicItem<B> where B : ClassicItemData {
         #region Fields
-        protected Dictionary<int, A> items;
+        protected Dictionary<int, A> items = new Dictionary<int, A>();
         #endregion
 
         #region Getters
@@ -74,9 +74,17 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
 
         #region Helpers
         protected abstract A CreateItem(B itemData, int amount);
-        protected abstract bool NewItemCondition(B itemData, int amount);
-        protected abstract bool IncrementItemCondition(A item, int amount);
-        protected abstract void ClearItem(A item);
+
+        protected virtual void ClearItem(A item) {
+            this.items.Remove(item.ItemData.Id);
+        }
+        
+        protected virtual bool NewItemCondition(B itemData, int amount) {
+            return amount <= itemData.MaximumCount;
+        }
+        protected virtual bool IncrementItemCondition(A item, int amount) {
+            return (item.Count + amount) <= item.ItemData.MaximumCount;
+        }
         #endregion
     }
 }

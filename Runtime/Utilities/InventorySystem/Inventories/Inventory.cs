@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 namespace SkelTech.RPEST.Utilities.InventorySystem {
-    public interface Inventory<A, B> where A : Item<B> where B : ItemData {
+    public interface Inventory<A, B> where A : ClassicItem<B> where B : ClassicItemData {
         #region Getters
         public A GetItem(int id);
         public A GetItem(string itemName);

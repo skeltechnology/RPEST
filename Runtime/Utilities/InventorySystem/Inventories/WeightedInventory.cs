@@ -25,21 +25,11 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
         }
 
         protected override bool NewItemCondition(T itemData, int amount) {
-            if (amount <= itemData.MaximumCount) {
-                return this.CanAddItem(itemData, amount);
-            }
-            return false;
+            return base.NewItemCondition(itemData, amount) && this.CanAddItem(itemData, amount);
         }
 
         protected override bool IncrementItemCondition(WeightedItem<T> item, int amount) {
-            if ((item.Count + amount) <= item.ItemData.MaximumCount) {
-                return this.CanAddItem(item.ItemData, amount);
-            }
-            return false;
-        }
-
-        protected override void ClearItem(WeightedItem<T> item) {
-            this.items.Remove(item.ItemData.Id);
+            return base.IncrementItemCondition(item, amount) && this.CanAddItem(item.ItemData, amount);
         }
 
         private bool CanAddItem(T itemData, int amount) {
