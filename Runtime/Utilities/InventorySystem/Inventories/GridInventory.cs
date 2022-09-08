@@ -1,7 +1,13 @@
 using SkelTech.RPEST.Utilities.Structures;
 
+using System;
+
 namespace SkelTech.RPEST.Utilities.InventorySystem {
     public class GridInventory<T>  where T : GridItemData {
+        #region Events
+        public event EventHandler OnUpdateInventory;
+        #endregion
+
         #region Properties
         public int Rows { get { return this.grid.Rows; }}
         public int Columns { get { return this.grid.Columns; }}
@@ -68,11 +74,15 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
                 item.Increment(amount);
             }
 
+            this.UpdateEventHandlers();
             return true;
         }
 
         public bool SwapItems(IntPosition position1, IntPosition position2) {
-            return this.grid.Swap(position1, position2);
+            bool result = this.grid.Swap(position1, position2);
+            if (result) this.UpdateEventHandlers();
+
+            return result;
         }
 
         public GridItem<T> RemoveItem(IntPosition position) {
@@ -89,6 +99,8 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
                 item.Decrement(amount);
                 if (item.Count == 0)
                     this.ClearItem(item);
+
+                this.UpdateEventHandlers();
                 return item;
             }
             return null;
@@ -96,6 +108,7 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
 
         public void Clear() {
             this.grid.Fill(null);
+            this.UpdateEventHandlers();
         }
         #endregion
 
@@ -106,6 +119,10 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
 
         private void ClearItem(GridItem<T> item) {
             this.grid[item.Position.Row, item.Position.Column] = null;
+        }
+        
+        private void UpdateEventHandlers() {
+            this.OnUpdateInventory?.Invoke(this, EventArgs.Empty);
         }
         #endregion
     }
