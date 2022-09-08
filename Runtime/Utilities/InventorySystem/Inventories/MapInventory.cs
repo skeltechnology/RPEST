@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 namespace SkelTech.RPEST.Utilities.InventorySystem {
-    public abstract class MapInventory<A, B> : Inventory<A, B> where A : ClassicItem<B> where B : ClassicItemData {
+    public abstract class MapInventory<A, B> where A : ClassicItem<B> where B : ClassicItemData {
         #region Fields
         protected Dictionary<int, A> items = new Dictionary<int, A>();
         #endregion
@@ -43,7 +43,7 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
                 item = this.CreateItem(itemData, amount);
                 return this.items.TryAdd(itemData.Id, item);
             } else {
-                if (!this.IncrementItemCondition(item, amount)) return false;
+                if (!this.NewItemCondition(item.ItemData, item.Count + amount)) return false;
 
                 item.Increment(amount);
                 return true;
@@ -53,6 +53,7 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
         public A RemoveItem(int id) {
             return this.RemoveItem(id, 1);
         }
+        
         public A RemoveItem(int id, int amount) {
             if (amount <= 0) return null;
 
@@ -67,7 +68,7 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
             return null;
         }
 
-        public void RemoveItems() {
+        public void Clear() {
             this.items.Clear();
         }
         #endregion
@@ -75,15 +76,12 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
         #region Helpers
         protected abstract A CreateItem(B itemData, int amount);
 
-        protected virtual void ClearItem(A item) {
+        protected void ClearItem(A item) {
             this.items.Remove(item.ItemData.Id);
         }
         
         protected virtual bool NewItemCondition(B itemData, int amount) {
             return amount <= itemData.MaximumCount;
-        }
-        protected virtual bool IncrementItemCondition(A item, int amount) {
-            return (item.Count + amount) <= item.ItemData.MaximumCount;
         }
         #endregion
     }

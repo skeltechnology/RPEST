@@ -28,10 +28,6 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
             return base.NewItemCondition(itemData, amount) && this.CanAddItem(itemData, amount);
         }
 
-        protected override bool IncrementItemCondition(WeightedItem<T> item, int amount) {
-            return base.IncrementItemCondition(item, amount) && this.CanAddItem(item.ItemData, amount);
-        }
-
         private bool CanAddItem(T itemData, int amount) {
             float newTotalWeight = this.TotalWeight + itemData.Weight * amount;
             return newTotalWeight <= this.MaximumTotalWeight;

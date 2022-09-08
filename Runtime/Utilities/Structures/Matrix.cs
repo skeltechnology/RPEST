@@ -56,6 +56,22 @@ namespace SkelTech.RPEST.Utilities.Structures {
                 }
             }
         }
+
+        public bool Swap(IntPosition position1, IntPosition position2) {
+            if (this.IsValidPosition(position1) && this.IsValidPosition(position2)) {
+                T temp = this.data[position1.Row, position1.Column];
+                this.data[position1.Row, position1.Column] = this.data[position2.Row, position2.Column];
+                this.data[position2.Row, position2.Column] = temp;
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsValidPosition(IntPosition position) {
+            if (position.Row < 0 || position.Row >= this.Rows) return false;
+            if (position.Column < 0 || position.Column >= this.Columns) return false;
+            return true;
+        }
         #endregion
     }
 }
