@@ -3,8 +3,8 @@ using UnityEngine;
 namespace SkelTech.RPEST.Utilities.InventorySystem {
     public class GridItemData : ClassicItemData {
         #region Properties
-        public float HorizontalSize { get { return this.horizontalSize; }}
-        public float VerticalSize { get { return this.verticalSize; }}
+        public int HorizontalSize { get { return this.horizontalSize; }}
+        public int VerticalSize { get { return this.verticalSize; }}
         #endregion
 
         #region Fields

@@ -66,7 +66,7 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
                 if (!this.CheckAmountCondition(itemData, amount)) return false;
 
                 item = new GridItem<T>(itemData, position, amount);
-                this.grid[position.Row, position.Column] = item;
+                if (!this.AddItemToGrid(item)) return false;
             } else {  // Occupied cell
                 if (!item.ItemData.Equals(itemData)) return false;  // Can't increase a different item
                 if (!this.CheckAmountCondition(itemData, item.Count + amount)) return false;  // Overflows the maximum count
@@ -78,11 +78,12 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
             return true;
         }
 
-        public bool SwapItems(IntPosition position1, IntPosition position2) {
-            bool result = this.grid.Swap(position1, position2);
-            if (result) this.UpdateEventHandlers();
+        public bool MoveItem(GridItem<T> item, IntPosition newPosition) {
+            GridItem<T> newItem = new GridItem<T>(item.ItemData, newPosition, item.Count);
+            if (!this.AddItemToGrid(newItem)) return false;
 
-            return result;
+            this.RemoveItemFromGrid(item);
+            return true;
         }
 
         public GridItem<T> RemoveItem(IntPosition position) {
@@ -98,7 +99,7 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
             if (item != null) {
                 item.Decrement(amount);
                 if (item.Count == 0)
-                    this.ClearItem(item);
+                    this.RemoveItemFromGrid(item);
 
                 this.UpdateEventHandlers();
                 return item;
@@ -113,12 +114,50 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
         #endregion
 
         #region Helpers
-        private bool CheckAmountCondition(T itemData, int amount) {
-            return amount <= itemData.MaximumCount;
+        private bool AddItemToGrid(GridItem<T> item) {
+            if (!this.CanBePlaced(item, item.Position)) return false;
+
+            return this.PlaceItem(item, item);
         }
 
-        private void ClearItem(GridItem<T> item) {
-            this.grid[item.Position.Row, item.Position.Column] = null;
+        private void RemoveItemFromGrid(GridItem<T> item) {
+            this.PlaceItem(item, null);
+        }
+
+        private bool PlaceItem(GridItem<T> item, GridItem<T> value) {
+            if (!this.CheckInsideGrid(item, item.Position)) return false;
+
+            for (int i = 0; i < item.ItemData.VerticalSize; ++i) {
+                for (int j = 0; j < item.ItemData.HorizontalSize; ++j) {
+                    this.grid[item.Position.Row + i, item.Position.Column + j] = value;
+                }
+            }
+            return true;
+        }
+
+        private bool CanBePlaced(GridItem<T> item, IntPosition position) {
+            for (int i = 0; i < item.ItemData.VerticalSize; ++i) {
+                for (int j = 0; j < item.ItemData.HorizontalSize; ++j) {
+                    if (this.grid[position.Row + i, position.Column + j] != null) return false;
+                }
+            }
+            return true;
+        }
+
+        private bool CheckInsideGrid(GridItem<T> item, IntPosition position) {
+            IntPosition currentPosition = new IntPosition();
+            for (int i = 0; i < item.ItemData.VerticalSize; ++i) {
+                currentPosition.Row = position.Row + i;
+                for (int j = 0; j < item.ItemData.HorizontalSize; ++j) {
+                    currentPosition.Column = position.Column + j;
+                    if (!this.grid.IsValidPosition(currentPosition)) return false;
+                }
+            }
+            return true;
+        }
+
+        private bool CheckAmountCondition(T itemData, int amount) {
+            return amount <= itemData.MaximumCount;
         }
         
         private void UpdateEventHandlers() {
