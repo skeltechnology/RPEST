@@ -7,8 +7,19 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
         public event EventHandler OnUpdateInventory;
         #endregion
 
+        #region Properties
+        public int MaximumUniqueItemsCount { get; private set; }
+        public int UniqueItemsCount { get { return this.items.Count; }}
+        #endregion
+
         #region Fields
         protected Dictionary<int, A> items = new Dictionary<int, A>();
+        #endregion
+
+        #region Constructors
+        public MapInventory(int maximumUniqueItemsCount) {
+            this.MaximumUniqueItemsCount = maximumUniqueItemsCount;
+        }
         #endregion
 
         #region Getters
@@ -49,7 +60,7 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
                 bool added = this.items.TryAdd(itemData.Id, item);
                 if (!added) return false;
             } else {
-                if (!this.NewItemCondition(item.ItemData, item.Count + amount)) return false;
+                if (!this.IncrementItemCondition(item, amount)) return false;
 
                 item.Increment(amount);
             }
@@ -86,7 +97,11 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
         protected abstract A CreateItem(B itemData, int amount);
         
         protected virtual bool NewItemCondition(B itemData, int amount) {
-            return amount <= itemData.MaximumCount;
+            return this.UniqueItemsCount < this.MaximumUniqueItemsCount && amount <= itemData.MaximumCount;
+        }
+
+        protected virtual bool IncrementItemCondition(A item, int amount) {
+            return item.Count + amount <= item.ItemData.MaximumCount;
         }
 
         private void ClearItem(A item) {

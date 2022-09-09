@@ -14,7 +14,7 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
         #endregion
 
         #region Constructors
-        public WeightedInventory(float maximumTotalWeight) {
+        public WeightedInventory(int maximumUniqueItemsCount, float maximumTotalWeight) : base(maximumUniqueItemsCount) {
             this.MaximumTotalWeight = maximumTotalWeight;
         }
         #endregion
@@ -26,6 +26,10 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
 
         protected override bool NewItemCondition(T itemData, int amount) {
             return base.NewItemCondition(itemData, amount) && this.CanAddItem(itemData, amount);
+        }
+
+        protected override bool IncrementItemCondition(WeightedItem<T> item, int amount) {
+            return base.IncrementItemCondition(item, amount) && this.CanAddItem(item.ItemData, amount);
         }
 
         private bool CanAddItem(T itemData, int amount) {
