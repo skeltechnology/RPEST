@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -8,7 +7,8 @@ namespace SkelTech.RPEST.Utilities.Structures {
     // TODO: DOCUMENTATION
     public enum RPESTCoroutineStatus { Created, Running, Paused, Finished, Canceled }
 
-    public class RPESTCoroutine : Pausable{
+    public class RPESTCoroutine {
+        // TODO: YIELDABLE
         // TODO: EVENTS
         #region Properties
         public RPESTCoroutineStatus Status { get; private set; }
@@ -28,32 +28,35 @@ namespace SkelTech.RPEST.Utilities.Structures {
         #endregion
 
         #region Operators
-        public void Start(MonoBehaviour caller) {
+        public bool Start(MonoBehaviour caller) {
             if (caller == null) throw new Exception("Caller argument can not be null");
-            if (this.Status != RPESTCoroutineStatus.Created) throw new Exception("Coroutine was already started before");
+            if (this.Status != RPESTCoroutineStatus.Created) return false;
 
             this.Status = RPESTCoroutineStatus.Running;
             caller.StartCoroutine(this.CoroutineWrapper());
+            return true;
         }
 
-        public void Stop() {
-            if (this.Status == RPESTCoroutineStatus.Created) throw new Exception("Coroutine was not started");
+        public bool Stop() {
             if (this.Status == RPESTCoroutineStatus.Finished || 
-                this.Status == RPESTCoroutineStatus.Canceled) throw new Exception("Coroutine has already terminated");
+                this.Status == RPESTCoroutineStatus.Canceled) return false;
             
             this.Status = RPESTCoroutineStatus.Canceled;
+            return true;
         }
 
-        public void Pause() {
-            if (this.Status != RPESTCoroutineStatus.Running) throw new Exception("Coroutine needs to be running, in order to be paused");
+        public bool Pause() {
+            if (this.Status != RPESTCoroutineStatus.Running) return false;
 
             this.Status = RPESTCoroutineStatus.Paused;
+            return true;
         }
 
-        public void Play() {
-            if (this.Status != RPESTCoroutineStatus.Paused) throw new Exception("Coroutine needs to be paused, in order to be played");
+        public bool Play() {
+            if (this.Status != RPESTCoroutineStatus.Paused) return false;
 
             this.Status = RPESTCoroutineStatus.Running;
+            return true;
         }
         #endregion
 
@@ -63,9 +66,14 @@ namespace SkelTech.RPEST.Utilities.Structures {
                 if (this.Status == RPESTCoroutineStatus.Paused) {
                     yield return null;
                 } else if (this.Status == RPESTCoroutineStatus.Running) {
-                    if (this.routine.MoveNext()) yield return this.routine.Current;
-                    else this.Status = RPESTCoroutineStatus.Finished;
-                } else {  // Finished or cancelled
+                    if (this.routine.MoveNext()) {
+                        yield return this.routine.Current;
+                    }
+                    else {
+                        this.Status = RPESTCoroutineStatus.Finished;
+                        break;
+                    }
+                } else {  // Cancelled
                     break;
                 }
             }
