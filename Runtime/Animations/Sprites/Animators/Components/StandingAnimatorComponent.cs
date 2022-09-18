@@ -34,14 +34,12 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
 
         #region Initialization
         protected override void Initialize() {
-            this.walkableObject.OnStartedMovement += this.OnStartedMovement;
             this.walkableObject.OnFinishedMovement += this.OnFinishedMovement;
             this.walkableObject.OnUpdateDirection += this.OnUpdateDirection;
 
             if (!this.walkableObject.IsMoving) this.StartStandingAnimation();
         }
         protected override void Disable() {
-            this.walkableObject.OnStartedMovement -= this.OnStartedMovement;
             this.walkableObject.OnFinishedMovement -= this.OnFinishedMovement;
             this.walkableObject.OnUpdateDirection -= this.OnUpdateDirection;
 
@@ -50,19 +48,14 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         #endregion
 
         #region Helpers
-        // TODO: DOCUMENTATION
-        private void OnStartedMovement(object sender, System.EventArgs e) {
-            this.animator.StopAnimation(this.tag);
-
-        }
-
         private void OnFinishedMovement(object sender, System.EventArgs e) {
+            this.animator.StopAnimation(this.tag);
             this.StartStandingAnimation();
         }
 
         private void OnUpdateDirection(object sender, Direction direction) {
             if (direction != this.standingDirection && !this.walkableObject.IsMoving) {
-                this.animator.StopAnimation();
+                this.animator.StopAnimation(this.tag);
                 this.StartStandingAnimation(direction);
             }
         }
