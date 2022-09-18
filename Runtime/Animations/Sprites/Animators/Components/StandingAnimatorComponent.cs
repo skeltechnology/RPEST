@@ -6,7 +6,9 @@ using System.Collections;
 using UnityEngine;
 
 namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
-    // TODO: DOCUMENTATION
+    /// <summary>
+    /// Component responsible for animating a <c>WalkableObject</c> that is not moving.
+    /// </summary>
     public class StandingAnimatorComponent : WorldObjectAnimatorComponent {
         #region Fields
         /// <summary>
@@ -19,8 +21,14 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// </summary>
         [SerializeField] private DirectedAnimation standingAnimation;
 
+        /// <summary>
+        /// Duration of a single animation cycle.
+        /// </summary>
         [SerializeField] private float loopDuration = 0.5f;
 
+        /// <summary>
+        /// Direction of the most recent standing animation played.
+        /// </summary>
         private Direction standingDirection;
         #endregion
 
@@ -48,6 +56,7 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         #endregion
 
         #region Helpers
+        // TODO: DOCUMENTATION
         private void OnFinishedMovement(object sender, System.EventArgs e) {
             this.animator.StopAnimation(this.tag);
             this.StartStandingAnimation();

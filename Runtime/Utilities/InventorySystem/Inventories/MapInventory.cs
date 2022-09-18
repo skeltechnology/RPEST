@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace SkelTech.RPEST.Utilities.InventorySystem {
+    // TODO: DOCUMENTATION
     public abstract class MapInventory<A, B> where A : ClassicItem<B> where B : ClassicItemData {
         #region Events
         public event EventHandler OnUpdateInventory;

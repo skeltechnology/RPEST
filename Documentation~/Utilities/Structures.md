@@ -16,6 +16,10 @@ Its element must implement the `IComparable` interface.
 
 Any class that can change between two action states (play and stop) should implement this `Interface`.
 
+## RPEST Custom Coroutine
+
+// TODO: DOCUMENTATION
+
 ## Utility Models
 
 |Class|Description|
