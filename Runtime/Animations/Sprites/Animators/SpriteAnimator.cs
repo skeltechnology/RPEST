@@ -85,16 +85,11 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         }
 
         public void StopAnimation(string tag) {
-            // TODO: IMPROVE
             if (this.IsAnimating) {
-                if (this.animations.First.Value.Tag.Equals(tag)) {
-                    this.StopAnimation();
-                } else if (this.animations.Count > 1) {
-                    for(LinkedListNode<AnimationData> node = this.animations.First; node != null; node = node.Next) {
-                        if (node.Value.Tag.Equals(tag)) {
-                            this.StopAnimation(node);
-                            break;
-                        }
+                for(LinkedListNode<AnimationData> node = this.animations.First; node != null; node = node.Next) {
+                    if (node.Value.Tag.Equals(tag)) {
+                        this.StopAnimation(node);
+                        break;
                     }
                 }
             }
