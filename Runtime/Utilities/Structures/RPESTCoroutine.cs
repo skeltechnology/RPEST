@@ -7,14 +7,15 @@ namespace SkelTech.RPEST.Utilities.Structures {
     // TODO: DOCUMENTATION
     public enum RPESTCoroutineStatus { Created, Running, Paused, Finished, Canceled }
 
-    public class RPESTCoroutine {
-        // TODO: YIELDABLE
+    public class RPESTCoroutine : CustomYieldInstruction{
         #region Events
         public event EventHandler OnCoroutineFinished;
         #endregion
 
         #region Properties
         public RPESTCoroutineStatus Status { get; private set; }
+
+        public override bool keepWaiting { get { return this.Status == RPESTCoroutineStatus.Running; }}
         #endregion
 
         #region Fields

@@ -137,9 +137,8 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
                 if (animation.Coroutine.Status == RPESTCoroutineStatus.Created) animation.Coroutine.Start(this);
                 else if (animation.Coroutine.Status == RPESTCoroutineStatus.Paused) animation.Coroutine.Play();
 
-                yield return new WaitWhile(() => {
-                    return animation.Coroutine.Status == RPESTCoroutineStatus.Running;
-                });
+                // Wait while coroutine is running
+                yield return animation.Coroutine;
 
                 if (animation.Coroutine.Status == RPESTCoroutineStatus.Finished) {
                     if (this.animations.Count > 0) this.animations.RemoveFirst();
