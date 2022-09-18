@@ -9,7 +9,10 @@ namespace SkelTech.RPEST.Utilities.Structures {
 
     public class RPESTCoroutine {
         // TODO: YIELDABLE
-        // TODO: EVENTS
+        #region Events
+        public event EventHandler OnCoroutineFinished;
+        #endregion
+
         #region Properties
         public RPESTCoroutineStatus Status { get; private set; }
         #endregion
@@ -71,13 +74,13 @@ namespace SkelTech.RPEST.Utilities.Structures {
                     }
                     else {
                         this.Status = RPESTCoroutineStatus.Finished;
+                        this.OnCoroutineFinished?.Invoke(this, EventArgs.Empty);
                         break;
                     }
                 } else {  // Cancelled
                     break;
                 }
             }
-            // TODO: NOTIFY EVENT
         }
         #endregion
     }

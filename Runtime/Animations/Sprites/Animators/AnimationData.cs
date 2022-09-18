@@ -18,12 +18,5 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
             this.Tag = tag;
         }
         #endregion
-
-        #region Helpers
-        // TODO: CHECK IF NEEDED
-        public AnimationData Copy() {
-            return new AnimationData(this.Coroutine, this.Tag);
-        }
-        #endregion
     }
 }
