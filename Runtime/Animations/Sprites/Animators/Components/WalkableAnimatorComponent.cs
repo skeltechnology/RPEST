@@ -80,7 +80,10 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
             this.animator.UpdateSprite(animation.GetSprites(), 0f);
         }
 
-        // TODO: DOCUMENTATION
+        /// <summary>
+        /// Coroutines that executed the walking animation in the given direction.
+        /// </summary>
+        /// <param name="direction">Direction of the animation.</param>
         private IEnumerator WalkingAnimation(Direction direction) {
             Sprite[] sprites = this.walkableAnimation.GetAnimation(direction).GetSprites();
             while (this.progress < 1f) {

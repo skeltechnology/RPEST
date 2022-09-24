@@ -56,12 +56,21 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         #endregion
 
         #region Helpers
-        // TODO: DOCUMENTATION
+        /// <summary>
+        /// Callback responsible for updating the animation when the walkable object finishes its movement.
+        /// </summary>
+        /// <param name="sender">Sender of the callback.</param>
+        /// <param name="e">Callback arguments.</param>
         private void OnFinishedMovement(object sender, System.EventArgs e) {
             this.animator.StopAnimation(this.tag);
             this.StartStandingAnimation();
         }
 
+        /// <summary>
+        /// Callback responsible for updating the animation when the walkable object changes its direction.
+        /// </summary>
+        /// <param name="sender">Sender of the callback.</param>
+        /// <param name="direction">Direction of the walkable object.</param>
         private void OnUpdateDirection(object sender, Direction direction) {
             if (direction != this.standingDirection && !this.walkableObject.IsMoving) {
                 this.animator.StopAnimation(this.tag);
@@ -69,10 +78,17 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
             }
         }
 
+        /// <summary>
+        /// Helper method that starts the standing animation in the current direction of the walkable object.
+        /// </summary>
         private void StartStandingAnimation() {
             this.StartStandingAnimation(this.walkableObject.GetDirection());
         }
 
+        /// <summary>
+        /// Helper method that starts the standing animation in the given direction.
+        /// </summary>
+        /// <param name="direction">Direction of the animation.</param>
         private void StartStandingAnimation(Direction direction) {
             this.standingDirection = direction;
             SpriteAnimation spriteAnimation = this.standingAnimation.GetAnimation(direction);
