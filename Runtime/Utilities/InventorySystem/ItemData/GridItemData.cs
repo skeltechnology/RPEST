@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace SkelTech.RPEST.Utilities.InventorySystem {
+    // TODO: DOCUMENTATION
     public class GridItemData : ClassicItemData {
         #region Properties
         public int HorizontalSize { get { return this.horizontalSize; }}

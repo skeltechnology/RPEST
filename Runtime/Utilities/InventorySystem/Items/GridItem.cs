@@ -1,6 +1,7 @@
 using SkelTech.RPEST.Utilities.Structures;
 
 namespace SkelTech.RPEST.Utilities.InventorySystem {
+    // TODO: DOCUMENTATION
     public class GridItem<T> : ClassicItem<T> where T : GridItemData {
         #region Properties
         public IntPosition Position { get; private set; }

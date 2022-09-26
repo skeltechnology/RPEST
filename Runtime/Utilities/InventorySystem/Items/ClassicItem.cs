@@ -1,6 +1,7 @@
 using System;
 
 namespace SkelTech.RPEST.Utilities.InventorySystem {
+    // TODO: DOCUMENTATION
     public class ClassicItem<T> where T : ClassicItemData {
         #region Properties
         public T ItemData { get; protected set; }

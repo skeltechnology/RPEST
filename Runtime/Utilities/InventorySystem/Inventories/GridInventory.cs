@@ -3,27 +3,58 @@ using SkelTech.RPEST.Utilities.Structures;
 using System;
 
 namespace SkelTech.RPEST.Utilities.InventorySystem {
+    /// <summary>
+    /// Inventory that has a visual organization of the items.
+    /// </summary>
+    /// <typeparam name="T">Item data type.</typeparam>
     public class GridInventory<T>  where T : GridItemData {
         #region Events
+        /// <summary>
+        /// Called when the inventory is updated.
+        /// This includes operations that add move and remove items.
+        /// </summary>
         public event EventHandler OnUpdateInventory;
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Number of rows that the inventory grid has.
+        /// </summary>
         public int Rows { get { return this.grid.Rows; }}
+
+        /// <summary>
+        /// Number of columns that the inventory grid has.
+        /// </summary>
         public int Columns { get { return this.grid.Columns; }}
         #endregion
 
         #region Fields
+        /// <summary>
+        /// Reference to the inventory grid.
+        /// </summary>
         protected Matrix<GridItem<T>> grid;
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Constructor of the class.
+        /// </summary>
+        /// <param name="rows">Number of rows that the inventory grid has.</param>
+        /// <param name="columns">Number of columns that the inventory grid has.</param>
         public GridInventory(int rows, int columns) {
             this.grid = new Matrix<GridItem<T>>(rows, columns, null);
         }
         #endregion
 
         #region Getters
+        // TODO: GET ITEM BY ID OR NAME
+        // TODO: GET FREE POSITION
+
+        /// <summary>
+        /// Gets the item in the given position.
+        /// </summary>
+        /// <param name="position">Position of the item.</param>
+        /// <returns>Item in the given position or <c>null</c> if it does not exist.</returns>
         public GridItem<T> GetItem(IntPosition position) {
             if (this.grid.IsValidPosition(position)) {
                 return this.grid[position.Row, position.Column];
@@ -31,10 +62,18 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
             return null;
         }
 
+        /// <summary>
+        /// Gets the number of total slots of the inventory grid.
+        /// </summary>
+        /// <returns>Number of total slots of the inventory grid.</returns>
         public int GetTotalSlots() {
             return this.Rows * this.Columns;
         }
 
+        /// <summary>
+        /// Gets the number of free (unoccupied) slots of the inventory grid.
+        /// </summary>
+        /// <returns></returns>
         public int GetFreeSlots() {
             int count = 0;
             for (int i = 0; i < this.Rows; ++i) {
@@ -46,11 +85,16 @@ namespace SkelTech.RPEST.Utilities.InventorySystem {
             return count;
         }
 
+        /// <summary>
+        /// Gets the number of occupied slots of the inventory grid.
+        /// </summary>
+        /// <returns>Number of occupied slots of the inventory grid.</returns>
         public int GetOccupiedSlots() {
             return this.GetTotalSlots() - this.GetFreeSlots();
         }
         #endregion
 
+        // TODO: CONTINUE DOCUMENTATION
         #region Setters
         public bool AddItem(T itemData, IntPosition position) {
             return this.AddItem(itemData, position, 1);

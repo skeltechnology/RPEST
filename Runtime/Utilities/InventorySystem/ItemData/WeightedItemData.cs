@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace SkelTech.RPEST.Utilities.InventorySystem {
+    // TODO: DOCUMENTATION
     public class WeightedItemData : ClassicItemData {
         #region Properties
         public float Weight { get { return this.weight; }}

@@ -1,4 +1,5 @@
 namespace SkelTech.RPEST.Utilities.InventorySystem {
+    // TODO: DOCUMENTATION
     public class WeightedItem<T> : ClassicItem<T> where T : WeightedItemData {
         #region Constructors
         public WeightedItem(T itemData) : this(itemData, 0) {}
