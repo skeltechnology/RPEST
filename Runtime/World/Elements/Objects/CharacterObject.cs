@@ -1,13 +1,23 @@
 using UnityEngine;
 
 namespace SkelTech.RPEST.World.Elements.Objects {
-    // TODO: DOCUMENTATION
+    /// <summary>
+    /// <c>MonoBehaviour</c> that represents a character object.
+    /// It must be a (sub-)child of a <c>World</c> component.
+    /// </summary>
     public abstract class CharacterObject<T> : InteractorObject, Interactable {
         #region Properties
+        /// <summary>
+        /// Reference to the character data.
+        /// </summary>
         public T Data { get { return this.data; } set { this.data = value; }}
         #endregion
 
         #region Fields
+        /// <summary>
+        /// Reference to the character data.
+        /// </summary>
+        /// <returns></returns>
         [SerializeField] private T data;
         #endregion
 
