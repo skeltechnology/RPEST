@@ -14,11 +14,13 @@ Its element must implement the `IComparable` interface.
 
 ## Pausable Interface
 
-Any class that can change between two action states (play and stop) should implement this `Interface`.
+Any class that can change between two action states (pause and unpause) should implement this `Interface`.
 
 ## RPEST Custom Coroutine
 
-// TODO: DOCUMENTATION
+To expand the functionalities of Unity coroutines, the class `RPESTCoroutine` was created, featuring methods to `Start()`, `Stop()`, `Pause()` and `Play()`, along with its `Status` and and an event handler that is called at the end of the coroutine's execution.
+
+This class can also be used with the `yield` expression, that keeps waiting while its status is **Running**.
 
 ## Utility Models
 
