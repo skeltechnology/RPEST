@@ -24,6 +24,7 @@ This package contains the following modules:
 - [Pathfinding](./Pathfinding/Pathfinding.md)
 
 ## Utilities
+- [Inventory System](./Utilities/InventorySystem.md)
 - [Search](./Utilities/Search.md)
 - [Structures](./Utilities/Structures.md)
 

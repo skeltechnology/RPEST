@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SkelTech.RPEST.World.Database {
@@ -52,6 +53,40 @@ namespace SkelTech.RPEST.World.Database {
         /// <param name="item"></param>
         public virtual void Remove(T item) {
             this.database.Remove(item);
+        }
+        #endregion
+
+        #region Helpers
+        /// <summary>
+        /// Gets the first element of the given collection in which the evaluator returns true.
+        /// </summary>
+        /// <typeparam name="A">Type of the collection elements.</typeparam>
+        /// <param name="collection">Collection that will be searched.</param>
+        /// <param name="evaluator">Evaluator function.</param>
+        /// <returns>Element in which the evaluator returns true. <c>null</c> if there isn't one.</returns>
+        protected static A GetFirst<A>(ICollection<A> collection, Func<A, bool> evaluator) where A : class {
+            foreach (A element in collection) {
+                if (evaluator.Invoke(element))
+                    return element;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets all the elements of the given collection in which the evaluator returns true.
+        /// </summary>
+        /// <typeparam name="A">Type of the collection elements.</typeparam>
+        /// <param name="collection">Collection that will be searched.</param>
+        /// <param name="evaluator">Evaluator function.</param>
+        /// <returns>Collection of elements in which the evaluator returns true.</returns>
+        protected static ICollection<A> GetAll<A>(ICollection<A> collection, Func<A, bool> evaluator) where A : class {
+            ICollection<A> result = new LinkedList<A>();
+
+            foreach (A element in collection) {
+                if (evaluator.Invoke(element))
+                    result.Add(element);
+            }
+            return result;
         }
         #endregion
     }

@@ -6,14 +6,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- Character Objects
-- Inventory System
 - Cutscene System
 - Quest System
 - Dialogue System
 - Tutorials
 - Loading Scene System
 - Save / Load System
+
+## [0.2.0] - 2022-10-31
+### Added
+- The `StandingAnimationComponent`, which animates a sprite when its not moving.
+- `CharacterObject`, that facilitates the creating of game characters.
+- Inventory System
+    - Classic
+    - Weighted
+    - Grid
+- RPEST Custom Coroutines
+
+### Changed
+- Animation System is now simpler and more efficient.
+- A `WalkableObject` can now receive a collection of direction and use them to move.
 
 ## [0.1.1] - 2022-08-09
 ### Changed
@@ -52,5 +64,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Interaction and Trigger Systems
 - Sprite Animation
 
+[0.2.0]: https://github.com/skeltechnology/RPEST/releases/tag/v0.2.0
 [0.1.1]: https://github.com/skeltechnology/RPEST/releases/tag/v0.1.1
 [0.1.0]: https://github.com/skeltechnology/RPEST/releases/tag/v0.1.0

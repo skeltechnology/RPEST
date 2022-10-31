@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
 namespace SkelTech.RPEST.World.Elements.Objects {
     /// <summary>
-    /// <c>MonoBehaviour</c> that represents a walkable object.
+    /// <c>MonoBehaviour</c> that represents an interactor object.
     /// It must be a (sub-)child of a <c>World</c> component.
     /// </summary>
     public class InteractorObject : WalkableObject {
@@ -41,13 +42,13 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         #region Unity
         protected override void Awake() {
             base.Awake();
-            this.OnStartedMovement += this.OnStartedMovementHandler;
-            this.OnFinishedMovement += this.OnFinishedMovementHandler;
+            this.OnStartedCellMovement += this.OnStartedCellMovementHandler;
+            this.OnFinishedCellMovement += this.OnFinishedCellMovementHandler;
         }
 
         protected override void OnDestroy() {
-            this.OnStartedMovement -= this.OnStartedMovementHandler;
-            this.OnFinishedMovement -= this.OnFinishedMovementHandler;
+            this.OnStartedCellMovement -= this.OnStartedCellMovementHandler;
+            this.OnFinishedCellMovement -= this.OnFinishedCellMovementHandler;
             base.OnDestroy();
         }
         #endregion
@@ -103,10 +104,13 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// </summary>
         /// <param name="interactablePosition">Interactable position.</param>
         /// <returns>Boolean indicating if an interaction occurred.</returns>
-        public bool Interact(Vector3 interactablePosition) {
+        public virtual bool Interact(Vector3 interactablePosition) {
             if (this.CanInteract()) {
-                Interactable interactable = this.world.InteractableDatabase.GetInteractable(interactablePosition);
-                return this.Interact(interactable);
+                ICollection<Interactable> interactables = this.world.InteractableDatabase.GetInteractables(interactablePosition);
+                foreach (Interactable interactable in interactables) {
+                    if (this.Interact(interactable))
+                        return true;
+                }
             }
             return false;
         }
@@ -118,7 +122,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// <returns>Boolean indicating if an interaction occurred.</returns>
         private bool Interact(Interactable interactable) {
             // Check if there's an interactable in the next cell
-            if (interactable != null && this.CanInteract()) {
+            if (interactable != null && this.CanInteract() && interactable.GetWorldObject() != this) {
                 interactable.Interact(this);
                 this.OnInteract?.Invoke(this, interactable);
                 return true;
@@ -131,7 +135,7 @@ namespace SkelTech.RPEST.World.Elements.Objects {
         /// </summary>
         /// <param name="triggerPosition">Trigger position.</param>
         /// <param name="onEnter">Boolean indicating if the object is entering the trigger.</param>
-        private void Trigger(Vector3 triggerPosition, bool onEnter) {
+        protected virtual void Trigger(Vector3 triggerPosition, bool onEnter) {
             if (this.canTrigger) {
                 Trigger trigger = this.world.TriggerDatabase.GetTrigger(triggerPosition);
                 this.Trigger(trigger, onEnter);
@@ -154,20 +158,20 @@ namespace SkelTech.RPEST.World.Elements.Objects {
 
         #region Helpers
         /// <summary>
-        /// Helper callback to handle OnStartedMovement.
+        /// Helper callback to handle OnStartedCellMovement.
         /// </summary>
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="e">Arguments.</param>
-        private void OnStartedMovementHandler(object sender, System.EventArgs e) {
+        private void OnStartedCellMovementHandler(object sender, System.EventArgs e) {
             this.Trigger(this.transform.position, false);
         }
 
         /// <summary>
-        /// Helper callback to handle OnFinishedMovement.
+        /// Helper callback to handle OnFinishedCellMovement.
         /// </summary>
         /// <param name="sender">Sender of the callback.</param>
         /// <param name="e">Arguments.</param>
-        protected void OnFinishedMovementHandler(object sender, System.EventArgs e) {
+        protected void OnFinishedCellMovementHandler(object sender, System.EventArgs e) {
             this.Trigger(this.transform.position, true);
         }
 

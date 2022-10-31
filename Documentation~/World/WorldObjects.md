@@ -39,3 +39,9 @@ Every world object that can potentially walk (and run must extend the `WalkableO
 ### Interactor Objects
 
 As described before, `InteractorObject`s are `WalkableObject`s that can interact with `Interactable`s and `Trigger`s.
+
+### Character Objects
+
+The template `CharacterObject` class represents an `InteractorObject` that is also an `Interactable` itself and has a field that stores the necessary data to represent a character.
+
+It is up to the programmer to create the type of that field and it can contain serializable information like: other classes, a **name**, a **picture** or the **age**.

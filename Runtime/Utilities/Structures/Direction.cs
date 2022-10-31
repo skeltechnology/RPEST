@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SkelTech.RPEST.Utilities.Structures {
     /// <summary>
-    /// Model to store and manage two dimensional directions.
+    /// Model used to store and manage two dimensional directions.
     /// </summary>
     [Serializable]
     public class Direction {

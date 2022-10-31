@@ -18,11 +18,11 @@ Coming Soon...
 - Input System
 - Interaction and Trigger Systems
 - Sprite Animation
+- Character Objects
+- Inventory System
 
 And coming soon:
 
-- Character Objects
-- Inventory System
 - Cutscene System
 - Quest System
 - Dialogue System
