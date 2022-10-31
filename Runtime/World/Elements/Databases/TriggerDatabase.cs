@@ -22,7 +22,11 @@ namespace SkelTech.RPEST.World.Database {
             });
         }
 
-        // TODO: DOCUMENTATION
+        /// <summary>
+        /// Gets all the triggers (if any) at the correspondent position.
+        /// </summary>
+        /// <param name="globalPosition">Position of the triggers (global coordinates).</param>
+        /// <returns>Collection of triggers at the correspondet position.</returns>
         public ICollection<Trigger> GetTriggers(Vector3 globalPosition) {
             return GetAll(this.database, (trigger) => {
                 return trigger.GetWorldObject().Intersects(globalPosition);

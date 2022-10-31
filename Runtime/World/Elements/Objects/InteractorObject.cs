@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SkelTech.RPEST.World.Elements.Objects {
     /// <summary>
-    /// <c>MonoBehaviour</c> that represents a walkable object.
+    /// <c>MonoBehaviour</c> that represents an interactor object.
     /// It must be a (sub-)child of a <c>World</c> component.
     /// </summary>
     public class InteractorObject : WalkableObject {

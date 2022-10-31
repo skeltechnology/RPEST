@@ -21,7 +21,10 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// </summary>
         [SerializeReference, HideInInspector] protected WorldObjectAnimator animator;
 
-        // TODO: DOCUMENTATION
+        /// <summary>
+        /// Tag that identifies the animator component.
+        /// Must be unique for each component type.
+        /// </summary>
         [SerializeField, HideInInspector] protected string tag;
         #endregion
 
@@ -37,19 +40,28 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         #endregion
 
         #region Operators
-        // TODO: DOCUMENTATION
-        public void Pause() {
-            if (!this.IsInitialized) return;
+        /// <summary>
+        /// Pauses the execution of the component.
+        /// </summary>
+        /// <returns>Boolean indicating if the component execution was paused.</returns>
+        public bool Pause() {
+            if (!this.IsInitialized) return false;;
 
             this.IsInitialized = false;
             this.Disable();
+            return true;
         }
 
-        public void Play() {
-            if (this.IsInitialized) return;
+        /// <summary>
+        /// Plays the execution of the component.
+        /// </summary>
+        /// <returns>Boolean indicating if the component execution was played.</returns>
+        public bool Play() {
+            if (this.IsInitialized) return false;;
 
             this.IsInitialized = true;
             this.Initialize();
+            return true;
         }
         #endregion
 
@@ -85,11 +97,21 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
             }
         }
 
-        // TODO: DOCUMENTATION
+        /// <summary>
+        /// Coroutine that animates the given animation for a certain durating infinitely.
+        /// </summary>
+        /// <param name="animation"><c>SpriteAnimation</c> to be played.</param>
+        /// <param name="duration">Duration of a single animation.</param>
         protected IEnumerator AnimationLoopCoroutine(SpriteAnimation animation, float duration) {
             return this.AnimationLoopCoroutine(animation, duration, int.MaxValue);
         }
 
+        /// <summary>
+        /// Coroutine that animates the given animation for a certain durating and the specified amount of times.
+        /// </summary>
+        /// <param name="animation"><c>SpriteAnimation</c> to be played.</param>
+        /// <param name="duration">Duration of a single animation.</param>
+        /// <param name="count">Number of times the animation will be played.</param>
         protected IEnumerator AnimationLoopCoroutine(SpriteAnimation animation, float duration, int count) {
             while (count > 0) {
                 yield return this.AnimationCoroutine(animation, duration);

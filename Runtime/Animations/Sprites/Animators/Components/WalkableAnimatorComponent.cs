@@ -8,7 +8,7 @@ using UnityEngine;
 namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
     [System.Serializable]
     /// <summary>
-    /// Component responsible for animating a <c>WalkableObject</c>.
+    /// Component responsible for animating a <c>WalkableObject</c> while moving.
     /// </summary>
     public class WalkableAnimatorComponent : WorldObjectAnimatorComponent {
         #region Fields
@@ -22,7 +22,9 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
         /// </summary>
         [SerializeField] private DirectedAnimation walkableAnimation;
 
-        // TODO: DOCUMENTATION
+        /// <summary>
+        /// Float that stores the total progress of the cell movement.
+        /// </summary>
         private float progress = 0f;
         #endregion
 
@@ -78,7 +80,10 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators.Components {
             this.animator.UpdateSprite(animation.GetSprites(), 0f);
         }
 
-        // TODO: DOCUMENTATION
+        /// <summary>
+        /// Coroutines that executed the walking animation in the given direction.
+        /// </summary>
+        /// <param name="direction">Direction of the animation.</param>
         private IEnumerator WalkingAnimation(Direction direction) {
             Sprite[] sprites = this.walkableAnimation.GetAnimation(direction).GetSprites();
             while (this.progress < 1f) {

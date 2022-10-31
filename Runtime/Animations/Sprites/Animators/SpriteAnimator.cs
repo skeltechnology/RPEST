@@ -24,7 +24,9 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         /// </summary>
         private SpriteRenderer spriteRenderer;
 
-        // TODO: DOCUMENTATION
+        /// <summary>
+        /// List of animations that will be played by the animator.
+        /// </summary>
         private LinkedList<AnimationData> animations = new LinkedList<AnimationData>();
         #endregion
 
@@ -56,12 +58,12 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
         #endregion
 
         #region Operators
-        // TODO: DOCUMENTATE BOOL
         /// <summary>
         /// Animates the <c>SpriteRenderer</c>, by starting the given coroutine.
         /// The coroutine is only executed of the animator is not animating.
         /// </summary>
         /// <param name="coroutine">Coroutine that will be executed.</param>
+        /// <param name="force">Boolean indicating if the animator should pause the current animation (if any) and force the execution of this one.</param>
         public void StartAnimation(AnimationData animationData, bool force) {
             if (this.animations.Count == 0) {
                 this.animations.AddFirst(animationData);
@@ -77,13 +79,19 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
             }
         }
 
-        // TODO: DOCUMENTATION
+        /// <summary>
+        /// Stops and removes the current animation.
+        /// </summary>
         public void StopAnimation() {
             if (this.IsAnimating) {
                 this.StopAnimation(this.animations.First);
             }
         }
 
+        /// <summary>
+        /// Stops and removes the first animation that has the given tag
+        /// </summary>
+        /// <param name="tag"></param>
         public void StopAnimation(string tag) {
             if (this.IsAnimating) {
                 for(LinkedListNode<AnimationData> node = this.animations.First; node != null; node = node.Next) {
@@ -95,14 +103,21 @@ namespace SkelTech.RPEST.Animations.Sprites.Animators {
             }
         }
 
+        /// <summary>
+        /// Stops and removes the given animation.
+        /// </summary>
+        /// <param name="node">Node that stores the animation.</param>
         private void StopAnimation(LinkedListNode<AnimationData> node) {
             AnimationData animation = node.Value;
             this.animations.Remove(node);
             animation.Coroutine.Stop();
         }
 
+        /// <summary>
+        /// Stops and removes all the animations.
+        /// </summary>
         public void StopAllAnimations() {
-            // TODO: BUG
+            // TODO: BUG: NOT WORKING
             if (this.IsAnimating) {
                 LinkedListNode<AnimationData> first = this.animations.First;
                 this.animations.Clear();
