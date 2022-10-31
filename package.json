@@ -1,6 +1,6 @@
 {
   "name": "com.skeltech.rpest",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "displayName": "RPEST",
   "description": "A Unity package to develop 2D RPG.",
   "unity": "2021.3",
@@ -20,7 +20,10 @@
     "Input",
     "Interaction",
     "Trigger",
-    "Animation"
+    "Animation",
+    "Characters",
+    "Inventory",
+    "Items"
   ],
   "author": {
     "name": "Skel Tech",
