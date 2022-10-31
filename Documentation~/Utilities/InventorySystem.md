@@ -5,10 +5,15 @@ This module contains classes that can be used to implement or expand and invento
 An inventory system is composed by **3** basic parts:
 
 1. **Item Data**: `ItemData` classes are `ScriptableObjects` that the programmer should create to store the necessary information of an item. There are currently **3** classes that can be used or expanded.
+
 ![ItemData Diagram](../images/ItemDataDiagram.png)
+
 2. **Item**: `Item` classes are wrappers for `ItemData` that contain essential information for the `Inventory`.
+
 ![Items Diagram](../images/ItemsDiagram.png)
+
 3. **Inventory**: Is basically a model and controller for the inventory, implementing the necessary mechanisms to interact with it.
+
 ![Inventories Diagram](../images/InventoriesDiagram.png)
 
 There are currently **3** different types of inventories, but the programmer can create its own based on this parts.
